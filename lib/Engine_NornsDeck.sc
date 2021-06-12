@@ -126,7 +126,7 @@ Engine_NornsDeck : CroneEngine {
             ("loading "++msg[2]).postln;
             bufSample[msg[1]-1] = Buffer.read(context.server,msg[2],action:{
                 ("loaded "++msg[2]).postln;
-                synSample[msg[1]-1].set(\out,mainBus,\bufnum,bufSample[msg[1]-1].bufnum,\t_trig,1);
+                synSample[msg[1]-1].set(\out,mainBus.index,\bufnum,bufSample[msg[1]-1].bufnum,\t_trig,1);
             });
         });
         
@@ -390,8 +390,8 @@ Engine_NornsDeck : CroneEngine {
                 ("freeing "++synVoice).postln;
                 synSupertonic[synVoice].free;
             });
-            synSupertonic[synVoice]=Synth.after(synBreaklivePlay,"supertonic",[
-                \out,0,
+            synSupertonic[synVoice]=Synth("supertonic",[
+                \out,mainBus.index,
                 \distAmt, msg[1],
                 \eQFreq, msg[2],
                 \eQGain, msg[3],
@@ -416,7 +416,7 @@ Engine_NornsDeck : CroneEngine {
                 \modVel, msg[22],
                 \fx_lowpass_freq,msg[23],
                 \fx_lowpass_rq,msg[24],
-            ]);
+            ],target:context.xg);
             NodeWatcher.register(synSupertonic[synVoice]);
         });
         // ^ NornsDeck specific
