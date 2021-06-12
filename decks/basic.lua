@@ -88,3 +88,6 @@ play("op1","b2 c2",2)
 -- arp(<notes>,<num>) plays random arpegio with <notes> string of <num> notes
 play("op1",arp("f#5 c#5 e5 .",8),1)
 
+-- stop(<ptn>) stops the pattern
+stop("op1")
+
