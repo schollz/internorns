@@ -179,6 +179,12 @@ function arp(s,num)
   return table.concat(t2," ")
 end
 
+function reverse(v)
+  if v==nil then
+    v=0
+  end
+  play("bbr",er("if math.random()<"..v.." then e.brev(1) end",5))
+end
 
 function glitch(v)
   if v==nil then
