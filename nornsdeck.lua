@@ -20,12 +20,12 @@ function init()
   audio.level_monitor(0)
 
   os.execute("mkdir -p /home/we/dust/audio/nornsdeck/")
-  os.execute("cp /home/we/dust/code/nornsdeck/data/*.wav /home/we/dust/audio/nornsdeck/")
+  os.execute("cp -u /home/we/dust/code/nornsdeck/data/*.wav /home/we/dust/audio/nornsdeck/")
 
   local drummer=include("nornsdeck/lib/drummer")
   local patches_=include("nornsdeck/lib/patches")
   local patches=patches_:new()
-  local patches_loaded=patches:load("/home/we/dust/data/nornsdeck/data/default.mtpreset")
+  local patches_loaded=patches:load("/home/we/dust/code/nornsdeck/data/default.mtpreset")
   kick=drummer:new({id=1})
   sd=drummer:new({id=2})
   hh=drummer:new({id=3})
@@ -77,6 +77,15 @@ function redraw()
   for i,s in ipairs(string.wrap(print_command,36)) do
     screen.move(1,8+8*(i-1))
     screen.text(s)
+  end
+  if last_command=="" then
+    screen.font_size(8)
+    screen.move(64,8)
+    screen.text_center("available midi:")
+    for i,v in ipairs(mp.names) do
+      screen.move(64,8+(10*i))
+      screen.text_center(v)
+    end
   end
   screen.update()
 end
@@ -147,12 +156,12 @@ end
 
 function tapestop()
   e.bl()
-  e.bl_rate(0.01)
+  e.blrate(0.01)
 end
 
 function tapestart()
   clock.run(function()
-    e.bl_rate(1)
+    e.blrate(1)
     clock.sync(8)
     e.bl()
   end)
