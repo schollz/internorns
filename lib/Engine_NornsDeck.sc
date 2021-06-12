@@ -102,7 +102,6 @@ Engine_NornsDeck : CroneEngine {
             synBreaklivePlay.set(\panRate,msg[1])
         });
 
-
         this.addCommand("blbpm","f", { arg msg;
             synBreaklivePlay.set(\bpm,msg[1])
         });
@@ -217,12 +216,12 @@ Engine_NornsDeck : CroneEngine {
 
         context.server.sync;
 
-        this.addCommand("bload","s", { arg msg;
+        this.addCommand("bload","sff", { arg msg;
             bufBreakbeat.free;
             ("loading "++msg[1]).postln;
             bufBreakbeat = Buffer.read(context.server,msg[1],action:{
                 ("loaded "++msg[1]).postln;
-                synBreakbeat.set(\bufnum,bufBreakbeat.bufnum,\t_trig,1,\reset,msg[1],\start,0,\end,1,\rate,1,\loops,1000);
+                synBreakbeat.set(\bufnum,bufBreakbeat.bufnum,\bpm,msg[2],\bpmsource,msg[3],\t_trig,1,\reset,msg[1],\start,0,\end,1,\rate,1,\loops,1000);
             });
                        
         });

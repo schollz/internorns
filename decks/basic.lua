@@ -70,6 +70,25 @@ play("closer",er("e.spos(1,0)",1),1)
 expand("closer",8)
 
 
+-------------------- drum samples -----------------------
+
+-- e.bload(<file>,<tempo>,<filetempo>) loads <file> at <filetempo> and plays it at <tempo>
+-- wav(<name>) loads /home/we/dust/audio/nornsdeck/<name>.wav
+e.bload(wav("120_1"),clock.get_tempo(),120) 
+
+-- beatsync(<num>) keeps sample containing <num> beats in sync
+beatsync(8)
+
+-- glitch(<prob>) glitch with probability <prob> (0,1)
+glitch(0.2)
+
+-- reverse(<prob> reverses with probability <prob> (0,1)
+reverse(0.1)
+
+-- e.bamp(<vol>) raises volume
+e.bamp(1.5)
+
+
 -------------------- midi -----------------------
 
 -- your norns screen shows the names, use any part of the name
