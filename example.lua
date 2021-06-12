@@ -14,6 +14,7 @@ clock.run(function() clock.sleep(1.5);tapebreak();clock.sleep(1.5);tapebreak() e
 params:set("clock_tempo",165)
 
 -- drums
+-- "kick", "oh", "hh", "sd", "clap" are available
 play("kick",er(1),1)
 play("kick",er_add(er(1),rot(er(1),3)),2)
 play("kicklfo",er("kick.patch.distAmt=lfo(10,1,80)",12))
