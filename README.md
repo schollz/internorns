@@ -9,12 +9,30 @@ a cyberdeck to use norns from vim.
 
 ### Documentation
 
+#### keyboard sounds
+
+keyboard sounds are piped in through supercollider from osc messages. you can setup a key logger on your computer that will send osc messages on key press.
+
+from your host computer (Windows-only currently) install with
+
+```
+git clone https://github.com/schollz/osckeylogger
+cd osckeylogger
+go install -v
+```
+
+then use with
+
+```
+osckeylogger --host "<supercollider host>"
+```
+
 
 #### using with vim
 
 lines from a norns script can be quickly and easily run using vim.
 
-to use with vim, first download `wscat` - a utility for piping commands to a websocket server (maiden).
+to use with vim, first download `wscat` - a utility for piping commands to the maiden websocket server.
 
 ```
 wget https://github.com/schollz/wscat/releases/download/binaries/wscat
