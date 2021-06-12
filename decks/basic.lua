@@ -68,3 +68,23 @@ e.samp(1,1)
 play("closer",er("e.spos(1,0)",1),1)
 -- set position every 8 measures
 expand("closer",8)
+
+
+-------------------- midi -----------------------
+
+-- your norns screen shows the names, use any part of the name
+-- e.g. if it says "op1 midi device" you can just write "op1"
+
+-- play chord on measure 1
+play("op1","G/B:3",1)
+
+-- play a note on measure 1
+play("op1","b2",1)
+
+-- play multiple notes on measure 2
+-- note distances are determined by euclidean rhythm
+play("op1","b2 c2",2)
+
+-- arp(<notes>,<num>) plays random arpegio with <notes> string of <num> notes
+play("op1",arp("f#5 c#5 e5 .",8),1)
+
