@@ -5,15 +5,18 @@ function midipal:new(o)
   setmetatable(o,self)
   self.__index=self
   o.midis={}
+  o.names={}
   for _,dev in pairs(midi.devices) do
     local name=string.lower(dev.name)
     name=name:gsub("-","")
+    table.insert(o.names,name)
     print("connected to "..name)
     o.midis[name]={notes={}}
     o.midis[name].conn=midi.connect(dev.port)
   end
   return o
 end
+
 
 function midipal:ismidi(name)
   for k,v in pairs(self.midis) do
