@@ -102,9 +102,9 @@ end
 local naturevol=-1
 function nature(vol)
   if naturevol<0 then
-    e.sload(2,wav("birds_eating"))
-    e.sload(3,wav("birds_morning"))
-    e.sload(4,wav("waves"))
+    engine.wav(4,wav("birds_eating"))
+    engine.wav(5,wav("birds_morning"))
+    engine.wav(6,wav("waves"))
   end
   if naturevol>0 then
     naturevol=0
@@ -114,8 +114,8 @@ function nature(vol)
   if vol~=nil then
     naturevol=vol
   end
-  for i=2,4 do
-    e.samp(i,6*vol/(i*i))
+  for i=4,6 do
+    engine.amp(i,6*vol/(i*i))
   end
 end
 
@@ -152,19 +152,19 @@ function stop(name)
 end
 
 function tapebreak()
-  e.bl()
+  engine.tapebreak()
 end
 
 function tapestop()
-  e.bl()
-  e.blrate(0.01)
+  engine.tapebreak()
+  engine.taperate(0.01)
 end
 
 function tapestart()
   clock.run(function()
-    e.blrate(1)
+    engine.taperate(1)
     clock.sync(8)
-    e.bl()
+    engine.tapebreak()
   end)
 end
 
@@ -180,24 +180,24 @@ function arp(s,num)
   return table.concat(t2," ")
 end
 
-function reverse_prob(v)
+function reverse_prob(i,v)
   if v==nil then
     v=0
   end
-  play("bbr",er("if math.random()<"..v.." then e.brev(1) end",5))
+  play("bbr",er("if math.random()<"..v.." then engine.reverse("..i..",1) end",5))
 end
 
-function glitch_prob(v)
+function glitch_prob(i,v)
   if v==nil then
     v=0
   end
-  ta:add("bbb",er("if math.random()<"..v.." then; v=math.random(); e.bbreak(v,v+math.random()/40+0.01) end",4),1)
+  ta:add("bbb",er("if math.random()<"..v.." then; v=math.random(); engine.loop("..i..",v,v+math.random()/40+0.01) end",4),1)
 end
 
 
-function beatsync(totalbeats)
+function beatsync(i,totalbeats)
   local v = totalbeats*4
-  ta:add("bb",er("if math.random()<0.5 then e.bsync((<sn>-1)%"..v.."/"..v..") end",4),1)
+  ta:add("bb",er("if math.random()<0.5 then engine.pos("..i..",(<sn>-1)%"..v.."/"..v..") end",4),1)
 end
 
 function wav(s)

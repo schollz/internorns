@@ -4,13 +4,11 @@
 Engine_NornsDeck : CroneEngine {
 
     // NornsDeck specific v0.1.0
-    var bufBreakbeat;
-    var synBreakbeat;
     var synDrone;
     var synSupertonic;
     var synVoice=0;
     var maxVoices=5;
-    var maxVoicesQ=2;
+    var maxSamplers=7;
     var bufBreaklive;
     var synBreakliveRec;
     var synBreaklivePlay;
@@ -28,29 +26,29 @@ Engine_NornsDeck : CroneEngine {
     alloc {
         // NornsDeck specific v0.0.1
         // keys
-        SynthDef("defKeys",{
-                arg amp=0.5,bufnum=0,t_trig=1,start=0,out=0;
-                var snd,env;
-                env=EnvGen.kr(Env(levels:[0,1,1,0],times:[0.01,0.2,0.05]),gate:t_trig);
-                snd = env*PlayBuf.ar(2,bufnum,BufRateScale.kr(bufnum),1,start*BufFrames.kr(bufnum),loop:1);
-                Out.ar(0,snd);
-        }).add;
+        // SynthDef("defKeys",{
+        //         arg amp=0.5,bufnum=0,t_trig=1,start=0,out=0;
+        //         var snd,env;
+        //         env=EnvGen.kr(Env(levels:[0,1,1,0],times:[0.01,0.2,0.05]),gate:t_trig);
+        //         snd = env*PlayBuf.ar(2,bufnum,BufRateScale.kr(bufnum),1,start*BufFrames.kr(bufnum),loop:1);
+        //         Out.ar(0,snd);
+        // }).add;
 
-        context.server.sync;
+        // context.server.sync;
 
-        bufKeys=Buffer.read(context.server,"/home/we/dust/code/nornsdeck/data/keys.wav",action:{
-            synKeys=Synth("defKeys",[\bufnum,bufKeys],context.xg);
-        });
+        // bufKeys=Buffer.read(context.server,"/home/we/dust/code/nornsdeck/data/keys.wav",action:{
+        //     synKeys=Synth("defKeys",[\bufnum,bufKeys],context.xg);
+        // });
 
-        OSCFunc({ arg msg, time, addr, recvPort; 
-            [msg, time, addr, recvPort].postln; 
-            synKeys.set(\t_trig,1);
-        }, '/keystroke');
+        // OSCFunc({ arg msg, time, addr, recvPort; 
+        //     [msg, time, addr, recvPort].postln; 
+        //     synKeys.set(\t_trig,1);
+        // }, '/keystroke');
 
 
-        this.addCommand("keys","f", { arg msg;
-            synBreaklivePlay.set(\amp,msg[1])
-        });
+        // this.addCommand("keys","f", { arg msg;
+        //     synBreaklivePlay.set(\amp,msg[1])
+        // });
 
         // break live
         mainBus=Bus.audio(context.server,2);
@@ -91,62 +89,30 @@ Engine_NornsDeck : CroneEngine {
         synBreakliveRec = Synth("defBreakliveRec",[\bufnum,bufBreaklive,\in,mainBus.index],context.xg);
         synBreaklivePlay = Synth("defBreaklivePlay",[\bufnum,bufBreaklive,\in,mainBus.index],context.xg);
 
-        this.addCommand("bl","", { arg msg;
+        this.addCommand("tapebreak","", { arg msg;
             synBreaklivePlay.set(\t_trig,1)
         });
 
-        this.addCommand("blrate","f", { arg msg;
+        this.addCommand("taperate","f", { arg msg;
             synBreaklivePlay.set(\rate,msg[1])
         });
 
-        this.addCommand("blpan","f", { arg msg;
+        this.addCommand("tapepan","f", { arg msg;
             synBreaklivePlay.set(\panRate,msg[1])
-        });
-
-        this.addCommand("blbpm","f", { arg msg;
-            synBreaklivePlay.set(\bpm,msg[1])
-        });
-
-        this.addCommand("blampmin","f", { arg msg;
-            synBreaklivePlay.set(\ampmin,msg[1])
         });
 
 	   context.server.sync;
 
-        bufSample=Array.fill(4,{arg i;
-            Buffer.new(context.server);
-        });
-        synSample=Array.fill(4,{arg i;{
-                arg amp=0,bufnum=0,t_trig=1,start=0,out=0;
-                Out.ar(out,PlayBuf.ar(2,bufnum,BufRateScale.kr(bufnum),t_trig,start*BufFrames.kr(bufnum),loop:1)*VarLag.kr(amp,10,warp:\linear));
-            }.play(target:context.xg);
-        });
-
-        this.addCommand("sload","is", { arg msg;
-            bufSample[msg[1]-1].free;
-            ("loading "++msg[2]).postln;
-            bufSample[msg[1]-1] = Buffer.read(context.server,msg[2],action:{
-                ("loaded "++msg[2]).postln;
-                synSample[msg[1]-1].set(\out,mainBus.index,\bufnum,bufSample[msg[1]-1].bufnum,\t_trig,1);
-            });
-        });
-        
-	   this.addCommand("samp","if", { arg msg;
-            synSample[msg[1]-1].set(\amp,msg[2]);
-        });
-
-        this.addCommand("spos","if", { arg msg;
-            synSample[msg[1]-1].set(\start,msg[2],\t_trig,1);
-        });
 
 
         // break beat
 
-        bufBreakbeat = Buffer.new(context.server);
+        bufSample=Array.fill(maxSamplers,{arg i;
+            Buffer.new(context.server);
+        });
 
         SynthDef("defBreakbeat", {
             arg out=0, amp=0,bufnum=0, rate=1, start=0, end=1, reset=0, t_trig=0,
-            bpm=120,bpmsource=120,
             loops=1;
             var snd,snd2,pos,pos2,frames,duration,env;
             var startA,endA,startB,endB,resetA,resetB,crossfade,aOrB;
@@ -163,7 +129,7 @@ Engine_NornsDeck : CroneEngine {
             amp=Lag.kr(amp,4);
 
 
-            rate = rate*BufRateScale.kr(bufnum)*bpm/bpmsource;
+            rate = rate*BufRateScale.kr(bufnum);
             frames = BufFrames.kr(bufnum);
             duration = frames*(end-start)/rate.abs/context.server.sampleRate*loops;
 
@@ -210,37 +176,40 @@ Engine_NornsDeck : CroneEngine {
 
         context.server.sync;
 
-        synBreakbeat = Synth("defBreakbeat",[
-            \out,mainBus.index,
-            \bufnum,bufBreakbeat;
-        ], target:context.xg);
+        synSample=Array.fill(maxSamplers,{arg i;
+            Synth("defBreakbeat",[
+                \out,mainBus.index,
+                \bufnum,bufSample[i];
+            ], target:context.xg);
+        });
 
         context.server.sync;
 
-        this.addCommand("bload","sff", { arg msg;
-            bufBreakbeat.free;
-            ("loading "++msg[1]).postln;
-            bufBreakbeat = Buffer.read(context.server,msg[1],action:{
-                ("loaded "++msg[1]).postln;
-                synBreakbeat.set(\bufnum,bufBreakbeat.bufnum,\bpm,msg[2],\bpmsource,msg[3],\t_trig,1,\reset,msg[1],\start,0,\end,1,\rate,1,\loops,1000);
-            });
-                       
+        this.addCommand("wav","is", { arg msg;
+            bufSample[msg[1]-1].free;
+            bufSample[msg[1]-1] = Buffer.read(context.server,msg[2],action:{
+                synSample[msg[1]-1].set(\bufnum,bufSample[msg[1]-1].bufnum,\t_trig,1,\reset,0,\start,0,\end,1,\rate,1,\loops,1000);
+            });                       
         });
 
-        this.addCommand("bamp","f", { arg msg;
-            synBreakbeat.set(\amp,msg[1])
+        this.addCommand("amp","if", { arg msg;
+            synSample[msg[1]-1].set(\amp,msg[2])
         });
 
-        this.addCommand("bsync","f", {arg msg;
-            synBreakbeat.set(\t_trig,1,\reset,msg[1],\start,0,\end,1,\rate,1,\loops,1000);
+        this.addCommand("rate","if", { arg msg;
+            synSample[msg[1]-1].set(\rate,msg[2])
         });
 
-        this.addCommand("brev","f", {arg msg;
-            synBreakbeat.set(\rate,-1);
+        this.addCommand("pos","if", {arg msg;
+            synSample[msg[1]-1].set(\t_trig,1,\reset,msg[2],\start,0,\end,1,\rate,1,\loops,1000);
         });
 
-        this.addCommand("bbreak","ff", {arg msg;
-            synBreakbeat.set(\t_trig,1,\start,msg[1],\reset,msg[1],\end,msg[2],\loops,1000);
+        this.addCommand("reverse","i", {arg msg;
+            synSample[msg[1]-1].set(\rate,-1);
+        });
+
+        this.addCommand("loop","iff", {arg msg;
+            synSample[msg[1]-1].set(\t_trig,1,\start,msg[2],\reset,msg[2],\end,msg[3],\loops,1000);
         });
 
 
@@ -426,15 +395,13 @@ Engine_NornsDeck : CroneEngine {
 
     free {
         // NornsDeck Specific v0.0.1
-        bufBreakbeat.free;
-        synBreakbeat.free;
         synDrone.free;
         (0..maxVoices).do({arg i; synSupertonic[i].free});
         synBreaklivePlay.free;
         synBreakliveRec.free;
         mainBus.free;
-        4.do({arg i; bufSample[i].free});
-        4.do({arg i; synSample[i].free});
+        maxSamplers.do({arg i; bufSample[i].free});
+        maxSamplers.do({arg i; synSample[i].free});
         synKeys.free;
         bufKeys.free;
     }
