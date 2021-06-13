@@ -1,24 +1,34 @@
+--------------------------------------------------
+-------------------- welome ----------------------
+--------------------------------------------------
+
 -- run any line with Ctl+enter
 -- each line is valid lua
 -- special functions are available to make it easier
 
--------------------- restart  -----------------------
+--------------------------------------------------
+-------------------- restart ---------------------
+--------------------------------------------------
 
 norns.script.load("code/nornsdeck/nornsdeck.lua")
 
--------------------- nature  -----------------------
 
-nature(0.0)
+--------------------------------------------------
+-------------------- nature ----------------------
+--------------------------------------------------
 
+-- nature is an example of a special function
 
------------------- built-in drums -------------------
+-- nature(<vol>) sets nature sounds to volume <vol>
+nature(1.0)
 
--- "kick", "oh", "hh", "sd", "clap" are available
--- drums are unaffected by the tape
+--------------------------------------------------
+---------------  built-in drums ------------------
+--------------------------------------------------
 
 -- er(<n>) creates 16-step euclidean rhythm with <n> beats
+-- e.g., er(4) = {1,,,,1,,,,1,,,,1,,,}
 table.print(er(4))
--- prints: {1,,,,1,,,,1,,,,1,,,}
 
 -- play(<ptn>,<er>,<measure>) will set pattern <ptn> to play 
 -- the <er> rhythm on measure <measure>
@@ -28,7 +38,7 @@ play("kick",er(2),1)
 -- that stores a <lua> command on each beat
 table.print(er("print('hi')",4))
 play("hello",er("print('hi')",4),1)
--- lets makae some lfos
+-- use er(..) to make lfos
 play("kicklfo",er("kick.patch.oscDcy=lfo(12,400,1200)",4),1)
 play("kicklfo2",er("kick.patch.distAmt=lfo(13,1,40)",4),1)
 
@@ -38,10 +48,11 @@ play("kick",er_add(er(1),rot(er(1),3)),2)
 
 
 -- er_sub(<er1>,<er2>) will subtract <er2> from <er1>
-play("hh",er_sub(er(9),er(4)),1)
+play("hh",er_sub(er(15),er(4)),1)
 play("hhlfo",er("hh.patch.nEnvDcy=lfo(13,90,150)",4),1)
 
 -- regular lua commands work
+hh.patch.level=-10
 clap.patch.level=-8
 play("clap",rot(er(2),4),1)
 
@@ -50,48 +61,50 @@ stop("kick")
 stop("clap")
 stop("hh")
 
--------------------- samples -----------------------
+
+--------------------------------------------------
+------------------  samples ----------------------
+--------------------------------------------------
 
 -- e = engine, it is quicker
--- e.sload(<bufnum>,<file>) loads <file> into <bufnum>
+-- e.wav(<bufnum>,<file>) loads <file> into <bufnum>
 -- wav(<name>) loads /home/we/dust/audio/nornsdeck/<name>.wav
-e.sload(1,wav("closer"))
+e.wav(1,wav("closer"))
 -- set volume
-e.samp(1,0.25)
+e.amp(1,0.25)
 -- set position (0,1)
-e.spos(1,0) 
+e.pos(1,0.5) 
 -- set position every measure
 play("closer",er("e.spos(1,0)",1),1)
 -- set position every 8 measures
 expand("closer",8)
 
 
---------------- quantized samples -------------------
-
 -- one sample can be "quantized" and with glitch and reverse fx
-
--- e.bload(<file>,<tempo>,<filetempo>) loads <file> at <filetempo> and plays it at <tempo>
--- wav(<name>) loads /home/we/dust/audio/nornsdeck/<name>.wav
-e.bload(wav("120_1"),clock.get_tempo(),120) 
-
+e.wav(2,wav("120_1")) 
+-- change rate to match bpm
+e.rate(2,clock.get_tempo()/120)
 -- e.bamp(<vol>) raises volume
-e.bamp(0.25)
-
+e.amp(2,0.15)
 -- beatsync(<num>) keeps sample containing <num> beats in sync
-beatsync(8)
-
+beatsync(2,8)
+-- once beat synced, you can do
+-- glitching and reversing:
 -- glitch(<prob>) glitch with probability <prob> (0,1)
-glitch_prob(0.2)
-
+glitch_prob(2,0.01)
 -- reverse(<prob> reverses with probability <prob> (0,1)
-reverse_prob(0.1)
+reverse_prob(2,0.01)
 
 -- turn off by setting volume to 0
-e.bamp(0.0)
+e.amp(1,0)
+e.amp(2,0)
 
--------------------- tape  -----------------------
 
--- (nature and drums are not affected by tape)
+--------------------------------------------------
+--------------------  tape -----------------------
+--------------------------------------------------
+
+-- tape can add cool stops and starts
 
 -- tape stop
 tapestop()
@@ -107,29 +120,42 @@ clock.run(function() clock.sleep(1.5);tapebreak();clock.sleep(1.5);tapebreak() e
 -- clock
 params:set("clock_tempo",120)
 
--------------------- midi -----------------------
+
+
+--------------------------------------------------
+-- midi                                         --
+-- easily play outboard gear, set ccs           --
+--------------------------------------------------
+
 
 -- your norns screen shows the names, use any part of the name
 -- e.g. if it says "op1 midi device" you can just write "op1"
 
--- play chord on measure 1
-play("op1","G/B:3",1)
+-- play chord on measures 1 and 4
+-- chords begin with uppercase letter and ":<octave>" denotes octave
+play("op1","Abm/Eb:3",1)
+play("op1","Ebm:3",4)
 
--- play a note on measure 1
-play("op1","b2",1)
-
--- play multiple notes on measure 2
--- note distances are determined by euclidean rhythm
-play("op1","b2 c2",2)
+-- play notes on measure 2
+-- notes begin with lowercase letter
+play("bou","e3 g#3 b3 g#3",2)
 
 -- arp(<notes>,<num>) plays random arpegio with <notes> string of <num> notes
-play("op1",arp("f#5 c#5 e5 .",8),1)
+play("op1",arp("gb3 bb3 db3 .",8),3)
 
--- stop(<ptn>) stops the pattern
+-- cclfo(<name>,<cc>,<period>,<slo>,<shi>) sets a lfo on a cc value <cc>
+-- with sine lfo with period <period> oscillating between <slo> and <shi>
+cclfo("op1",1,11,60,80)
+cclfo("op1",4,3,10,60)
+
+-- stop(<name>) will stop all patterns and notes for that instruments
 stop("op1")
 
 
--------------------- crow -----------------------
+--------------------------------------------------
+-- crow                                         --
+-- easily play outboard gear, set ccs           --
+--------------------------------------------------
 
 -- crow can be commanded similarly
 -- crow out 1 is pitch
@@ -142,7 +168,8 @@ crow.output[2].action="{ to(10,2),to(0,6) }"; crow.output[2]()
 -- specified measure, as before with midi
 -- the envelope is triggered on every note.
 play("crow","ab3",1)
-play("crow","db4",3)
-play("crow",". eb4",5)
-play("crow","gb4",7)
-play("crow","gb4",8)
+play("crow","gb3",3)
+play("crow","eb4",4)
+
+-- stop(<name>) will stop crow
+stop("crow")

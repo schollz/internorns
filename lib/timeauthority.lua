@@ -33,7 +33,7 @@ function TA:step()
       if cmd~=nil then
         cmd=cmd:gsub("<qn>",self.qn)
         cmd=cmd:gsub("<sn>",self.sn)
-        -- print(self.measure+1,self.qn,self.sn,self.pulse,k,cmd)
+        print(self.measure+1,self.qn,self.sn,self.pulse,k,cmd)
         next_command=string.format("%s %s/%s ",next_command,k,cmd)
         rc(cmd)
       end
