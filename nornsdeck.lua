@@ -87,6 +87,7 @@ function redraw()
       screen.text_center(v)
     end
   end
+
   screen.update()
 end
 

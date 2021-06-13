@@ -10,6 +10,7 @@ Engine_NornsDeck : CroneEngine {
     var synSupertonic;
     var synVoice=0;
     var maxVoices=5;
+    var maxVoicesQ=2;
     var bufBreaklive;
     var synBreakliveRec;
     var synBreaklivePlay;
