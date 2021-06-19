@@ -113,8 +113,8 @@ Engine_NornsDeck : CroneEngine {
 
         SynthDef("defBreakbeat", {
             arg out=0, amp=0,bufnum=0, rate=1, start=0, end=1, reset=0, t_trig=0,
-            loops=1;
-            var snd,snd2,pos,pos2,frames,duration,env;
+            loops=1, pan=0;
+            var snd,snd2,pos,pos2,frames,duration,env,finalsnd;
             var startA,endA,startB,endB,resetA,resetB,crossfade,aOrB;
 
             // latch to change trigger between the two
@@ -126,7 +126,7 @@ Engine_NornsDeck : CroneEngine {
             endB=Latch.kr(end,1-aOrB);
             resetB=Latch.kr(reset,1-aOrB);
             crossfade=Lag.ar(K2A.ar(aOrB),0.05);
-            amp=Lag.kr(amp,8);
+            amp=VarLag.kr(amp,8,0);
 
 
             rate = rate*BufRateScale.kr(bufnum);
@@ -171,7 +171,8 @@ Engine_NornsDeck : CroneEngine {
                 interpolation:4,
             );
 
-            Out.ar(out,(crossfade*snd)+((1-crossfade)*snd2) * env * amp)
+            finalsnd=(crossfade*snd)+((1-crossfade)*snd2) * env;
+            Out.ar(out,Balance2.ar(finalsnd[0],finalsnd[1],-1*pan,amp))
         }).add;
 
         context.server.sync;
@@ -194,6 +195,10 @@ Engine_NornsDeck : CroneEngine {
 
         this.addCommand("amp","if", { arg msg;
             synSample[msg[1]-1].set(\amp,msg[2])
+        });
+
+        this.addCommand("pan","if", { arg msg;
+            synSample[msg[1]-1].set(\pan,msg[2])
         });
 
         this.addCommand("rate","if", { arg msg;

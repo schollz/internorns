@@ -99,24 +99,16 @@ end
 -- shims --
 -----------
 
-local naturevol=-1
 function nature(vol)
-  if naturevol<0 then
-    engine.wav(4,wav("birds_eating"))
-    engine.wav(5,wav("birds_morning"))
-    engine.wav(6,wav("waves"))
+  if vol==nil then
+    vol=0
   end
-  if naturevol>0 then
-    naturevol=0
-  else
-    naturevol=4
-  end
-  if vol~=nil then
-    naturevol=vol
-  end
-  for i=4,6 do
-    engine.amp(i,6*vol/(i*i))
-  end
+  engine.wav(4,wav("birds_eating"))
+  engine.wav(5,wav("birds_morning"))
+  engine.wav(6,wav("waves"))
+  engine.amp(4,1*vol)
+  engine.amp(5,2*vol)
+  engine.amp(6,0.2*vol)
 end
 
 function expand(name,num)
