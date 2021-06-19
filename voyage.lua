@@ -1,16 +1,16 @@
--- nornsdeck v0.0.0
+-- voyage v0.0.0
 --
 --
 
 engine.name="NornsDeck"
 
 -- this order matters
-include("nornsdeck/lib/utils")
-music=include("nornsdeck/lib/music")
-timeauthority_=include("nornsdeck/lib/timeauthority")
+include("voyage/lib/utils")
+music=include("voyage/lib/music")
+timeauthority_=include("voyage/lib/timeauthority")
 ta=timeauthority_:new()
 lattice=require("lattice")
-midipal_=include("nornsdeck/lib/midipal")
+midipal_=include("voyage/lib/midipal")
 mp=midipal_:new()
 
 e=engine
@@ -19,13 +19,13 @@ last_command=""
 function init()
   audio.level_monitor(0)
 
-  os.execute("mkdir -p /home/we/dust/audio/nornsdeck/")
-  os.execute("cp -u /home/we/dust/code/nornsdeck/data/*.wav /home/we/dust/audio/nornsdeck/")
+  os.execute("mkdir -p /home/we/dust/audio/voyage/")
+  os.execute("cp -u /home/we/dust/code/voyage/data/*.wav /home/we/dust/audio/voyage/")
 
-  local drummer=include("nornsdeck/lib/drummer")
-  local patches_=include("nornsdeck/lib/patches")
+  local drummer=include("voyage/lib/drummer")
+  local patches_=include("voyage/lib/patches")
   local patches=patches_:new()
-  local patches_loaded=patches:load("/home/we/dust/code/nornsdeck/data/default.mtpreset")
+  local patches_loaded=patches:load("/home/we/dust/code/voyage/data/default.mtpreset")
   kick=drummer:new({id=1})
   sd=drummer:new({id=2})
   hh=drummer:new({id=3})
@@ -230,5 +230,5 @@ function beatsync(i,totalbeats)
 end
 
 function wav(s)
-  return "/home/we/dust/audio/nornsdeck/"..s..".wav"
+  return "/home/we/dust/audio/voyage/"..s..".wav"
 end

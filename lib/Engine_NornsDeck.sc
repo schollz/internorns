@@ -36,7 +36,7 @@ Engine_NornsDeck : CroneEngine {
 
         // context.server.sync;
 
-        // bufKeys=Buffer.read(context.server,"/home/we/dust/code/nornsdeck/data/keys.wav",action:{
+        // bufKeys=Buffer.read(context.server,"/home/we/dust/code/voyage/data/keys.wav",action:{
         //     synKeys=Synth("defKeys",[\bufnum,bufKeys],context.xg);
         // });
 
