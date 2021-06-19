@@ -148,13 +148,34 @@ local database={
   {m=131,i="B9",f=15804.264,y={"b9","cb9"}},
 }
 
+local note_lengths={
+  q=4,
+  h=8,
+  w=16,
+  e=1,
+}
+
 function music.to_midi(s,midi_near)
+  -- capture note length
+  -- e.g. "eb|qq" = "eb|h"
+  local note_len=0
+  if string.find(s,"|") then
+    local foo = string.split(s,"|")
+    s=foo[1]
+    local notelens=foo[2]
+    for i=1,#notelens do
+      local c=notelens:sub(i,i)
+      if note_lengths[c]~=nil then
+        note_len=note_len+note_lengths[c]
+      end
+    end
+  end
   if string.lower(string.sub(s,1,1))==string.sub(s,1,1) then
     -- lowercase, assume it is a note
-    return music.note_to_midi(s,midi_near)
+    return music.note_to_midi(s,midi_near),note_len
   else
     -- uppercase, assume it is a chord
-    return music.chord_to_midi(s,midi_near)
+    return music.chord_to_midi(s,midi_near),note_len
   end
 end
 
