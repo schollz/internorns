@@ -158,7 +158,8 @@ function TA:sound(s,ctx,ctxoff)
     for i,v in ipairs(toadd) do
       ray[v.pos]=v.cmd..ray[v.pos]
     end
-    table.insert(rays,ray)end
+    table.insert(rays,ray)
+  end
   
   if #rays==1 then
     return rays[1]
