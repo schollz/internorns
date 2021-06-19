@@ -160,7 +160,7 @@ function music.to_midi(s,midi_near)
   -- e.g. "eb|qq" = "eb|h"
   local note_len=0
   if string.find(s,"|") then
-    local foo = string.split(s,"|")
+    local foo=string.split(s,"|")
     s=foo[1]
     local notelens=foo[2]
     for i=1,#notelens do
