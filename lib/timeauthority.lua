@@ -102,113 +102,64 @@ function TA:expand(s,n)
   end
 end
 
--- rc runs any code, even stupid code
-function rc(code)
-  local ok,f=pcall(load(code))
-  if ok then
-    if f~=nil then
-      f()
-    end
-  else
-    print(string.format("rc: could not run '%s': %s",code,f))
-  end
-end
 
--- returns an euclidean spaced array of "item"
-function er(item,num,size)
-  if size==nil then
-    size=16
-  end
-  if num==nil then
-	  num=item
-item="1"
-  end
-  local ray={}
-  local bucket=0
-  for i=1,size do
-    ray[size+1-i]=""
-    bucket=bucket+num
-    if bucket>=size then
-      bucket=bucket-size
-      ray[size+1-i]=item
-    end
-  end
-  return ray
-end
-
-
--- adds two arrays
-function er_add(t,t2)
-  local t3={}
-  for i,v1 in ipairs(t) do
-    local v2=t2[i]
-    if v1~="" then
-      table.insert(t3,v1)
-    else
-      table.insert(t3,v2)
-    end
-  end
-  return t3
-end
-
--- subtract two arrays
-function er_sub(t,t2)
-  local t3={}
-  for i,v1 in ipairs(t) do
-    local v2=t2[i]
-    if v1~="" and v2~="" then
-      table.insert(t3,"")
-    else
-      table.insert(t3,v1)
-    end
-  end
-  return t3
-end
-
--- rotates an array by amt
-function rot(t,amt)
-  local rotated={}
-  for i=#t-amt+1,#t do
-    table.insert(rotated,t[i])
-  end
-  for i=1,#t-amt do
-    table.insert(rotated,t[i])
-  end
-  return rotated
-end
-
-
-function sound(s,ctx)
+function TA:sound(s,ctx,ctxoff)
   local rays={}
   local lines=string.split(s,";")
   for i,line in ipairs(lines) do
     local words=string.split(line," ")
     local ray=er("-",#words)
     local cmds={}
+    local cmdsoff={}
+    local last_midi=nil
     for j,word in ipairs(words) do
       local cmd=""
+      local cmdoff={}
       if word~="." then
-        local notes=music.to_midi(word)
-        for _,note in ipairs(notes) do
+        local notes,note_len=music.to_midi(word,last_midi)
+        for ni,note in ipairs(notes) do
+          last_midi=note.m
           for _,ctxn in ipairs({"m","v","f","n"}) do
             if string.find(ctx,"<"..ctxn..">") then
               cmd=cmd..ctx:gsub("<"..ctxn..">",note[ctxn])..";"
+              if ni==1 and note_len>0 and ctxoff ~= nil then
+                cmdoff={cmd=ctxoff:gsub("<"..ctxn..">",note[ctxn])..";",offset=note_len}
+              end
             end
           end
         end
       end
       table.insert(cmds,cmd)
-
+      table.insert(cmdsoff,cmdoff)
     end
     local k=1
     for j,rayw in ipairs(ray) do
-      if rayw=="-" then
+      if rayw~="" then
         ray[j]=cmds[k]
         k=k+1
       end
     end
-    table.insert(rays,ray)
-  end
+    local k=0
+    local toadd={}
+    for j,rayw in ipairs(ray) do
+      if rayw~="" then
+        k=k+1
+        if cmdsoff[k]~=nil and cmdsoff[k].cmd~=nil then
+          local m=cmdsoff[k].offset+j
+          if m<16 then
+            if ray[m]~="" then
+              ray[m]=";"..ray[m]
+            end
+            table.insert(toadd,{pos=m,cmd=cmdsoff[k].cmd})
+          end
+        end
+      end
+    end
+    for i,v in ipairs(toadd) do
+      ray[v.pos]=v.cmd..ray[v.pos]
+    end
+    table.insert(rays,ray)end
+  
   if #rays==1 then
     return rays[1]
   else

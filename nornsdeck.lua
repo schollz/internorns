@@ -129,7 +129,7 @@ end
 
 function play(name,notes,i)
   if name=="crow" then
-    ta:add(name,sound(notes,'crow.output[1].volts=<v>;crow.output[2]()'),i)
+    ta:add(name,ta:sound(notes,'crow.output[1].volts=<v>;crow.output[2]()'),i)
   elseif name=="kick" or name=="hh" or name=="clap" or name=="sd" or name=="oh" then
     for i,v in ipairs(notes) do
       if v~="" then
@@ -138,7 +138,7 @@ function play(name,notes,i)
     end
     ta:add(name,notes,i)
   elseif mp:ismidi(name) then
-    ta:add(name,sound(notes,"mp:on('"..name.."',<m>,<sn>)"),i)
+    ta:add(name,ta:sound(notes,"mp:on('"..name.."',<m>,<sn>)","mp:off('"..name.."',-1)"),i)
   else
     ta:add(name,notes,i)
   end
@@ -169,6 +169,19 @@ function tapestart()
 end
 
 function arp(s,num)
+  local t=string.split(s)
+  if num==nil then
+    num=16
+  end
+  local t2={}
+  local tlen=#t
+  for i=1,num do
+    table.insert(t2,t[(i-1)%tlen+1])
+  end
+  return table.concat(t2," ")
+end
+
+function arpr(s,num)
   local t=string.split(s)
   if num==nil then
     num=16

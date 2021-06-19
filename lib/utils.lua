@@ -66,4 +66,81 @@ function table.print(t)
   end
 end
 
+
+
+-- rc runs any code, even stupid code
+function rc(code)
+  local ok,f=pcall(load(code))
+  if ok then
+    if f~=nil then
+      f()
+    end
+  else
+    print(string.format("rc: could not run '%s': %s",code,f))
+  end
+end
+
+-- returns an euclidean spaced array of "item"
+function er(item,num,size)
+  if size==nil then
+    size=16
+  end
+  if num==nil then
+    num=item
+    item="1"
+  end
+  local ray={}
+  local bucket=0
+  for i=1,size do
+    ray[size+1-i]=""
+    bucket=bucket+num
+    if bucket>=size then
+      bucket=bucket-size
+      ray[size+1-i]=item
+    end
+  end
+  return ray
+end
+
+
+-- adds two arrays
+function er_add(t,t2)
+  local t3={}
+  for i,v1 in ipairs(t) do
+    local v2=t2[i]
+    if v1~="" then
+      table.insert(t3,v1)
+    else
+      table.insert(t3,v2)
+    end
+  end
+  return t3
+end
+
+-- subtract two arrays
+function er_sub(t,t2)
+  local t3={}
+  for i,v1 in ipairs(t) do
+    local v2=t2[i]
+    if v1~="" and v2~="" then
+      table.insert(t3,"")
+    else
+      table.insert(t3,v1)
+    end
+  end
+  return t3
+end
+
+-- rotates an array by amt
+function rot(t,amt)
+  local rotated={}
+  for i=#t-amt+1,#t do
+    table.insert(rotated,t[i])
+  end
+  for i=1,#t-amt do
+    table.insert(rotated,t[i])
+  end
+  return rotated
+end
+
 --table.print(string.wrap("this is a long sentence",3))
