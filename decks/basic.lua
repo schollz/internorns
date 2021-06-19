@@ -94,7 +94,7 @@ e.pan(1,0)
 -- set position every measure
 play("closer",er("e.pos(1,13/28)",1),1)
 play("closerpan",er("e.pan(1,lfo(6,-0.5,0.5))",8),1)
--- set position every 8 measures
+-- set position every 16 measures
 expand("closer",16)
 stop("closer")
 
@@ -105,7 +105,7 @@ e.wav(2,wav("120_1"))
 e.rate(2,clock.get_tempo()/120)
 -- beatsync(<id>,<num>) keeps sample containing <num> beats in sync
 beatsync(2,8)
--- e.bamp(<id>,<vol>) raises volume
+-- e.amp(<id>,<vol>) raises volume
 e.amp(2,0.4)
 -- e.pan(<id>,<pan>) will pan
 e.pan(2,0.3)
