@@ -126,7 +126,7 @@ Engine_NornsDeck : CroneEngine {
             endB=Latch.kr(end,1-aOrB);
             resetB=Latch.kr(reset,1-aOrB);
             crossfade=Lag.ar(K2A.ar(aOrB),0.05);
-            amp=Lag.kr(amp,4);
+            amp=Lag.kr(amp,8);
 
 
             rate = rate*BufRateScale.kr(bufnum);

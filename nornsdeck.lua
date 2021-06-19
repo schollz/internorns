@@ -193,6 +193,30 @@ function arpr(s,num)
   return table.concat(t2," ")
 end
 
+function carp(s,num)
+  local t=string.split(s)
+  local notearray={}
+  for _, ss in ipairs(t) do
+    local notes=music.to_midi(ss)
+    for _, n in ipairs(notes) do
+      table.insert(notearray,string.lower(n.n))
+    end
+  end
+  return arp(table.concat(notearray," "),num)
+end
+
+function carpr(s,num)
+  local t=string.split(s)
+  local notearray={}
+  for _, ss in ipairs(t) do
+    local notes=music.to_midi(ss)
+    for _, n in ipairs(notes) do
+      table.insert(notearray,string.lower(n.n))
+    end
+  end
+  return arpr(table.concat(notearray," "),num)
+end
+
 function reverse_prob(i,v)
   if v==nil then
     v=0
