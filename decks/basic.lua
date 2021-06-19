@@ -11,16 +11,21 @@
 --------------------------------------------------
 
 norns.script.load("code/nornsdeck/nornsdeck.lua")
+carp("Abm/Eb:4")
+
+play("op1",arp("Abm/Eb:4 Abm/Eb:4 . "),1)
+play("op1",carpr("Abm/Eb:4 Abm/Eb:5"),1)
 
 table.print(ta:sound("Cmaj|q f3|ee","mp:on('op1',<m>,<sn>)","mp:off('op1')"))
 table.print(ta:sound("eb3|q f3|ee","mp:on('op1',<m>,<sn>)"))
 table.print(ta:sound("Cmaj|q f3|ee","mp:on('op1',<m>,<sn>)"))
 play("op1","Cmaj:4",1)
-play("op1","Amin:4",2)
+play("op1","Amin:4",3)
+expand("op1",4)
 play("op1","Cmaj:4|h",1)
 play("op1","Cmaj:4|h",1)
 stop("op1")
-play("op1",arp("c4|e . . c5|e e|e g|e c6|e e|e"),1)
+play("op1",arp("c4 e g"),1)
 print(arp("c4 e4 g4"))
 --------------------------------------------------
 -------------------- nature ----------------------
@@ -58,12 +63,12 @@ play("kick",er_add(er(1),rot(er(1),3)),2)
 
 -- er_sub(<er1>,<er2>) will subtract <er2> from <er1>
 play("hh",er_sub(er(15),er(4)),1)
-play("hhlfo",er("hh.patch.nEnvDcy=lfo(13,90,150)",4),1)
+play("hhlfo",er("hh.patch.nEnvDcy=lfo(13,90,450)",4),1)
 play("clap",rot(er(2),4),1)
 
 -- regular lua commands work
 hh.patch.level=-10
-clap.patch.level=-8
+clap.patch.level=-4
 
 -- stop(<ptn>) will stop pattern named <ptn>
 stop("kick")
@@ -80,7 +85,7 @@ stop("hh")
 -- wav(<name>) loads /home/we/dust/audio/nornsdeck/<name>.wav
 e.wav(1,wav("closer"))
 -- set volume
-e.amp(1,0.4)
+e.amp(1,0.2)
 -- set position (0,1)
 e.pos(1,0.5) 
 -- set position every measure
@@ -94,15 +99,15 @@ e.wav(2,wav("120_1"))
 -- change rate to match bpm
 e.rate(2,clock.get_tempo()/120)
 -- e.bamp(<vol>) raises volume
-e.amp(2,0.25)
+e.amp(2,0.5)
 -- beatsync(<num>) keeps sample containing <num> beats in sync
 beatsync(2,8)
 -- once beat synced, you can do
 -- glitching and reversing:
 -- glitch(<prob>) glitch with probability <prob> (0,1)
-glitch_prob(2,0.01)
+glitch_prob(2,0.15)
 -- reverse(<prob> reverses with probability <prob> (0,1)
-reverse_prob(2,0.01)
+reverse_prob(2,0.05)
 
 -- turn off by setting volume to 0
 e.amp(1,0)
@@ -127,7 +132,7 @@ clock.run(function() clock.sleep(1.5);tapestop();clock.sleep(2.5);tapestart() en
 clock.run(function() clock.sleep(1.5);tapebreak();clock.sleep(1.5);tapebreak() end)
 
 -- clock
-params:set("clock_tempo",60)
+params:set("clock_tempo",120)
 
 
 
@@ -151,6 +156,12 @@ play("op1","Abm/Eb:4",1)
 play("op1","E:4",2)
 play("op1","Gb/Db:4",3)
 play("op1","Ebm:4",4)
+
+-- there are some apecial arrangement functions
+play("op1",arp("ab4 b4 eb4"),1)
+play("op1",arpr("e4 g#4 b4 e5 ."),2)
+play("op1",carp("Gb/Db:4"),3)
+play("op1",carpr("Ebm:4 Ebm:5"),4)
 
 -- play notes on measure 2
 -- notes begin with lowercase letter
