@@ -10,7 +10,7 @@
 print("hello, world")
 
 -- lets load the norns deck
-norns.script.load("code/nornsdeck/nornsdeck.lua")
+norns.script.load("code/voyage/voyage.lua")
 
 -- lets change the tempo to 120
 params:set("clock_tempo",120)
@@ -54,7 +54,7 @@ kick.patch.distAmt=60;
 kick.patch.level=-5;
 clap.patch.level=-2;
 hh.patch.level=-5;
--- more: http://norns.local/maiden/#edit/dust/code/nornsdeck/lib/drummer.lua
+-- more: http://norns.local/maiden/#edit/dust/code/voyage/lib/drummer.lua
 
 -- lets sequence some lua code
 -- "kicklfo" is arbitrary, using er(..) to sequence lua that change the patch
@@ -83,7 +83,7 @@ stop("hh")
 
 -- e = engine, it is quicker to access
 -- e.wav(<bufnum>,<file>) loads <file> into <bufnum>
--- wav(<name>) loads /home/we/dust/audio/nornsdeck/<name>.wav
+-- wav(<name>) loads /home/we/dust/audio/voyage/<name>.wav
 e.wav(1,wav("closer"))
 -- e.amp(<id>,<vol>) sets volume
 e.amp(1,0.5)

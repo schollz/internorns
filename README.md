@@ -1,4 +1,4 @@
-## nornsdeck
+## voyage
 
 a cyberdeck to use norns from vim.
 
@@ -55,5 +55,5 @@ now whenever you use the key combo <kbd>ctl</kbd>+<kbd>c</kbd> it will send the 
 ### Install
 
 ```
-;install https://github.com/schollz/nornsdeck
+;install https://github.com/schollz/voyage
 ```
