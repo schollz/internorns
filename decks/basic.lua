@@ -86,7 +86,7 @@ stop("hh")
 -- wav(<name>) loads /home/we/dust/audio/voyage/<name>.wav
 e.wav(1,wav("closer"))
 -- e.amp(<id>,<vol>) sets volume
-e.amp(1,0.5)
+e.amp(1,1.2)
 -- e.pos(<id>,<pos>) sets position (in [0,1])
 e.pos(1,13/28) 
 -- e.pan(<id>,<pan>) sets pan (in [-1,1])
@@ -100,15 +100,15 @@ stop("closer")
 
 -- one sample can be "quantized" and with glitch and reverse fx
 -- e.wav(<id>,<filename>)
-e.wav(2,wav("120_1")) 
+e.wav(2,wav("120_4")) 
 -- e.rate(<id>,<rate>), can change rate to match bpm
 e.rate(2,clock.get_tempo()/120)
 -- beatsync(<id>,<num>) keeps sample containing <num> beats in sync
 beatsync(2,8)
 -- e.amp(<id>,<vol>) raises volume
-e.amp(2,0.4)
+e.amp(2,0.6)
 -- e.pan(<id>,<pan>) will pan
-e.pan(2,0.3)
+e.pan(2,0.0)
 
 -- once beat synced, you can do
 -- glitching and reversing:
@@ -153,8 +153,8 @@ params:set("clock_tempo",120)
 
 -- cclfo(<name>,<cc>,<period>,<slo>,<shi>) sets a lfo on a cc value <cc>
 -- with sine lfo with period <period> oscillating between <slo> and <shi>
-cclfo("op1",1,11,40,60)
-cclfo("op1",4,13,10,60)
+cclfo("op1",1,7,50,80)
+cclfo("op1",4,7.1,10,70)
 
 -- play chord on measures 1 and 4
 -- chords begin with uppercase letter and ":<octave>" denotes octave
@@ -213,12 +213,66 @@ stop("crow")
 
 -- quick tuning!
 -- this loads the tuner and sets the volts to 1
+norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3; 
 
-norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3; crow.output[2].action="{ to(10,0),to(0,0.07) }"; crow.output[2]()
+
+
+params:set("clock_tempo",125)
+
+stop("op1")
+play("op1","Dm",1)
+play("op1","Am:3",2)
+play("op1","Bb:3",3)
+play("op1","C Am/C",4)
+cclfo("op1",1,7,30,60)
+cclfo("op1",4,7.1,10,60)
+
+stop("op1")
+crow.output[2].action="{ to(10,0.5),to(0.0,1.0) }";
+stop("crow")
+play("crow","f4 f4 . f4 f4 . .",1)
+play("crow","e4 e4 f d d . .",2)
+play("crow","g4 g4 f . .",3)
+play("crow","e4 e4 f  e e . .",4)
+play("crow","f4 f4 . f4 f4 . .",5)
+play("crow","e4 e4 f d d . .",6)
+play("crow","f4 g4",7)
+play("crow","a4 a4",8)
+crow.output[2].action="{ to(10,0.0),to(0,0.06) }";
+stop("crow"); play("crow",arp("a4 a4 a4"),1)
 
 
 stop("usb")
-play("usb",arpr("ab3 ab1 ab1 ab1 eb2 eb2 . . . "),1)
-play("usb",arpr("b3 b2 e1 b2 ."),2)
-play("usb",arpr("gb2 gb1 gb3 db"),3)
-play("usb",arpr("eb3 eb1 eb2 bb3 eb1 . "),4)
+play("usb","d1 d1 a1 d d d1 a1 d",1)
+play("usb","a1 a1 e1 a a e1 a1 e",2)
+play("usb","bb1 bb f1 bb bb bb1 f1 bb",3)
+play("usb","c1 c g c c a c1 a",4)
+stop("usb")
+play("usb",arpr("d2 a2 ."),1)
+play("usb",arpr("a2 e2 a2 e1 f4 ."),2)
+play("usb",arpr("bb2 bb2 bb2 bb2 f4 d3 ."),3)
+play("usb",arpr("a3 e4 c2 c1 g4 ."),4)
+
+
+
+-- one sample can be "quantized" and with glitch and reverse fx
+-- e.wav(<id>,<filename>)
+e.wav(2,wav("120_3")) 
+-- e.rate(<id>,<rate>), can change rate to match bpm
+e.rate(2,clock.get_tempo()/120)
+-- beatsync(<id>,<num>) keeps sample containing <num> beats in sync
+beatsync(2,8)
+-- e.amp(<id>,<vol>) raises volume
+e.amp(2,0.8)
+-- e.pan(<id>,<pan>) will pan
+e.pan(2,0.0)
+
+-- once beat synced, you can do
+-- glitching and reversing:
+-- glitch(<prob>) glitch with probability <prob> (0,1)
+glitch_prob(2,0.05)
+-- reverse(<prob> reverses with probability <prob> (0,1)
+reverse_prob(2,0.05)
+
+
+
