@@ -212,67 +212,30 @@ stop("crow"); play("crow",arpr("ab4 eb5 ab5"),1)
 stop("crow")
 
 -- quick tuning!
--- this loads the tuner and sets the volts to 1
+-- this loads the tuner and sets the volts to 3 (A3)
 norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3; 
 
 
+--------------------------------------------------
+-------------------- oooooo ----------------------
+--------------------------------------------------
 
-params:set("clock_tempo",125)
+-- you can use ooooooo with commands
+-- use the norns params menu to change characteristics of loops 
+-- (e.g. pan, volume, lfos, etc.)
 
-stop("op1")
-play("op1","Dm",1)
-play("op1","Am:3",2)
-play("op1","Bb:3",3)
-play("op1","C Am/C",4)
-cclfo("op1",1,7,30,60)
-cclfo("op1",4,7.1,10,60)
+tape_rec(1) -- records into loop 1
+-- note: recording stops when reaching end of loop (set in `PARMS > startup`)
+--       or recording stops when tape_stop(..) or tape_play(..) activated
+tape_arm_rec(1) -- arms recording for loop 1 (recording activated with sound)
 
-stop("op1")
-crow.output[2].action="{ to(10,0.5),to(0.0,1.0) }";
-stop("crow")
-play("crow","f4 f4 . f4 f4 . .",1)
-play("crow","e4 e4 f d d . .",2)
-play("crow","g4 g4 f . .",3)
-play("crow","e4 e4 f  e e . .",4)
-play("crow","f4 f4 . f4 f4 . .",5)
-play("crow","e4 e4 f d d . .",6)
-play("crow","f4 g4",7)
-play("crow","a4 a4",8)
-crow.output[2].action="{ to(10,0.0),to(0,0.06) }";
-stop("crow"); play("crow",arp("a4 a4 a4"),1)
+tape_stop(1) -- stops loop 1
+tape_play(1) -- plays loop 1 from where it stopped
 
+tape_clear(1) -- clears loop 1 entirely
 
-stop("usb")
-play("usb","d1 d1 a1 d d d1 a1 d",1)
-play("usb","a1 a1 e1 a a e1 a1 e",2)
-play("usb","bb1 bb f1 bb bb bb1 f1 bb",3)
-play("usb","c1 c g c c a c1 a",4)
-stop("usb")
-play("usb",arpr("d2 a2 ."),1)
-play("usb",arpr("a2 e2 a2 e1 f4 ."),2)
-play("usb",arpr("bb2 bb2 bb2 bb2 f4 d3 ."),3)
-play("usb",arpr("a3 e4 c2 c1 g4 ."),4)
+tape_reset(1) -- resets loop 1 to beginning
 
+clock.run(function() tape_clear(1); tape_reset(1); tape_rec(1); clock.sleep(2); tape_play(1) end)
 
-
--- one sample can be "quantized" and with glitch and reverse fx
--- e.wav(<id>,<filename>)
-e.wav(2,wav("120_3")) 
--- e.rate(<id>,<rate>), can change rate to match bpm
-e.rate(2,clock.get_tempo()/120)
--- beatsync(<id>,<num>) keeps sample containing <num> beats in sync
-beatsync(2,8)
--- e.amp(<id>,<vol>) raises volume
-e.amp(2,0.8)
--- e.pan(<id>,<pan>) will pan
-e.pan(2,0.0)
-
--- once beat synced, you can do
--- glitching and reversing:
--- glitch(<prob>) glitch with probability <prob> (0,1)
-glitch_prob(2,0.05)
--- reverse(<prob> reverses with probability <prob> (0,1)
-reverse_prob(2,0.05)
-
-
-
+-- of course you change loop 1 to any number between 1 and 6....
