@@ -1,29 +1,33 @@
-## voyage
+# voyage
 
-a cyberdeck to use norns from vim.
+a live-coding environment for norns.
 
-
-### Requirements
+## Requirements
 
 - norns
 
-### Documentation
+## Documentation
 
-First you can choose an editor.
+1. first you can choose an editor - maiden, visual studio code, and vim are all great options.
 
-#### maiden
+2. then open up `~/dust/code/voyage/decks/basic.lua` and follow the tutorial.
+
+3. then code your own deck!
+
+
+### maiden
 
 open up a webbrowser to [norns.local/maiden/#edit/dust/code/voyage/decks/basic.lua](norns.local/maiden/#edit/dust/code/voyage/decks/basic.lua).
 
 you can select any code and press <kbd>ctl</kbd>+<kbd>enter</kdb> to send that code to the norns.
 
-#### visual studio code
+### visual studio code
 
 [download visual studio code](https://code.visualstudio.com/) and then install [the Norns REPL extension](https://llllllll.co/t/norns-repl-vscode-extension/41382). use software like [sftp drive](https://www.nsoftware.com/sftp/drive/) to mount your norns on your computer. then you can directly edit `~/dust/code/voyage/decks/basic.lua`. 
 
 press <kbd>ctl</kbd>+<kbd>enter</kdb> to send the current line to the norns.
 
-#### vim
+### vim
 
 lines from a norns script can be quickly and easily run using vim.
 
