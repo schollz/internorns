@@ -16,9 +16,10 @@
 local plonky=include("plonky/lib/plonky")
 local shift=false
 local arplatch=0
+include("voyage/lib/voyage")
 
 function init()
-  mg=plonky:new({grid_on=true,toggleable=true})
+  mg=plonky:new({grid_on=true,toggleable=false})
 
   drawing=metro.init()
   drawing.time=0.1
@@ -33,6 +34,9 @@ function init()
       mg:reset_toggles()
     end,
   })
+
+  mg:update_engine("MxVoyage")
+  voyage_init()
 end
 
 

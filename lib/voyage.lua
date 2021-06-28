@@ -1,5 +1,3 @@
-engine.name="MxVoyage"
-
 -- this order matters
 include("voyage/lib/utils")
 music=include("voyage/lib/music")
