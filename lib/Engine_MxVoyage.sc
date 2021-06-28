@@ -76,6 +76,7 @@ Engine_MxVoyage : CroneEngine {
 		this.addCommand("mxsamplesvoicenum","i", { arg msg;
 			if (msg[1]<mxsamplesVoices,{
 				(msg[1]..(mxsamplesVoices-1)).do({arg i;
+					("releasing voice "++i).postln;
 					samplerPlayerMxSamples[i].free;
 				});
 			},{});
