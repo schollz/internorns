@@ -36,6 +36,7 @@ function init()
   })
 
   mg:update_engine("MxVoyage")
+  mg.mx:max_voices(10)
   voyage_init()
 end
 
