@@ -144,3 +144,9 @@ function rot(t,amt)
 end
 
 --table.print(string.wrap("this is a long sentence",3))
+--
+
+function rerun()
+  norns.script.load(norns.state.script)
+end
+
