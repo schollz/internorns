@@ -1,19 +1,10 @@
-local tape={}
+local tape={bnds={0,0,90,90,180,180,270,270}}
 
 function tape:new(o)
   o=o or {}
   setmetatable(o,self)
   self.__index=self
-  o.midis={}
-  o.names={}
-  for _,dev in pairs(midi.devices) do
-    local name=string.lower(dev.name)
-    name=name:gsub("-","")
-    table.insert(o.names,name)
-    print("connected to "..name)
-    o.midis[name]={notes={}}
-    o.midis[name].conn=midi.connect(dev.port)
-  end
+  self:reset()
   return o
 end
 
@@ -41,8 +32,9 @@ function tape:reset()
     softcut.rec(i,1)
     softcut.play(i,1)
     softcut.rate(i,1)
-    softcut.loop_start(i,loop_start)
-    softcut.loop_end(i,loop_start+loop_length)
+    softcut.loop_start(i,self.bnds[i])
+    softcut.loop_end(i,self.bnds[i+2])
+    softcut.position(i,self.bnds[i])
     softcut.loop(i,1)
 
     softcut.level_slew_time(i,0.4)
@@ -50,7 +42,6 @@ function tape:reset()
 
     softcut.rec_level(i,0.0)
     softcut.pre_level(i,1.0)
-    softcut.position(i,loop_start)
     softcut.phase_quant(i,0.025)
 
     softcut.post_filter_dry(i,0.0)
@@ -64,53 +55,5 @@ function tape:reset()
     softcut.pre_filter_fc(i,20000)
   end
 end
-
-
-function tape:ismidi(name)
-  for k,v in pairs(self.midis) do
-    if string.find(k,name) then
-      do return true end
-    end
-  end
-  return false
-end
-
-function tape:on(name,note,r)
-  for k,v in pairs(self.midis) do
-    if string.find(k,name) then
-      -- turn off all previous notes
-      self:off(k,r)
-      -- turn on
-      print(name.." playing "..note)
-      self.midis[k].conn:note_on(note,127)
-      self.midis[k].notes[note]=r
-    end
-  end
-end
-
-function tape:cc(name,cc,val)
-  for k,v in pairs(self.midis) do
-    if string.find(k,name) then
-      print("sending cc to "..k)
-      self.midis[k].conn:cc(cc,math.floor(val))
-    end
-  end
-end
-
-function tape:off(name,r)
-  for k,v in pairs(self.midis) do
-    if string.find(k,name) then
-      local devname=k
-      for note,noter in pairs(self.midis[devname].notes) do
-        if noter~=r then
-          print(name.." stopping "..note)
-          self.midis[devname].conn:note_off(note)
-          self.midis[devname].notes[note]=nil
-        end
-      end
-    end
-  end
-end
-
 
 return tape
