@@ -1,4 +1,4 @@
--- voyage + plonky v1.3.0
+-- plonky v1.4.0
 -- keyboard + sequencer
 --
 -- llllllll.co/t/plonky
@@ -12,7 +12,7 @@
 -- k2 or k3 plays pattern
 -- (e2 or e3) changes latch/arp
 
-include("voyage/lib/voyage")
+
 local plonky=include("plonky/lib/plonky")
 local shift=false
 local arplatch=0
@@ -33,8 +33,6 @@ function init()
       mg:reset_toggles()
     end,
   })
-
-  voyage_init()
 end
 
 
@@ -183,26 +181,26 @@ end
 
 -- from https://github.com/tlubke/shapes/blob/049b6ef68dd80c04e2181ef349afee2939784fe5/shapes.lua
 function clone_function(fn)
-  local dumped = string.dump(fn)
-  local cloned = load(dumped)
-  local i = 1
+  local dumped=string.dump(fn)
+  local cloned=load(dumped)
+  local i=1
   while true do
-    local name = debug.getupvalue(fn, i)
+    local name=debug.getupvalue(fn,i)
     if not name then
       break
     end
-    debug.upvaluejoin(cloned, i, fn, i)
-    i = i + 1
+    debug.upvaluejoin(cloned,i,fn,i)
+    i=i+1
   end
   return cloned
 end
 
 function inject_param_method_extensions(pset,fns)
   -- extend paramset:write()
-  if pset.write2 == nil then
-    pset.write2 = clone_function(pset.write)
-    pset.write = function(paramset, filename, name)
-      pset:write2(filename, name)
+  if pset.write2==nil then
+    pset.write2=clone_function(pset.write)
+    pset.write=function(paramset,filename,name)
+      pset:write2(filename,name)
       if fns.write~=nil then
         fns.write(filename,name)
       end
@@ -210,11 +208,11 @@ function inject_param_method_extensions(pset,fns)
   end
 
   -- extend paramset:read()
-  if pset.read2 == nil then
-    pset.read2 = clone_function(pset.read)
-    pset.read = function(paramset, filename) 
+  if pset.read2==nil then
+    pset.read2=clone_function(pset.read)
+    pset.read=function(paramset,filename)
       pset:read2(filename)
-      if fns.read ~= nil then 
+      if fns.read~=nil then
         fns.read(filename,name)
       end
     end
@@ -223,15 +221,15 @@ end
 
 function uninject_param_method_extensions(pset)
   -- reverse paramset:write() extension
-  if pset.write2 ~= nil then
-    pset.write  = clone_function(pset.write2)
-    pset.write2 = nil
+  if pset.write2~=nil then
+    pset.write=clone_function(pset.write2)
+    pset.write2=nil
   end
 
   -- reverse paramset:read() extension
-  if pset.read2 ~= nil then
-    pset.read   = clone_function(pset.read2)
-    pset.read2  = nil
+  if pset.read2~=nil then
+    pset.read=clone_function(pset.read2)
+    pset.read2=nil
   end
 end
 
