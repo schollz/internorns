@@ -129,19 +129,16 @@ e.amp(2,0)
 -- "all tape" is a special utility that keeps a 
 -- buffer of everything and can do tape breaks/stops/starts
 
--- tape stop
+-- all stop in a stylish way
 allstop()
--- tape start (run after stop)
+-- all start, after running all stop
 allstart()
--- tape break (run twice to get normal)
+-- all break breaks everything
 allbreak()
 
 -- put them together
 clock.run(function() clock.sleep(1.5);allstop();clock.sleep(2.5);allstart() end)
 clock.run(function() clock.sleep(1.5);allbreak();clock.sleep(1.5);allbreak() end)
-
--- clock
-params:set("clock_tempo",120)
 
 
 
@@ -221,35 +218,48 @@ norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3;
 --------------------- tape -----------------------
 --------------------------------------------------
 
-norns.script.load("code/voyage/voyage.lua")
+-- tape is a shim for softcut
+-- tape makes it simple to quickly allocate up to 
+-- three stereo tapes that record playing audio
 
-play("kick",er(2),1)
-stop("kick")
-play("loopy",er("tape:loop(1,0,lfo(3,0.0,2.0))",4),1)
-stop("loopy")
-
--- tape:start(<tape>) starts the tape
+-- tape:start(<tape>) starts the tape.
+-- <tape> can be 1, 2, or 3
 tape:start(1)
 
 -- tape:stop(<tape>) stops the tape
+-- <tape> can be 1, 2, or 3
 tape:stop(1)
 
--- tape:pan(<tape>,<pan>) changes the pan (-1,1)
+-- tape:pan(<tape>,<pan>) changes the pan
+-- <tape> can be 1, 2, or 3
+-- <pan> is between -1 and 1
 tape:pan(1,1)
 
 -- tape:rate(<tape>,<rate>) changes the rate
+-- <tape> can be 1, 2, or 3
+-- <rate> can be from -? to +?
 tape:rate(1,1)
 
 -- tape:level(<tape>,<level>) changes the rate
+-- <tape> can be 1, 2, or 3
+-- <level> can be from 0 to 1
 tape:level(1,1)
 
 -- tape:slew(<tape>,<slew>) changes the slew of rate/level
+-- <tape> can be 1, 2, or 3
+-- <slew> can be from 0 to 10
 tape:slew(1,4)
 
 -- tape:rec(<tape>,<rec_level>,<pre_level>) activates recording
 -- which will record at level <rec_leve> and keep previous material
--- at <pre_level
+-- at <pre_level>
+-- both levels can be from 0 to 1
 tape:rec(1,1,0.5)
+
+-- tape:rec(<tape>,<loop_end>,<loop_end>) creates a loop between
+-- <loop_start> and <loop_end> (denoted in seconds). 
+-- both points can be between 0 and 90 (90-second max)
+tape:loop(1,0,2) -- a two-second loop on tape 1
 
 -- example:
 -- a delay!
@@ -257,7 +267,7 @@ tape:start(1);tape:loop(1,0,clock.get_beat_sec()/2);tape:rec(1,1,0.2);
 tape:pan(1,0)
 tape:stop(1)
 
--- another delay!
-tape:start(2);tape:loop(2,0,clock.get_beat_sec()/4);tape:rec(2,1,0.05);
-tape:stop(2)
+-- you can add lfos to the loops easily
+play("loopy",er("tape:loop(1,0,lfo(3,0.0,2.0))",4),1)
+stop("loopy")
 
