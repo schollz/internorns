@@ -85,12 +85,20 @@ stop("hh")
 -- e.wav(<bufnum>,<file>) loads <file> into <bufnum>
 -- wav(<name>) loads /home/we/dust/audio/voyage/<name>.wav
 e.wav(1,wav("closer"))
+sample.open(1,"closer")
+
 -- e.amp(<id>,<vol>) sets volume
 e.amp(1,1.2)
+sample.level(1,1.2)
+
 -- e.pos(<id>,<pos>) sets position (in [0,1])
 e.pos(1,13/28) 
+sample.pos(1,13/28)
+
 -- e.pan(<id>,<pan>) sets pan (in [-1,1])
 e.pan(1,0) 
+sample.pan(1,0)
+
 -- set position every measure
 play("closer",er("e.pos(1,13/28)",1),1)
 play("closerpan",er("e.pan(1,lfo(6,-0.5,0.5))",8),1)
@@ -104,7 +112,7 @@ e.wav(2,wav("120_4"))
 -- e.rate(<id>,<rate>), can change rate to match bpm
 e.rate(2,clock.get_tempo()/120)
 -- beatsync(<id>,<num>) keeps sample containing <num> beats in sync
-beatsync(2,8)
+sample.sync(2,8)
 -- e.amp(<id>,<vol>) raises volume
 e.amp(2,0.6)
 -- e.pan(<id>,<pan>) will pan
@@ -113,9 +121,9 @@ e.pan(2,0.0)
 -- once beat synced, you can do
 -- glitching and reversing:
 -- glitch(<prob>) glitch with probability <prob> (0,1)
-glitch_prob(2,0.02)
+sample.glitch(2,0.02)
 -- reverse(<prob> reverses with probability <prob> (0,1)
-reverse_prob(2,0.05)
+sample.reverse(2,0.05)
 
 -- e.amp(<id>,<vol>) lets you turn on/off the sound
 e.amp(1,0)

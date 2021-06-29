@@ -27,7 +27,7 @@ function play(name,notes,i)
     ta:add(name,ta:sound(notes,'crow.output[1].volts=<v>;crow.output[2]()'),i)
   elseif string.sub(name,1,3)=="mx/" then
     print(name)
-    local foo = string.split(name,"/")
+    local foo=string.split(name,"/")
     if foo[3]==nil then
       foo[3]=""
     else
@@ -35,7 +35,7 @@ function play(name,notes,i)
     end
     ta:add(foo[2],ta:sound(notes,
       "mg.mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})",
-      "mg.mx:off({name='"..foo[2].."',midi=<m>})"),i)
+    "mg.mx:off({name='"..foo[2].."',midi=<m>})"),i)
   elseif name=="kick" or name=="hh" or name=="clap" or name=="sd" or name=="oh" then
     for i,v in ipairs(notes) do
       if v~="" then
@@ -55,7 +55,7 @@ function stop(name)
     mp:off(name,-1)
   end
   if string.sub(name,1,3)=="mx/" then
-    local foo = string.split(name,"/")
+    local foo=string.split(name,"/")
     name=foo[2]
   end
   ta:rm(name)
@@ -106,9 +106,9 @@ end
 function carp(s,num)
   local t=string.split(s)
   local notearray={}
-  for _, ss in ipairs(t) do
+  for _,ss in ipairs(t) do
     local notes=music.to_midi(ss)
-    for _, n in ipairs(notes) do
+    for _,n in ipairs(notes) do
       table.insert(notearray,string.lower(n.n))
     end
   end
@@ -118,31 +118,53 @@ end
 function carpr(s,num)
   local t=string.split(s)
   local notearray={}
-  for _, ss in ipairs(t) do
+  for _,ss in ipairs(t) do
     local notes=music.to_midi(ss)
-    for _, n in ipairs(notes) do
+    for _,n in ipairs(notes) do
       table.insert(notearray,string.lower(n.n))
     end
   end
   return arpr(table.concat(notearray," "),num)
 end
 
-function reverse_prob(i,v)
+
+
+sample={}
+
+function sample.pos(i,v)
+  engine.pos(i,v)
+end
+
+function sample.level(i,v)
+  engine.amp(i,v)
+end
+
+function sample.open(i,v)
+  engine.wav(i,wav(v))
+end
+function sample.pan(i,v)
+  engine.pan(i,v)
+end
+
+function sample.rate(i,v)
+  engine.rate(i,v)
+end
+
+function sample.sync(i,totalbeats)
+  local v=totalbeats*4
+  ta:add("bb",er("if math.random()<0.5 then engine.pos("..i..",(<sn>-1)%"..v.."/"..v..") end",4),1)
+end
+
+function sample.reverse(i,v)
   if v==nil then
     v=0
   end
   play("bbr",er("if math.random()<"..v.." then engine.reverse("..i..",1) end",5))
 end
 
-function glitch_prob(i,v)
+function sample.glitch(i,v)
   if v==nil then
     v=0
   end
   ta:add("bbb",er("if math.random()<"..v.." then; v=math.random(); engine.loop("..i..",v,v+math.random()/40+0.01) end",4),1)
-end
-
-
-function beatsync(i,totalbeats)
-  local v = totalbeats*4
-  ta:add("bb",er("if math.random()<0.5 then engine.pos("..i..",(<sn>-1)%"..v.."/"..v..") end",4),1)
 end
