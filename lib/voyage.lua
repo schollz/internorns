@@ -1,16 +1,6 @@
--- this order matters
-include("voyage/lib/utils")
-music=include("voyage/lib/music")
-timeauthority_=include("voyage/lib/timeauthority")
-ta=timeauthority_:new()
-lattice=require("lattice")
-midipal_=include("voyage/lib/midipal")
-mp=midipal_:new()
-
-e=engine
-last_command=""
 
 function voyage_init()
+  print("initializing voyage")
   audio.level_monitor(0)
 
   os.execute("mkdir -p /home/we/dust/audio/voyage/")

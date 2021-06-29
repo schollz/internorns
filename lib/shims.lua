@@ -1,3 +1,7 @@
+function wav(s)
+  return "/home/we/dust/audio/voyage/"..s..".wav"
+end
+
 function nature(vol)
   if vol==nil then
     vol=0
@@ -126,8 +130,4 @@ end
 function beatsync(i,totalbeats)
   local v = totalbeats*4
   ta:add("bb",er("if math.random()<0.5 then engine.pos("..i..",(<sn>-1)%"..v.."/"..v..") end",4),1)
-end
-
-function wav(s)
-  return "/home/we/dust/audio/voyage/"..s..".wav"
 end
