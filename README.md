@@ -54,5 +54,8 @@ now whenever you use the key combo <kbd>ctl</kbd>+<kbd>c</kbd> it will send the 
 ### Install
 
 ```
+;install https://github.com/schollz/mx.samples
+;install https://github.com/schollz/plonky
+;install https://github.com/schollz/supertonic
 ;install https://github.com/schollz/voyage
 ```

@@ -26,7 +26,8 @@ ta=timeauthority_:new()
 lattice=require("lattice")
 midipal_=include("voyage/lib/midipal")
 mp=midipal_:new()
-
+tape=include("voyage/lib/tape")
+tape:init()
 e=engine
 last_command=""
 include("voyage/lib/voyage")
