@@ -234,59 +234,65 @@ norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3;
 
 
 --------------------------------------------------
---------------------- tape -----------------------
+---------------------- ooo -----------------------
 --------------------------------------------------
 
--- tape is a shim for softcut
--- tape makes it simple to quickly allocate up to 
--- three stereo tapes that record playing audio
+-- ooo is like oooooo, but only allow three loops,
+-- each 90 seconds, of stereo audio
 
--- tape:start(<tape>) starts the tape.
+-- ooo.start(<tape>) starts the tape.
 -- <tape> can be 1, 2, or 3
-tape:start(1)
+-- will start playing at that last rate (default 1)
+-- if recording is active, it will record
+ooo.start(1)
 
--- tape:stop(<tape>) stops the tape
+-- ooo.stop(<tape>) stops the tape
 -- <tape> can be 1, 2, or 3
-tape:stop(1)
+ooo.stop(1)
 
--- tape:pan(<tape>,<pan>) changes the pan
+-- ooo.pan(<tape>,<pan>) changes the pan
 -- <tape> can be 1, 2, or 3
 -- <pan> is between -1 and 1
-tape:pan(1,1)
+ooo.pan(1,1)
 
--- tape:rate(<tape>,<rate>) changes the rate
+-- ooo.rate(<tape>,<rate>) changes the rate
 -- <tape> can be 1, 2, or 3
 -- <rate> can be from -? to +?
-tape:rate(1,1)
+ooo.rate(1,1)
 
--- tape:level(<tape>,<level>) changes the rate
+-- ooo.level(<tape>,<level>) changes the rate
 -- <tape> can be 1, 2, or 3
 -- <level> can be from 0 to 1
-tape:level(1,1)
+ooo.level(1,1)
 
--- tape:slew(<tape>,<slew>) changes the slew of rate/level
+-- ooo.slew(<tape>,<slew>) changes the slew of rate/level
 -- <tape> can be 1, 2, or 3
 -- <slew> can be from 0 to 10
-tape:slew(1,4)
+ooo.slew(1,4)
 
--- tape:rec(<tape>,<rec_level>,<pre_level>) activates recording
+-- ooo.rec(<tape>,<rec_level>,<pre_level>) activates/deactivates recording
 -- which will record at level <rec_leve> and keep previous material
 -- at <pre_level>
 -- both levels can be from 0 to 1
-tape:rec(1,1,0.5)
+-- example: turn on recording with full overdub
+ooo.rec(1,1,0.0)
+-- example: turn off recording (keeping previous material)
+ooo.rec(1,0,1)
+-- example: record and only keep 50% of the previous recordings
+ooo.rec(1,1,0.5)
 
--- tape:rec(<tape>,<loop_end>,<loop_end>) creates a loop between
+-- ooo.rec(<tape>,<loop_end>,<loop_end>) creates a loop between
 -- <loop_start> and <loop_end> (denoted in seconds). 
 -- both points can be between 0 and 90 (90-second max)
-tape:loop(1,0,2) -- a two-second loop on tape 1
+ooo.loop(1,0,2) -- a two-second loop between timestamps 0 and 2s, on tape 1
 
 -- example:
 -- a delay!
-tape:start(1);tape:loop(1,0,clock.get_beat_sec()/2);tape:rec(1,1,0.1);
-tape:pan(1,0)
-tape:stop(1)
+ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/2);ooo.rec(1,1,0.1);
+ooo.pan(1,0)
+ooo.stop(1)
 
 -- you can add lfos to the loops easily
-play("loopy",er("tape:pan(1,lfo(3.5,-1,1))",4),1)
+play("loopy",er("ooo.pan(1,lfo(3.5,-1,1))",4),1)
 stop("loopy")
 
