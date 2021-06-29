@@ -16,7 +16,22 @@
 local plonky=include("plonky/lib/plonky")
 local shift=false
 local arplatch=0
+
+-- voyage stuff
+-- this order matters
+include("voyage/lib/utils")
+music=include("voyage/lib/music")
+timeauthority_=include("voyage/lib/timeauthority")
+ta=timeauthority_:new()
+lattice=require("lattice")
+midipal_=include("voyage/lib/midipal")
+mp=midipal_:new()
+
+e=engine
+last_command=""
 include("voyage/lib/voyage")
+include("voyage/lib/shims")
+
 
 function init()
   mg=plonky:new({grid_on=true,toggleable=false})
@@ -35,8 +50,10 @@ function init()
     end,
   })
 
-  mg:update_engine("MxVoyage")
-  mg.mx:max_voices(10)
+  clock.run(function()
+    clock.sleep(1)
+    mg:update_engine("MxVoyage")
+  end)
   voyage_init()
 end
 
