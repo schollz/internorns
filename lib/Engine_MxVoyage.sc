@@ -5,7 +5,7 @@ Engine_MxVoyage : CroneEngine {
 
     // MxSamples specific
     var sampleBuffMxSamples;
-    var sampleBuffMxSamplesDelay;
+    // var sampleBuffMxSamplesDelay;
     var mxsamplesMaxVoices=40;
     var mxsamplesVoiceAlloc;
     // MxSamples ^
@@ -38,9 +38,9 @@ Engine_MxVoyage : CroneEngine {
         sampleBuffMxSamples = Array.fill(80, { arg i; 
             Buffer.new(context.server);
         });
-        sampleBuffMxSamplesDelay = Array.fill(mxsamplesMaxVoices, { arg i; 
-            Buffer.alloc(context.server,48000,2);
-        });
+        // sampleBuffMxSamplesDelay = Array.fill(mxsamplesMaxVoices, { arg i; 
+        //     Buffer.alloc(context.server,48000,2);
+        // });
 
         SynthDef("mxPlayer",{ 
                 arg bufnum,bufnumDelay, amp, t_trig=0,envgate=1,name=1,
@@ -67,21 +67,15 @@ Engine_MxVoyage : CroneEngine {
                     startPos: ((sampleEnd*(rate<0))*BufFrames.kr(bufnum))+(sampleStart/1000*48000),
                     trigger:t_trig,
                 );
-                snd = LPF.ar(snd,lpf);
-                snd = HPF.ar(snd,hpf);
-                snd = Mix.ar([
-                    Pan2.ar(snd[0],-1+(2*pan),amp),
-                    Pan2.ar(snd[1],1+(2*pan),amp),
-                ]);
+                // snd = LPF.ar(snd,lpf);
+                // snd = HPF.ar(snd,hpf);
+                // snd = Mix.ar([
+                //     Pan2.ar(snd[0],-1+(2*pan),amp),
+                //     Pan2.ar(snd[1],1+(2*pan),amp),
+                // ]);
                 snd = snd * amp * ender;
-                snd = snd*0.5 +
-                    ((delaySend>0)*BufCombN.ar(
-                        bufnumDelay,
-                        snd,
-                        secondsPerBeat*delayBeats,secondsPerBeat*delayBeats*LinLin.kr(delayFeedback,0,1,2,128),0.5*delaySend // delayFeedback should vary between 2 and 128
-                    )); 
-                    // delay w/ 30 voices = 1.5% (one core) per voice
-                    // w/o delay w/ 30 voices = 1.1% (one core) per voice
+                // delay w/ 30 voices = 1.5% (one core) per voice
+                // w/o delay w/ 30 voices = 1.1% (one core) per voice
                 // SendTrig.kr(Impulse.kr(1),name,1);
                 DetectSilence.ar(snd,doneAction:2);
                 // just in case, release after 1 minute
@@ -108,7 +102,7 @@ Engine_MxVoyage : CroneEngine {
             });
             mxsamplesVoiceAlloc.put(name,
                 Synth("mxPlayer",[
-                \bufnumDelay,sampleBuffMxSamplesDelay[msg[1]-1],
+                // \bufnumDelay,sampleBuffMxSamplesDelay[msg[1]-1],
                 \t_trig,1,
                 \envgate,1,
                 \bufnum,msg[2],
@@ -496,7 +490,7 @@ Engine_MxVoyage : CroneEngine {
 
 	free {
         (0..79).do({arg i; sampleBuffMxSamples[i].free});
-        (mxsamplesMaxVoices).do({arg i; sampleBuffMxSamplesDelay[i].free;});
+        // (mxsamplesMaxVoices).do({arg i; sampleBuffMxSamplesDelay[i].free;});
         mxsamplesVoiceAlloc.keysValuesDo({ arg key, value; value.free; });
         // NornsDeck Specific v0.0.1
         synDrone.free;
