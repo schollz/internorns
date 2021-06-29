@@ -184,10 +184,22 @@ stop("op1")
 ------------------ mx.samples---------------------
 --------------------------------------------------
 
+norns.script.load("code/voyage/voyage.lua")
+
 -- mx.samples can be played directly
 -- define instrument using "mx/<instrument_name>/<other_params>"
-play("mx/cello/amp=1.0,attack=2","Cmaj7",1)
+play("mx/steinway_model_b/amp=1.0,attack=0","Amin",1)
+play("mx/steinway_model_b/amp=1.0,attack=0","Amin",2)
+play("mx/steinway_model_b/amp=1.0,attack=0.0","C/G",3)
+play("mx/steinway_model_b/amp=1.0,attack=0.0","E/G#",4)
+stop("mx/steinway_model_b")
 
+
+play("mx/kalimba/amp=1.2,attack=0.0",arpr("a3 c e c a . "),1)
+play("mx/kalimba/amp=1.2,attack=0.0",arpr("a3 c e c a . "),2)
+play("mx/kalimba/amp=1.2,attack=0.0",carpr("C"),3)
+play("mx/kalimba/amp=1.2,attack=0.0",carpr("E"),4)
+stop("mx/string_spurs_swells")
 
 --------------------------------------------------
 --------------------  crow -----------------------
@@ -270,11 +282,11 @@ tape:loop(1,0,2) -- a two-second loop on tape 1
 
 -- example:
 -- a delay!
-tape:start(1);tape:loop(1,0,clock.get_beat_sec()/2);tape:rec(1,1,0.2);
+tape:start(1);tape:loop(1,0,clock.get_beat_sec()/2);tape:rec(1,1,0.1);
 tape:pan(1,0)
 tape:stop(1)
 
 -- you can add lfos to the loops easily
-play("loopy",er("tape:loop(1,0,lfo(3,0.0,2.0))",4),1)
+play("loopy",er("tape:pan(1,lfo(3.5,-1,1))",4),1)
 stop("loopy")
 
