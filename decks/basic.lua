@@ -123,21 +123,22 @@ e.amp(2,0)
 
 
 --------------------------------------------------
---------------------  tape -----------------------
+-------------------- all tape --------------------
 --------------------------------------------------
 
--- tape can add cool stops and starts
+-- "all tape" is a special utility that keeps a 
+-- buffer of everything and can do tape breaks/stops/starts
 
 -- tape stop
-tapestop()
+allstop()
 -- tape start (run after stop)
-tapestart()
+allstart()
 -- tape break (run twice to get normal)
-tapebreak()
+allbreak()
 
 -- put them together
-clock.run(function() clock.sleep(1.5);tapestop();clock.sleep(2.5);tapestart() end)
-clock.run(function() clock.sleep(1.5);tapebreak();clock.sleep(1.5);tapebreak() end)
+clock.run(function() clock.sleep(1.5);allstop();clock.sleep(2.5);allstart() end)
+clock.run(function() clock.sleep(1.5);allbreak();clock.sleep(1.5);allbreak() end)
 
 -- clock
 params:set("clock_tempo",120)
@@ -217,25 +218,11 @@ norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3;
 
 
 --------------------------------------------------
--------------------- oooooo ----------------------
+--------------------- tape -----------------------
 --------------------------------------------------
 
--- you can use ooooooo with commands
--- use the norns params menu to change characteristics of loops 
--- (e.g. pan, volume, lfos, etc.)
 
-tape_rec(1) -- records into loop 1
--- note: recording stops when reaching end of loop (set in `PARMS > startup`)
---       or recording stops when tape_stop(..) or tape_play(..) activated
-tape_arm_rec(1) -- arms recording for loop 1 (recording activated with sound)
-
-tape_stop(1) -- stops loop 1
-tape_play(1) -- plays loop 1 from where it stopped
-
-tape_clear(1) -- clears loop 1 entirely
-
-tape_reset(1) -- resets loop 1 to beginning
-
-clock.run(function() tape_clear(1); tape_reset(1); tape_rec(1); clock.sleep(2); tape_play(1) end)
-
--- of course you change loop 1 to any number between 1 and 6....
+tape:loop(1,0,0.5)
+tape:rate(1,1)
+tape:rec(1,1,0.5)
+tape:play(1)

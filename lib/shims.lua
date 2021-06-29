@@ -46,16 +46,16 @@ function stop(name)
   ta:rm(name)
 end
 
-function tapebreak()
+function allbreak()
   engine.tapebreak()
 end
 
-function tapestop()
+function allstop()
   engine.tapebreak()
   engine.taperate(0.01)
 end
 
-function tapestart()
+function allstart()
   clock.run(function()
     engine.taperate(1)
     clock.sync(8)
