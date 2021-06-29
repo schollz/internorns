@@ -2,6 +2,8 @@
 
 a live-coding environment for norns.
 
+combines [digital tapes a la *oooooo*](https://llllllll.co/t/oooooo), [built-in drums from supertonic](https://llllllll.co/t/supertonic/), with [sample player similar to amen](https://llllllll.co/t/amen/) and all atop the [plonky sequencer](https://llllllll.co/t/plonky/) with [instrument samples from mx.samples](https://llllllll.co/t/mx-samples/).
+
 ## Requirements
 
 - norns

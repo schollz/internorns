@@ -180,6 +180,13 @@ play("op1",carpr("Ebm:4 Ebm:5"),4)
 stop("op1")
 
 
+--------------------------------------------------
+------------------ mx.samples---------------------
+--------------------------------------------------
+
+-- mx.samples can be played directly
+-- define instrument using "mx/<instrument_name>/<other_params>"
+play("mx/cello/amp=1.0,attack=2","Cmaj7",1)
 
 
 --------------------------------------------------

@@ -25,6 +25,16 @@ end
 function play(name,notes,i)
   if name=="crow" then
     ta:add(name,ta:sound(notes,'crow.output[1].volts=<v>;crow.output[2]()'),i)
+  elseif string.sub(name,1,2)=="mx/" then
+    local foo = string.split(name,"/")
+    if foo[3]==nil then
+      foo[3]==""
+    else
+      foo[3]=","..foo[3]
+    end
+    ta:add(name,ta:sound(notes,
+      "skeys:on({name='"..instrument.."',midi=<m>,velocity=80"..foo[3].."})",
+      "skeys:off({name='"..instrument.."',midi=<m>})"),i)
   elseif name=="kick" or name=="hh" or name=="clap" or name=="sd" or name=="oh" then
     for i,v in ipairs(notes) do
       if v~="" then
