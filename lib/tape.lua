@@ -1,8 +1,8 @@
 local tape={
   bnds={1,1,90,90,180,180,270,270},
-  level={0.5,0.5,0.5},
-  rate={1,1,1},
-  slew={1,1,1},
+  levels={0.5,0.5,0.5},
+  rates={1,1,1},
+  slews={1,1,1},
 }
 
 function tape:new(o)
@@ -18,6 +18,9 @@ function tape:init()
   -- setup three stereo loops
   softcut.reset()
   softcut.buffer_clear()
+  audio.level_eng_cut(1)
+  audio.level_tape_cut(1)
+  audio.level_adc_cut(1)
   for i=1,6 do
     softcut.enable(i,1)
     softcut.level(i,0.5)
@@ -77,7 +80,7 @@ function tape:stop(i)
 end
 
 function tape:rate(i,r)
-  self.rate[i]=r
+  self.rates[i]=r
   for j=i*2-1,i*2 do
     softcut.rate(j,r)
   end
@@ -85,34 +88,47 @@ end
 
 function tape:rec(i,v,v2)
   for j=i*2-1,i*2 do
-    softcut.rec_level(v)
-    softcut.pre_level(j,v,v2)
+    softcut.rec_level(j,v)
+    softcut.pre_level(j,v2)
   end
 end
 
 function tape:slew(i,v)
-  self.slew[i]=v
+  self.slews[i]=v
   for j=i*2-1,i*2 do
     softcut.rate_slew_time(j,v)
-    softuct.level_slew_time(j,v)
+    softcut.level_slew_time(j,v)
   end
 end
 
 function tape:level(i,v)
-  self.level[i]=v
+  self.levels[i]=v
   for j=i*2-1,i*2 do
     softcut.level(j,v)
   end
 end
 
-function tape:play(i)
+function tape:pan(i,v)
+  i1=i*2-1
+  i2=i*2
+  v=v*2
+  if v>0 then
+    softcut.pan(i*2,util.clamp(v-1,-1,1))
+    softcut.pan(i*2-1,1)
+  else
+    softcut.pan(i*2,-1)
+    softcut.pan(i*2-1,util.clamp(1+v,-1,1))
+  end
+end
+
+function tape:start(i)
   for j=i*2-1,i*2 do
     softcut.rate_slew_time(j,0)
-    softcut.rate(j,self.rate[i])
-    softcut.level(j,self.level[i])
+    softcut.rate(j,self.rates[i])
+    softcut.level(j,self.levels[i])
     clock.run(function()
       clock.sleep(0.5)
-      softcut.rate_slew_time(j,self.slew[i])
+      softcut.rate_slew_time(j,self.slews[i])
     end)
   end
 end

@@ -221,8 +221,43 @@ norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3;
 --------------------- tape -----------------------
 --------------------------------------------------
 
+norns.script.load("code/voyage/voyage.lua")
 
-tape:loop(1,0,0.5)
+play("kick",er(2),1)
+stop("kick")
+play("loopy",er("tape:loop(1,0,lfo(3,0.0,2.0))",4),1)
+stop("loopy")
+
+-- tape:start(<tape>) starts the tape
+tape:start(1)
+
+-- tape:stop(<tape>) stops the tape
+tape:stop(1)
+
+-- tape:pan(<tape>,<pan>) changes the pan (-1,1)
+tape:pan(1,1)
+
+-- tape:rate(<tape>,<rate>) changes the rate
 tape:rate(1,1)
+
+-- tape:level(<tape>,<level>) changes the rate
+tape:level(1,1)
+
+-- tape:slew(<tape>,<slew>) changes the slew of rate/level
+tape:slew(1,4)
+
+-- tape:rec(<tape>,<rec_level>,<pre_level>) activates recording
+-- which will record at level <rec_leve> and keep previous material
+-- at <pre_level
 tape:rec(1,1,0.5)
-tape:play(1)
+
+-- example:
+-- a delay!
+tape:start(1);tape:loop(1,0,clock.get_beat_sec()/2);tape:rec(1,1,0.2);
+tape:pan(1,0)
+tape:stop(1)
+
+-- another delay!
+tape:start(2);tape:loop(2,0,clock.get_beat_sec()/4);tape:rec(2,1,0.05);
+tape:stop(2)
+
