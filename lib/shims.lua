@@ -61,16 +61,18 @@ function stop(name)
   ta:rm(name)
 end
 
-function allbreak()
+tape = {}
+
+function tape.freeze()
   engine.tapebreak()
 end
 
-function allstop()
+function tape.stop()
   engine.tapebreak()
   engine.taperate(0.01)
 end
 
-function allstart()
+function tape.start()
   clock.run(function()
     engine.taperate(1)
     clock.sync(8)
@@ -130,6 +132,10 @@ end
 
 
 sample={}
+
+function sample.loop(i,u,v)
+	engine.loop(i,u,v)
+end
 
 function sample.pos(i,v)
   engine.pos(i,v)
