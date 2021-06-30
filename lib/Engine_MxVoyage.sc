@@ -14,7 +14,7 @@ Engine_MxVoyage : CroneEngine {
     var synSupertonic;
     var synVoice=0;
     var maxVoices=5;
-    var maxSamplers=7;
+    var maxSamplers=6;
     var bufBreaklive;
     var synBreakliveRec;
     var synBreaklivePlay;
@@ -43,7 +43,7 @@ Engine_MxVoyage : CroneEngine {
         // });
 
         SynthDef("mxPlayer",{ 
-                arg bufnum,bufnumDelay, amp, t_trig=0,envgate=1,name=1,
+                arg out=0,bufnum,bufnumDelay, amp, t_trig=0,envgate=1,name=1,
                 attack=0.015,decay=1,release=2,sustain=0.9,
                 sampleStart=0,sampleEnd=1,rate=1,pan=0,
                 lpf=20000,hpf=10,
@@ -80,7 +80,7 @@ Engine_MxVoyage : CroneEngine {
                 DetectSilence.ar(snd,doneAction:2);
                 // just in case, release after 1 minute
                 FreeSelf.kr(TDelay.kr(DC.kr(1),60));
-                Out.ar(0,snd)
+                Out.ar(out,snd)
         }).add; 
 
         this.addCommand("mxsamplesrelease","", { arg msg;
@@ -102,6 +102,7 @@ Engine_MxVoyage : CroneEngine {
             });
             mxsamplesVoiceAlloc.put(name,
                 Synth("mxPlayer",[
+                \out,mainBus.index,
                 // \bufnumDelay,sampleBuffMxSamplesDelay[msg[1]-1],
                 \t_trig,1,
                 \envgate,1,
@@ -406,7 +407,7 @@ Engine_MxVoyage : CroneEngine {
             ]);
 
             // special Q
-            nozPostF=SelectX.ar((0.1092*(nFilQ.log)+0.0343),[nozPostF,SinOsc.ar(nFilFrq)]);
+            // nozPostF=SelectX.ar((0.1092*(nFilQ.log)+0.0343),[nozPostF,SinOsc.ar(nFilFrq)]);
 
             // apply envelope to noise
             noz=Splay.ar(nozPostF*nozEnv);
@@ -429,12 +430,12 @@ Engine_MxVoyage : CroneEngine {
             // apply eq after distortion
             snd=BPeakEQ.ar(snd,eQFreq,1,eQGain/2);
 
-            snd=HPF.ar(snd,20);
+            snd=HPF.ar(snd,30);
 
             snd=snd*level.dbamp*0.2;
 
             // free self if its quiet
-            FreeSelf.kr((Amplitude.kr(snd)<0.001)*TDelay.kr(DC.kr(1),0.03));
+            FreeSelf.kr((Amplitude.kr(snd)<0.01)*TDelay.kr(DC.kr(1),0.03));
 
             Out.ar(out, snd);
         }).add;
