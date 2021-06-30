@@ -44,9 +44,9 @@ stop("hello")
 -- "kick" or "clap" or "sd" or "hh" or "oh",
 -- it will utilize the built-in drums 
 
+-- more: http://norns.local/maiden/#edit/dust/code/voyage/lib/drummer.lua
 -- in each step of the <er> on the given <measure>
 play("kick",er(2),1)
-
 
 -- regular lua commands work
 -- built-in drums have a bunch of properties you can modify
@@ -54,7 +54,6 @@ kick.patch.distAmt=60;
 kick.patch.level=-5;
 clap.patch.level=-2;
 hh.patch.level=-5;
--- more: http://norns.local/maiden/#edit/dust/code/voyage/lib/drummer.lua
 
 -- lets sequence some lua code
 -- "kicklfo" is arbitrary, using er(..) to sequence lua that change the patch
@@ -89,14 +88,15 @@ stop("hh")
 sample.open(1,"closer")
 
 -- sample.level(<id>,<vol>) sets volume for sample <id>
-sample.level(1,1.2)
+sample.level(1,0.5)
 
 -- sample.pos(<id>,<pos>) sets position (in [0,1])
 sample.pos(1,13/28)
 
 -- sample.loop(<id>,<1>,<2>) sets loop points between
 -- <1> and <2> (in range [0,1])
-sample.loop(1,0,0.5)
+sample.loop(1,13.2/28,14.2/28)
+sample.loop(1,0,1)
 
 -- sample.pan(<id>,<pan>) sets pan (in [-1,1])
 sample.pan(1,0)
@@ -110,6 +110,7 @@ stop("closer")
 
 -- one sample can be "quantized" and with glitch and reverse fx
 sample.open(2,"120_4")
+sample.level(2,0.5)
 -- sample.rate(<id>,<rate>), can change rate to match bpm
 sample.rate(2,clock.get_tempo()/120)
 -- sample.sync(<id>,<num>) keeps sample containing <num> beats in sync
@@ -120,7 +121,7 @@ sample.sync(2,8)
 -- sample.glitch(<id>,<prob>) glitch with probability <prob> (0,1)
 sample.glitch(2,0.02)
 -- sample.reverse(<id>,<prob>) reverses with probability <prob> (0,1)
-sample.reverse(2,0.05)
+sample.reverse(2,0.1)
 
 -- sample.level(<id>,0) will turn off the samples
 sample.level(1,0)
@@ -128,11 +129,12 @@ sample.level(2,0)
 
 
 --------------------------------------------------
--------------------- all tape --------------------
+----------------------- tape ---------------------
 --------------------------------------------------
 
--- "all tape" is a special utility that keeps a 
--- buffer of everything and can do tape breaks/stops/starts
+-- "tape" is a special utility that keeps a 
+-- buffer of everything in the engine
+-- and can do tape breaks/stops/starts
 
 -- all stop in a stylish way
 tape.stop()
@@ -203,7 +205,7 @@ play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",arp("ab4 b4 eb4",8),1)
 play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",arpr("e4 g#4 b4 e5 .",8),2)
 play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carp("Gb/Db:4",8),3)
 play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carpr("Ebm:4 Ebm:3",8),4)
-stop("mx/string_spurs_swells")
+stop("mx/kalimba")
 
 --------------------------------------------------
 --------------------  crow -----------------------
