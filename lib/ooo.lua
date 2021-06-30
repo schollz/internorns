@@ -103,8 +103,6 @@ function ooo.level(i,v)
 end
 
 function ooo.pan(i,v)
-  i1=i*2-1
-  i2=i*2
   v=v*2
   if v>0 then
     softcut.pan(i*2,util.clamp(v-1,-1,1))
