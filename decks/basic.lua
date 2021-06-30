@@ -188,17 +188,16 @@ norns.script.load("code/voyage/voyage.lua")
 
 -- mx.samples can be played directly
 -- define instrument using "mx/<instrument_name>/<other_params>"
-play("mx/steinway_model_b/amp=1.0,attack=0","Amin",1)
-play("mx/steinway_model_b/amp=1.0,attack=0","Amin",2)
-play("mx/steinway_model_b/amp=1.0,attack=0.0","C/G",3)
-play("mx/steinway_model_b/amp=1.0,attack=0.0","E/G#",4)
+play("mx/steinway_model_b/amp=1.0,attack=0","Abm/Eb:4",1)
+play("mx/steinway_model_b/amp=1.0,attack=0","E:4",2)
+play("mx/steinway_model_b/amp=1.0,attack=0.0","Gb/Db:4",3)
+play("mx/steinway_model_b/amp=1.0,attack=0.0","Ebm:4",4)
 stop("mx/steinway_model_b")
 
-
-play("mx/kalimba/amp=1.2,attack=0.0",arpr("a3 c e c a . "),1)
-play("mx/kalimba/amp=1.2,attack=0.0",arpr("a3 c e c a . "),2)
-play("mx/kalimba/amp=1.2,attack=0.0",carpr("C"),3)
-play("mx/kalimba/amp=1.2,attack=0.0",carpr("E"),4)
+play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",arp("ab4 b4 eb4",8),1)
+play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",arpr("e4 g#4 b4 e5 .",8),2)
+play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carp("Gb/Db:4",8),3)
+play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carpr("Ebm:4 Ebm:3",8),4)
 stop("mx/string_spurs_swells")
 
 --------------------------------------------------

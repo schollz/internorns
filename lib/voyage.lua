@@ -41,37 +41,7 @@ function voyage_init()
     division=1/16,
   })
 
-
-  -- and initiate recording on incoming audio on input 1
-  p_amp_in=poll.set("amp_in_l")
-  -- set period low when primed, default 1 second
-  p_amp_in.time=1
-  p_amp_in.callback=function(val)
-    for i=1,6 do
-      if uS.recording[i]==1 and (params:get("input type")==1 or params:get("input type")>=4) then
-        if val>params:get("rec thresh")/10000 then
-          tape_rec(i)
-        end
-      end
-    end
-  end
-  p_amp_in:start()
-
-  -- and initiate recording on incoming on audio input 2
-  p_amp_in2=poll.set("amp_in_r")
-  -- set period low when primed, default 1 second
-  p_amp_in2.time=1
-  p_amp_in2.callback=function(val)
-    for i=1,6 do
-      if uS.recording[i]==1 and (params:get("input type")==2 or params:get("input type")>=4) then
-        if val>params:get("rec thresh")/10000 then
-          tape_rec(i)
-        end
-      end
-    end
-  end
-  p_amp_in2:start()
-
+  ooo.reset()
 
   -- start scheduler
   sched:start()

@@ -26,8 +26,7 @@ ta=timeauthority_:new()
 lattice=require("lattice")
 midipal_=include("voyage/lib/midipal")
 mp=midipal_:new()
-tape=include("voyage/lib/tape")
-tape:init()
+include("voyage/lib/ooo")
 e=engine
 last_command=""
 include("voyage/lib/voyage")
@@ -51,11 +50,12 @@ function init()
     end,
   })
 
+
   clock.run(function()
     clock.sleep(1)
     mg:update_engine("MxVoyage")
+    voyage_init()
   end)
-  voyage_init()
 end
 
 

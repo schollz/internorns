@@ -13,7 +13,7 @@ function ooo.reset()
   softcut.reset()
   softcut.buffer_clear()
   audio.level_eng_cut(1)
-  audio.level_ooo_cut(1)
+  audio.level_tape_cut(1)
   audio.level_adc_cut(1)
   for i=1,6 do
     softcut.enable(i,1)
