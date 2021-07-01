@@ -60,6 +60,7 @@ Engine_MxVoyage : CroneEngine {
                         releaseNode: 2,
                     ),
                     gate: envgate,
+                    doneAction: 2,
                 );
                 
                 snd = PlayBuf.ar(2, bufnum,
@@ -78,8 +79,8 @@ Engine_MxVoyage : CroneEngine {
                 // w/o delay w/ 30 voices = 1.1% (one core) per voice
                 // SendTrig.kr(Impulse.kr(1),name,1);
                 DetectSilence.ar(snd,doneAction:2);
-                // just in case, release after 1 minute
-                FreeSelf.kr(TDelay.kr(DC.kr(1),60));
+                // just in case, release after 20 seconds, remove it
+                FreeSelf.kr(TDelay.kr(DC.kr(1),20));
                 Out.ar(out,snd)
         }).add; 
 
@@ -435,7 +436,7 @@ Engine_MxVoyage : CroneEngine {
             snd=snd*level.dbamp*0.2;
 
             // free self if its quiet
-            FreeSelf.kr((Amplitude.kr(snd)<0.01)*TDelay.kr(DC.kr(1),0.03));
+            DetectSilence.ar(snd,doneAction:2);
 
             Out.ar(out, snd);
         }).add;
