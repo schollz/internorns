@@ -41,6 +41,8 @@ function ooo.reset()
 
     softcut.level_slew_time(i,0.4)
     softcut.rate_slew_time(i,0.4)
+    softcut.pan_slew_time(i,0.4)
+    softcut.recpre_slew_time(i,0.4)
 
     softcut.rec_level(i,0.0)
     softcut.pre_level(i,1.0)
@@ -92,6 +94,8 @@ function ooo.slew(i,v)
   for j=i*2-1,i*2 do
     softcut.rate_slew_time(j,v)
     softcut.level_slew_time(j,v)
+    softcut.pan_slew_time(j,v)
+    softcut.recpre_slew_time(j,v)
   end
 end
 

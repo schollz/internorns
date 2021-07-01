@@ -144,8 +144,8 @@ tape.start()
 tape.freeze()
 
 -- put them together
-clock.run(function() clock.sleep(1.5);allstop();clock.sleep(2.5);allstart() end)
-clock.run(function() clock.sleep(1.5);allbreak();clock.sleep(1.5);allbreak() end)
+clock.run(function() clock.sync(2);tape.stop();clock.sync(6);tape.start() end)
+clock.run(function() clock.sync(2);tape.freeze();clock.sync(2);tape.freeze() end)
 
 
 
@@ -190,8 +190,6 @@ stop("op1")
 --------------------------------------------------
 ------------------ mx.samples---------------------
 --------------------------------------------------
-
-norns.script.load("code/voyage/voyage.lua")
 
 -- mx.samples can be played directly
 -- define instrument using "mx/<instrument_name>/<other_params>"
@@ -271,9 +269,9 @@ ooo.rate(1,1)
 -- <level> can be from 0 to 1
 ooo.level(1,1)
 
--- ooo.slew(<tape>,<slew>) changes the slew of rate/level
+-- ooo.slew(<tape>,<slew>) changes the slew of rate/level/pan/rec
 -- <tape> can be 1, 2, or 3
--- <slew> can be from 0 to 10
+-- <slew> can be from 0 to ??
 ooo.slew(1,4)
 
 -- ooo.rec(<tape>,<rec_level>,<pre_level>) activates/deactivates recording
@@ -294,11 +292,19 @@ ooo.loop(1,0,2) -- a two-second loop between timestamps 0 and 2s, on tape 1
 
 -- example:
 -- a delay!
-ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/2);ooo.rec(1,1,0.1);
+ooo.level(1,0.25); ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/2);ooo.rec(1,1,0.1);
 ooo.pan(1,0)
 ooo.stop(1)
 
 -- you can add lfos to the loops easily
-play("loopy",er("ooo.pan(1,lfo(3.5,-1,1))",4),1)
+play("loopy",er("ooo.pan(1,lfo(3.5,-1,1))",16),1)
 stop("loopy")
 
+ooo.slew(1,4); ooo.loop(1,0,60);ooo.rec(1,1,0.0);
+ooo.rec(1,0,1)
+softcut.pan_slew_time (2,2)
+ooo.pan(1,-1)
+ooo.pan(1,1)
+
+softcut.pan(1,1); softcut.pan(2,1)
+softcut.pan(1,-1); softcut.pan(2,-1)
