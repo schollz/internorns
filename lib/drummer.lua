@@ -14,7 +14,7 @@ function Drummer:new(o)
   self.__index=self
   o.enabled=false
   o.id=o.id
-  o.name=o.name 
+  o.name=o.name
   o.update=true
   o.patch={}
   for _,v in ipairs({"distAmt","eQFreq","eQGain","level","mix","modAmt","modMode","modRate","nEnvAtk","nEnvDcy","nEnvMod","nFilFrq","nFilMod","nFilQ","nStereo","oscAtk","oscDcy","oscFreq","oscWave","oscVel","nVel","modVel"}) do
@@ -40,10 +40,10 @@ end
 
 function Drummer:toggle_pattern(pos,on)
   local current="-"
-  if on==true then 
+  if on==true then
     current="+"
   end
-  if on==nil then 
+  if on==nil then
     current=self.pattern_string:sub(pos,pos)
     if current=="-" then
       current="x"
@@ -56,25 +56,25 @@ function Drummer:toggle_pattern(pos,on)
 end
 
 function Drummer:enable()
-  if self.pattern==nil then 
-    do return end 
+  if self.pattern==nil then
+    do return end
   end
   self.enabled=true
 end
 
 function Drummer:disable()
-  self.enabled=false 
+  self.enabled=false
 end
 
 function Drummer:update_patch()
-  for k,_ in pairs(self.patch) do 
+  for k,_ in pairs(self.patch) do
     self.patch[k]=util.linlin(0,1,params:get(self.id.."1"..k),params:get(self.id.."2"..k),params:get(self.id.."morph"))
   end
   -- binary parameters
   local v=(params:get(self.id.."morph")>0.5) and 2 or 1
   for _,k in ipairs({"oscWave","modMode","nFilMod","nEnvMod","nStereo"}) do
     self.patch[k]=params:get(self.id..v..k)
-  end  
+  end
   self.update=false
 end
 
@@ -115,10 +115,10 @@ function Drummer:hit()
   )
 end
 function Drummer:step(beat)
-  if not self.enabled then 
+  if not self.enabled then
     do return false end
   end
-  if self.update then 
+  if self.update then
     self:update_patch()
   end
   local id=self.id
@@ -175,8 +175,8 @@ function Drummer:xox(riddim)
   -- return riddim detector
   -- beat starts on 1
   return function (beat)
-    beat = ((beat-1) % #riddim) + 1
-    return riddim:sub(beat, beat) ~= '-'
+    beat=((beat-1)%#riddim)+1
+    return riddim:sub(beat,beat)~='-'
   end
 end
 
