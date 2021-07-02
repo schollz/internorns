@@ -2,13 +2,11 @@
 
 a live-coding environment that interconnects norns.
 
-this script is essentially *lua sequencer*. that is, you can write lines of code have them be executed at time intervals, similar to a tracker. by default there are 4 steps per beat which can hold any amount of code that will be run at that step.
-
-the code you can sequence is any norns code. in addition to the standard norns features (midi, osc, crow), I've added in simple interfaces to "lite" versions of several of my own scripts. here is a list of easily controllable entities:
+this script is essentially a **lua sequencer**. that is, you can write lines of code have them be executed at time intervals, similar to a tracker, but with code.  there are four steps per beat and each step can hold any amount of code that will be executed. the code you can sequence is any norns code. in addition to the standard norns features (midi, osc, crow), I've added in simple interfaces to "lite" versions of several of my own scripts. here is a list of easily controllable entities:
 
 - midi pitches and cc lfos
 - crow pitches and envelope (or crow anything)
-- three stereo digital tapes a la [*oooooo*](https://llllllll.co/t/oooooo)
+- three stereo digital tapes a la [*oooooo*](https://llllllll.co/t/oooooo), via softcut
 - built-in drums from [supertonic](https://llllllll.co/t/supertonic/)
 - sample player similar to [amen](https://llllllll.co/t/amen/)
 - instrument samples from [mx.samples](https://llllllll.co/t/mx-samples/)
