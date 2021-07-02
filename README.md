@@ -25,24 +25,23 @@ using this script means that you first must run the script and then open up an e
 
 ## Documentation
 
-1. first you can choose an editor - maiden, visual studio code, and vim are all great options.
+1. first you can choose an editor - maiden, visual studio code, and vim are all great options. see below for how to get started.
 
-2. then open up `~/dust/code/internorns/decks/basic.lua` and follow the tutorial.
+2. then open up `~/dust/code/internorns/getting-started.lua` and follow the tutorial.
 
-3. then code your own deck!
-
+3. copy-paste things from `getting-started.lua` to formulate your own composition.
 
 ### maiden
 
-open up a webbrowser to [norns.local/maiden/#edit/dust/code/internorns/decks/basic.lua](norns.local/maiden/#edit/dust/code/internorns/decks/basic.lua).
+open up a webbrowser to [norns.local/maiden/#edit/dust/code/internorns/getting-started.lua](norns.local/maiden/#edit/dust/code/internorns/getting-started.lua).
 
-you can select any code and press <kbd>ctl</kbd>+<kbd>enter</kdb> to send that code to the norns.
+you can select any code and press <kbd>ctl</kbd>+<kbd>enter</kbd> to send that code to the norns.
 
 ### visual studio code
 
-[download visual studio code](https://code.visualstudio.com/) and then install [the Norns REPL extension](https://llllllll.co/t/norns-repl-vscode-extension/41382). use software like [sftp drive](https://www.nsoftware.com/sftp/drive/) to mount your norns on your computer. then you can directly edit `~/dust/code/internorns/decks/basic.lua`. 
+[download visual studio code](https://code.visualstudio.com/) and then install [the Norns REPL extension](https://llllllll.co/t/norns-repl-vscode-extension/41382). use software like [sftp drive](https://www.nsoftware.com/sftp/drive/) to mount your norns on your computer. then you can directly edit `~/dust/code/internorns/getting-started.lua`. 
 
-press <kbd>ctl</kbd>+<kbd>enter</kdb> to send the current line to the norns.
+press <kbd>ctl</kbd>+<kbd>enter</kbd> to send the current line to the norns.
 
 ### vim
 
@@ -70,9 +69,13 @@ now whenever you use the key combo <kbd>ctl</kbd>+<kbd>c</kbd> it will send the 
 
 ### Install
 
+make sure you install all of the following (or update if you already have them):
+
 ```
 ;install https://github.com/schollz/mx.samples
 ;install https://github.com/schollz/plonky
 ;install https://github.com/schollz/supertonic
 ;install https://github.com/schollz/internorns
 ```
+
+then restart your norns.
