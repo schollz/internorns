@@ -280,7 +280,7 @@ ooo.slew(1,4)
 -- both levels can be from 0 to 1
 -- example: turn on recording with full overdub
 ooo.rec(1,1,0.0)
--- example: turn off recording (keeping previous material)
+-- example: turn off recording (keepinpp 100% of previous recordings)
 ooo.rec(1,0,1)
 -- example: record and only keep 50% of the previous recordings
 ooo.rec(1,1,0.5)
@@ -299,12 +299,3 @@ ooo.stop(1)
 -- you can add lfos to the loops easily
 play("loopy",er("ooo.pan(1,lfo(3.5,-1,1))",16),1)
 stop("loopy")
-
-ooo.slew(1,4); ooo.loop(1,0,60);ooo.rec(1,1,0.0);
-ooo.rec(1,0,1)
-softcut.pan_slew_time (2,2)
-ooo.pan(1,-1)
-ooo.pan(1,1)
-
-softcut.pan(1,1); softcut.pan(2,1)
-softcut.pan(1,-1); softcut.pan(2,-1)
