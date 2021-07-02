@@ -3,13 +3,14 @@
 --------------------------------------------------
 
 -- each line in this file is valid lua code
--- you can run it by selecting it and pressing Ctl+Enter
+-- if in maiden:
+-- you can run it by selecting it and pressing Ctl+Enter 
 -- or just press Ctl+Enter and it will run the current line
 
--- highlight and run this code, you should see it below:
+-- highlight and run this code, it should print "hello, world"
 print("hello, world")
 
--- lets load the norns deck
+-- lets load internorns
 norns.script.load("code/internorns/internorns.lua")
 
 -- lets change the tempo to 120
@@ -26,15 +27,18 @@ nature(1.0)
 table.print(s("print('hi')",4))
 
 -- another useful function is the play(..) function
--- play(<ptn>,<er>,<measure>) creates a sequence called <ptn> that executes code
+-- play(<ptn>,<s>,<measure>) specifies a pattern named <ptn>
+-- which contains the <s> data (16 steps of code) for measure <measure>
+-- the <measure> is optional, and if omitted will just add to current measure
 play("hello",s("print('hi')",4),1)
 
--- stop(<ptn>) will stop the pattern
+-- stop(<ptn>) will stop the pattern named <ptn>
 stop("hello")
 
--- lfo(<period>,<slo>,<shi>) returns value of a sine function evaluated
+-- example:
+-- lfo(<period>,<slo>,<shi>) returns value of a sine function with period
+-- <period> that oscillates between <slo> and <shi>
 play("hello",s("print('lfo='..lfo(10,1,100))",4),1)
-stop("hello")
 
 --------------------------------------------------
 ---------------  built-in drums ------------------
@@ -49,9 +53,9 @@ stop("hello")
 -- e.g., s(4) = {1,,,,1,,,,1,,,,1,,,}
 table.print(s(4))
 
--- more: http://norns.local/maiden/#edit/dust/code/internorns/lib/drummer.lua
--- in each step of the <er> on the given <measure>
+-- example, lets play a kick
 play("kick",s(2),1)
+-- more: http://norns.local/maiden/#edit/dust/code/internorns/lib/drummer.lua
 
 -- regular lua commands work
 -- built-in drums have a bunch of properties you can modify
@@ -61,16 +65,17 @@ clap.patch.level=-2;
 hh.patch.level=-5;
 
 -- lets sequence some lua code
--- "kicklfo" is arbitrary, using s(..) to sequence lua that change the patch
+-- "kicklfo" is an arbitrary name, but we will
+-- use s(..) to sequence lua that change the patch
 play("kicklfo",s("kick.patch.oscDcy=lfo(12,400,1200)",4),1)
 play("kicklfo2",s("kick.patch.distAmt=lfo(13,1,60)",4),1)
 
--- s_add(<er1>,<er2>) will combine two rhythms
--- s_rot(<er>,<amt>) will rotate a rhythm <er> by <amt>
+-- s_add(<s1>,<s2>) will combine these tables of steps
+-- s_rot(<s>,<amt>) will rotate a steps by <amt>
 play("kick",s_add(s(1),s_rot(s(1),3)),2)
 
 
--- s_sub(<er1>,<er2>) will subtract <er2> from <er1>
+-- s_sub(<s1>,<s2>) will subtract <s2> from <s1>
 play("hh",s_sub(s(15),s(4)),1)
 play("hhlfo",s("hh.patch.nEnvDcy=lfo(13,90,450)",4),1)
 play("clap",s_rot(s(2),4),1)
@@ -246,8 +251,10 @@ norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3;
 ---------------------- ooo -----------------------
 --------------------------------------------------
 
--- ooo is like oooooo, but only allow three loops,
--- each 90 seconds, of stereo audio
+-- ooo is like oooooo - it is a wrapper around softcut
+-- that allows you to playback/record anything playing.
+-- ooo only allow three loops,
+-- each 90 seconds, of stereo audio.
 
 -- ooo.start(<tape>) starts the tape.
 -- <tape> can be 1, 2, or 3
