@@ -17,20 +17,20 @@ local plonky=include("plonky/lib/plonky")
 local shift=false
 local arplatch=0
 
--- voyage stuff
+-- internorns stuff
 -- this order matters
-include("voyage/lib/utils")
-music=include("voyage/lib/music")
-timeauthority_=include("voyage/lib/timeauthority")
+include("internorns/lib/utils")
+music=include("internorns/lib/music")
+timeauthority_=include("internorns/lib/timeauthority")
 ta=timeauthority_:new()
 lattice=require("lattice")
-midipal_=include("voyage/lib/midipal")
+midipal_=include("internorns/lib/midipal")
 mp=midipal_:new()
-include("voyage/lib/ooo")
+include("internorns/lib/ooo")
 e=engine
 last_command=""
-include("voyage/lib/voyage")
-include("voyage/lib/shims")
+include("internorns/lib/internorns")
+include("internorns/lib/shims")
 
 
 function init()
@@ -53,8 +53,8 @@ function init()
 
   clock.run(function()
     clock.sleep(1)
-    mg:update_engine("MxVoyage")
-    voyage_init()
+    mg:update_engine("MxInternorns")
+    internorns_init()
   end)
 end
 

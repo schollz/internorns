@@ -1,7 +1,7 @@
-// Engine_MxVoyage
+// Engine_MxInternorns
 
 // Inherit methods from CroneEngine
-Engine_MxVoyage : CroneEngine {
+Engine_MxInternorns : CroneEngine {
 
     // MxSamples specific
     var sampleBuffMxSamples;

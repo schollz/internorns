@@ -1,15 +1,15 @@
 
-function voyage_init()
-  print("initializing voyage")
+function internorns_init()
+  print("initializing internorns")
   audio.level_monitor(0)
 
-  os.execute("mkdir -p /home/we/dust/audio/voyage/")
-  os.execute("cp -u /home/we/dust/code/voyage/data/*.wav /home/we/dust/audio/voyage/")
+  os.execute("mkdir -p /home/we/dust/audio/internorns/")
+  os.execute("cp -u /home/we/dust/code/internorns/data/*.wav /home/we/dust/audio/internorns/")
 
-  local drummer=include("voyage/lib/drummer")
-  local patches_=include("voyage/lib/patches")
+  local drummer=include("internorns/lib/drummer")
+  local patches_=include("internorns/lib/patches")
   local patches=patches_:new()
-  local patches_loaded=patches:load("/home/we/dust/code/voyage/data/default.mtpreset")
+  local patches_loaded=patches:load("/home/we/dust/code/internorns/data/default.mtpreset")
   kick=drummer:new({id=1})
   sd=drummer:new({id=2})
   hh=drummer:new({id=3})
