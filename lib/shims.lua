@@ -63,7 +63,7 @@ function stop(name)
   ta:rm(name)
 end
 
-tape = {}
+tape={}
 
 function tape.freeze()
   engine.tapebreak()
@@ -136,7 +136,7 @@ end
 sample={}
 
 function sample.loop(i,u,v)
-	engine.loop(i,u,v)
+  engine.loop(i,u,v)
 end
 
 function sample.pos(i,v)

@@ -122,7 +122,7 @@ function TA:sound(s,ctx,ctxoff)
           for _,ctxn in ipairs({"m","v","f","n"}) do
             if string.find(ctx,"<"..ctxn..">") then
               cmd=cmd..ctx:gsub("<"..ctxn..">",note[ctxn])..";"
-              if ni==1 and note_len>0 and ctxoff ~= nil then
+              if ni==1 and note_len>0 and ctxoff~=nil then
                 cmdoff={cmd=ctxoff:gsub("<"..ctxn..">",note[ctxn])..";",offset=note_len}
               end
             end
@@ -160,7 +160,7 @@ function TA:sound(s,ctx,ctxoff)
     end
     table.insert(rays,ray)
   end
-  
+
   if #rays==1 then
     return rays[1]
   else
