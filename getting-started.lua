@@ -10,7 +10,7 @@
 print("hello, world")
 
 -- lets load the norns deck
-norns.script.load("code/voyage/voyage.lua")
+norns.script.load("code/internorns/internorns.lua")
 
 -- lets change the tempo to 120
 params:set("clock_tempo",120)
@@ -44,7 +44,7 @@ stop("hello")
 -- "kick" or "clap" or "sd" or "hh" or "oh",
 -- it will utilize the built-in drums 
 
--- more: http://norns.local/maiden/#edit/dust/code/voyage/lib/drummer.lua
+-- more: http://norns.local/maiden/#edit/dust/code/internorns/lib/drummer.lua
 -- in each step of the <er> on the given <measure>
 play("kick",er(2),1)
 
@@ -84,7 +84,7 @@ stop("hh")
 -- running and can be seamlessly cut or looped
 
 -- sample.open(<id>,<name>) loads 
--- /home/we/dust/audio/voyage/<name>.wav into sample <id>
+-- /home/we/dust/audio/internorns/<name>.wav into sample <id>
 sample.open(1,"closer")
 
 -- sample.level(<id>,<vol>) sets volume for sample <id>

@@ -1,4 +1,4 @@
-# voyage
+# internorns
 
 a live-coding environment for norns.
 
@@ -12,20 +12,20 @@ combines [digital tapes a la *oooooo*](https://llllllll.co/t/oooooo), [built-in 
 
 1. first you can choose an editor - maiden, visual studio code, and vim are all great options.
 
-2. then open up `~/dust/code/voyage/decks/basic.lua` and follow the tutorial.
+2. then open up `~/dust/code/internorns/decks/basic.lua` and follow the tutorial.
 
 3. then code your own deck!
 
 
 ### maiden
 
-open up a webbrowser to [norns.local/maiden/#edit/dust/code/voyage/decks/basic.lua](norns.local/maiden/#edit/dust/code/voyage/decks/basic.lua).
+open up a webbrowser to [norns.local/maiden/#edit/dust/code/internorns/decks/basic.lua](norns.local/maiden/#edit/dust/code/internorns/decks/basic.lua).
 
 you can select any code and press <kbd>ctl</kbd>+<kbd>enter</kdb> to send that code to the norns.
 
 ### visual studio code
 
-[download visual studio code](https://code.visualstudio.com/) and then install [the Norns REPL extension](https://llllllll.co/t/norns-repl-vscode-extension/41382). use software like [sftp drive](https://www.nsoftware.com/sftp/drive/) to mount your norns on your computer. then you can directly edit `~/dust/code/voyage/decks/basic.lua`. 
+[download visual studio code](https://code.visualstudio.com/) and then install [the Norns REPL extension](https://llllllll.co/t/norns-repl-vscode-extension/41382). use software like [sftp drive](https://www.nsoftware.com/sftp/drive/) to mount your norns on your computer. then you can directly edit `~/dust/code/internorns/decks/basic.lua`. 
 
 press <kbd>ctl</kbd>+<kbd>enter</kdb> to send the current line to the norns.
 
@@ -59,5 +59,5 @@ now whenever you use the key combo <kbd>ctl</kbd>+<kbd>c</kbd> it will send the 
 ;install https://github.com/schollz/mx.samples
 ;install https://github.com/schollz/plonky
 ;install https://github.com/schollz/supertonic
-;install https://github.com/schollz/voyage
+;install https://github.com/schollz/internorns
 ```

@@ -1,5 +1,5 @@
 function wav(s)
-  return "/home/we/dust/audio/voyage/"..s..".wav"
+  return "/home/we/dust/audio/internorns/"..s..".wav"
 end
 
 function nature(vol)
