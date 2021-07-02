@@ -2,7 +2,7 @@
 
 a live-coding environment that interconnects norns.
 
-this script is essentially a **lua sequencer**. that is, you can write lines of code have them be executed at time intervals, similar to a tracker, but with code.  there are four steps per beat and each step can hold any amount of code that will be executed. the code you can sequence is any norns code. in addition to the standard norns features (midi, osc, crow), I've added in simple interfaces to "lite" versions of several of my own scripts. here is a list of easily controllable entities:
+this script is a cross between a live coding environment and a tracker: i.e. it is a tracker that you sequence with code. the code you can sequence is any norns lua code. in addition to the standard norns features (midi, osc, crow), I've added in simple interfaces to "lite" versions of several of my own scripts. here is a list of easily controllable entities:
 
 - midi pitches and cc lfos
 - crow pitches and envelope (or crow anything)
@@ -14,18 +14,22 @@ this script is essentially a **lua sequencer**. that is, you can write lines of 
 - grid control into [plonky sequencer](https://llllllll.co/t/plonky/)
 - sequencing pitches is faciliated by simply describing pitches using note/chord names (e.g. `Cm7/Eb` or `a4`). 
 
-using this script means that you first must run the script in norns and then and then open up an editor of your choice to your lua code that you want to sequence. start with [`getting-started.lua`](https://github.com/schollz/internorns/blob/main/getting-started.lua) which explains all the funcationality of internorns. the process is music.
+the script works by constantly running a clock where code is defined to run on certain steps based on the the beat (4 steps per beat) and measure (you define measures). 
 
+see `getting-started.lua` to get started. the process is music.
 
 ## Requirements
 
 - norns
+- grid (optional)
+- midi device (optional)
+- crow (optional)
 
 ## Documentation
 
 1. first you can choose an editor - maiden, visual studio code, and vim are all great options. see below for how to get started.
 
-2. then open up `~/dust/code/internorns/getting-started.lua` and follow the tutorial.
+2. then open up `dust/code/internorns/getting-started.lua` and follow the tutorial.
 
 3. copy-paste things from `getting-started.lua` to formulate your own composition.
 
