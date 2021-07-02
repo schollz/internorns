@@ -1,14 +1,20 @@
-// Engine_NornsDeck
+// Engine_MxInternorns
 
 // Inherit methods from CroneEngine
-Engine_NornsDeck : CroneEngine {
+Engine_MxInternorns : CroneEngine {
 
+    // MxSamples specific
+    var sampleBuffMxSamples;
+    // var sampleBuffMxSamplesDelay;
+    var mxsamplesMaxVoices=40;
+    var mxsamplesVoiceAlloc;
+    // MxSamples ^
     // NornsDeck specific v0.1.0
     var synDrone;
     var synSupertonic;
     var synVoice=0;
     var maxVoices=5;
-    var maxSamplers=7;
+    var maxSamplers=6;
     var bufBreaklive;
     var synBreakliveRec;
     var synBreaklivePlay;
@@ -19,38 +25,124 @@ Engine_NornsDeck : CroneEngine {
     var bufKeys;
     // NornsDeck ^
 
-    *new { arg context, doneCallback;
-        ^super.new(context, doneCallback);
-    }
+	*new { arg context, doneCallback;
+		^super.new(context, doneCallback);
+	}
 
-    alloc {
-        // NornsDeck specific v0.0.1
-        // keys
-        // SynthDef("defKeys",{
-        //         arg amp=0.5,bufnum=0,t_trig=1,start=0,out=0;
-        //         var snd,env;
-        //         env=EnvGen.kr(Env(levels:[0,1,1,0],times:[0.01,0.2,0.05]),gate:t_trig);
-        //         snd = env*PlayBuf.ar(2,bufnum,BufRateScale.kr(bufnum),1,start*BufFrames.kr(bufnum),loop:1);
-        //         Out.ar(0,snd);
-        // }).add;
+	alloc {
 
-        // context.server.sync;
+        mxsamplesVoiceAlloc=Dictionary.new(mxsamplesMaxVoices);
 
-        // bufKeys=Buffer.read(context.server,"/home/we/dust/code/voyage/data/keys.wav",action:{
-        //     synKeys=Synth("defKeys",[\bufnum,bufKeys],context.xg);
+        context.server.sync;
+
+        sampleBuffMxSamples = Array.fill(80, { arg i; 
+            Buffer.new(context.server);
+        });
+        // sampleBuffMxSamplesDelay = Array.fill(mxsamplesMaxVoices, { arg i; 
+        //     Buffer.alloc(context.server,48000,2);
         // });
 
-        // OSCFunc({ arg msg, time, addr, recvPort; 
-        //     [msg, time, addr, recvPort].postln; 
-        //     synKeys.set(\t_trig,1);
-        // }, '/keystroke');
+        SynthDef("mxPlayer",{ 
+                arg out=0,bufnum,bufnumDelay, amp, t_trig=0,envgate=1,name=1,
+                attack=0.015,decay=1,release=2,sustain=0.9,
+                sampleStart=0,sampleEnd=1,rate=1,pan=0,
+                lpf=20000,hpf=10,
+                secondsPerBeat=1,delayBeats=8,delayFeedback=1,delaySend=0;
+
+                // vars
+                var ender,snd;
+
+                ender = EnvGen.ar(
+                    Env.new(
+                        curve: 'cubed',
+                        levels: [0,1,sustain,0],
+                        times: [attack+0.015,decay,release],
+                        releaseNode: 2,
+                    ),
+                    gate: envgate,
+                    doneAction: 2,
+                );
+                
+                snd = PlayBuf.ar(2, bufnum,
+                    rate:BufRateScale.kr(bufnum)*rate,
+                    startPos: ((sampleEnd*(rate<0))*BufFrames.kr(bufnum))+(sampleStart/1000*48000),
+                    trigger:t_trig,
+                );
+                // snd = LPF.ar(snd,lpf);
+                // snd = HPF.ar(snd,hpf);
+                // snd = Mix.ar([
+                //     Pan2.ar(snd[0],-1+(2*pan),amp),
+                //     Pan2.ar(snd[1],1+(2*pan),amp),
+                // ]);
+                snd = snd * amp * ender;
+                // delay w/ 30 voices = 1.5% (one core) per voice
+                // w/o delay w/ 30 voices = 1.1% (one core) per voice
+                // SendTrig.kr(Impulse.kr(1),name,1);
+                DetectSilence.ar(snd,doneAction:2);
+                // just in case, release after 20 seconds, remove it
+                FreeSelf.kr(TDelay.kr(DC.kr(1),20));
+                Out.ar(out,snd)
+        }).add; 
+
+        this.addCommand("mxsamplesrelease","", { arg msg;
+            (0..79).do({arg i; sampleBuffMxSamples[i].free});
+        });
+        this.addCommand("mxsamplesload","is", { arg msg;
+            // lua is sending 0-index
+            sampleBuffMxSamples[msg[1]].free;
+            sampleBuffMxSamples[msg[1]] = Buffer.read(context.server,msg[2]);
+        });
+
+        this.addCommand("mxsampleson","iiffffffffffffff", { arg msg;
+            var name=msg[1];
+            if (mxsamplesVoiceAlloc.at(name)!=nil,{
+                if (mxsamplesVoiceAlloc.at(name).isRunning==true,{
+                    ("stealing "++name).postln;
+                    mxsamplesVoiceAlloc.at(name).free;
+                });
+            });
+            mxsamplesVoiceAlloc.put(name,
+                Synth("mxPlayer",[
+                \out,mainBus.index,
+                // \bufnumDelay,sampleBuffMxSamplesDelay[msg[1]-1],
+                \t_trig,1,
+                \envgate,1,
+                \bufnum,msg[2],
+                \rate,msg[3],
+                \amp,msg[4],
+                \pan,msg[5],
+                \attack,msg[6],
+                \decay,msg[7],
+                \sustain,msg[8],
+                \release,msg[9],
+                \lpf,msg[10],
+                \hpf,msg[11],
+                \secondsPerBeat,msg[12],
+                \delayBeats,msg[13],
+                \delayFeedback,msg[14],
+                \delaySend,msg[15],
+                \sampleStart,msg[16] ],target:context.server).onFree({
+                    ("freed "++name).postln;
+                    NetAddr("127.0.0.1", 10111).sendMsg("voice",name,0);
+                });
+            );
+            NodeWatcher.register(mxsamplesVoiceAlloc.at(name));
+        });
+
+        this.addCommand("mxsamplesoff","i", { arg msg;
+            // lua is sending 1-index
+            var name=msg[1];
+            if (mxsamplesVoiceAlloc.at(name)!=nil,{
+                if (mxsamplesVoiceAlloc.at(name).isRunning==true,{
+                    mxsamplesVoiceAlloc.at(name).set(
+                        \envgate,0,
+                    );
+                });
+            });
+        });
 
 
-        // this.addCommand("keys","f", { arg msg;
-        //     synBreaklivePlay.set(\amp,msg[1])
-        // });
-
-        // break live
+	// break live
         mainBus=Bus.audio(context.server,2);
 
         bufBreaklive = Buffer.alloc(context.server, context.server.sampleRate * 18.0, 2);
@@ -316,7 +408,7 @@ Engine_NornsDeck : CroneEngine {
             ]);
 
             // special Q
-            nozPostF=SelectX.ar((0.1092*(nFilQ.log)+0.0343),[nozPostF,SinOsc.ar(nFilFrq)]);
+            // nozPostF=SelectX.ar((0.1092*(nFilQ.log)+0.0343),[nozPostF,SinOsc.ar(nFilFrq)]);
 
             // apply envelope to noise
             noz=Splay.ar(nozPostF*nozEnv);
@@ -339,12 +431,12 @@ Engine_NornsDeck : CroneEngine {
             // apply eq after distortion
             snd=BPeakEQ.ar(snd,eQFreq,1,eQGain/2);
 
-            snd=HPF.ar(snd,20);
+            snd=HPF.ar(snd,30);
 
             snd=snd*level.dbamp*0.2;
 
             // free self if its quiet
-            FreeSelf.kr((Amplitude.kr(snd)<0.001)*TDelay.kr(DC.kr(1),0.03));
+            DetectSilence.ar(snd,doneAction:2);
 
             Out.ar(out, snd);
         }).add;
@@ -396,9 +488,12 @@ Engine_NornsDeck : CroneEngine {
         });
         // ^ NornsDeck specific
 
-    }
+	}
 
-    free {
+	free {
+        (0..79).do({arg i; sampleBuffMxSamples[i].free});
+        // (mxsamplesMaxVoices).do({arg i; sampleBuffMxSamplesDelay[i].free;});
+        mxsamplesVoiceAlloc.keysValuesDo({ arg key, value; value.free; });
         // NornsDeck Specific v0.0.1
         synDrone.free;
         (0..maxVoices).do({arg i; synSupertonic[i].free});
@@ -409,5 +504,5 @@ Engine_NornsDeck : CroneEngine {
         maxSamplers.do({arg i; synSample[i].free});
         synKeys.free;
         bufKeys.free;
-    }
+	}
 }

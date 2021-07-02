@@ -10,7 +10,7 @@
 print("hello, world")
 
 -- lets load the norns deck
-norns.script.load("code/voyage/voyage.lua")
+norns.script.load("code/internorns/internorns.lua")
 
 -- lets change the tempo to 120
 params:set("clock_tempo",120)
@@ -44,9 +44,9 @@ stop("hello")
 -- "kick" or "clap" or "sd" or "hh" or "oh",
 -- it will utilize the built-in drums 
 
+-- more: http://norns.local/maiden/#edit/dust/code/internorns/lib/drummer.lua
 -- in each step of the <er> on the given <measure>
 play("kick",er(2),1)
-
 
 -- regular lua commands work
 -- built-in drums have a bunch of properties you can modify
@@ -54,7 +54,6 @@ kick.patch.distAmt=60;
 kick.patch.level=-5;
 clap.patch.level=-2;
 hh.patch.level=-5;
--- more: http://norns.local/maiden/#edit/dust/code/voyage/lib/drummer.lua
 
 -- lets sequence some lua code
 -- "kicklfo" is arbitrary, using er(..) to sequence lua that change the patch
@@ -81,66 +80,72 @@ stop("hh")
 ------------------  samples ----------------------
 --------------------------------------------------
 
--- e = engine, it is quicker to access
--- e.wav(<bufnum>,<file>) loads <file> into <bufnum>
--- wav(<name>) loads /home/we/dust/audio/voyage/<name>.wav
-e.wav(1,wav("closer"))
--- e.amp(<id>,<vol>) sets volume
-e.amp(1,1.2)
--- e.pos(<id>,<pos>) sets position (in [0,1])
-e.pos(1,13/28) 
--- e.pan(<id>,<pan>) sets pan (in [-1,1])
-e.pan(1,0) 
+-- you can load up to 6 samples, which are continuously
+-- running and can be seamlessly cut or looped
+
+-- sample.open(<id>,<name>) loads 
+-- /home/we/dust/audio/internorns/<name>.wav into sample <id>
+sample.open(1,"closer")
+
+-- sample.level(<id>,<vol>) sets volume for sample <id>
+sample.level(1,0.5)
+
+-- sample.pos(<id>,<pos>) sets position (in [0,1])
+sample.pos(1,13/28)
+
+-- sample.loop(<id>,<1>,<2>) sets loop points between
+-- <1> and <2> (in range [0,1])
+sample.loop(1,13.2/28,14.2/28)
+sample.loop(1,0,1)
+
+-- sample.pan(<id>,<pan>) sets pan (in [-1,1])
+sample.pan(1,0)
+
 -- set position every measure
-play("closer",er("e.pos(1,13/28)",1),1)
-play("closerpan",er("e.pan(1,lfo(6,-0.5,0.5))",8),1)
+play("closer",er("sample.pos(1,13/28)",1),1)
+play("closerpan",er("sample.pan(1,lfo(6,-0.5,0.5))",8),1)
 -- set position every 16 measures
 expand("closer",16)
 stop("closer")
 
 -- one sample can be "quantized" and with glitch and reverse fx
--- e.wav(<id>,<filename>)
-e.wav(2,wav("120_4")) 
--- e.rate(<id>,<rate>), can change rate to match bpm
-e.rate(2,clock.get_tempo()/120)
--- beatsync(<id>,<num>) keeps sample containing <num> beats in sync
-beatsync(2,8)
--- e.amp(<id>,<vol>) raises volume
-e.amp(2,0.6)
--- e.pan(<id>,<pan>) will pan
-e.pan(2,0.0)
+sample.open(2,"120_4")
+sample.level(2,0.5)
+-- sample.rate(<id>,<rate>), can change rate to match bpm
+sample.rate(2,clock.get_tempo()/120)
+-- sample.sync(<id>,<num>) keeps sample containing <num> beats in sync
+sample.sync(2,8)
 
 -- once beat synced, you can do
 -- glitching and reversing:
--- glitch(<prob>) glitch with probability <prob> (0,1)
-glitch_prob(2,0.02)
--- reverse(<prob> reverses with probability <prob> (0,1)
-reverse_prob(2,0.05)
+-- sample.glitch(<id>,<prob>) glitch with probability <prob> (0,1)
+sample.glitch(2,0.02)
+-- sample.reverse(<id>,<prob>) reverses with probability <prob> (0,1)
+sample.reverse(2,0.1)
 
--- e.amp(<id>,<vol>) lets you turn on/off the sound
-e.amp(1,0)
-e.amp(2,0)
+-- sample.level(<id>,0) will turn off the samples
+sample.level(1,0)
+sample.level(2,0)
 
 
 --------------------------------------------------
---------------------  tape -----------------------
+----------------------- tape ---------------------
 --------------------------------------------------
 
--- tape can add cool stops and starts
+-- "tape" is a special utility that keeps a 
+-- buffer of everything in the engine
+-- and can do tape breaks/stops/starts
 
--- tape stop
-tapestop()
--- tape start (run after stop)
-tapestart()
--- tape break (run twice to get normal)
-tapebreak()
+-- all stop in a stylish way
+tape.stop()
+-- all start, after running all stop
+tape.start()
+-- all break breaks everything
+tape.freeze()
 
 -- put them together
-clock.run(function() clock.sleep(1.5);tapestop();clock.sleep(2.5);tapestart() end)
-clock.run(function() clock.sleep(1.5);tapebreak();clock.sleep(1.5);tapebreak() end)
-
--- clock
-params:set("clock_tempo",120)
+clock.run(function() clock.sync(2);tape.stop();clock.sync(6);tape.start() end)
+clock.run(function() clock.sync(2);tape.freeze();clock.sync(2);tape.freeze() end)
 
 
 
@@ -182,7 +187,23 @@ play("op1",carpr("Ebm:4 Ebm:5"),4)
 stop("op1")
 
 
+--------------------------------------------------
+------------------ mx.samples---------------------
+--------------------------------------------------
 
+-- mx.samples can be played directly
+-- define instrument using "mx/<instrument_name>/<other_params>"
+play("mx/steinway_model_b/amp=1.0,attack=0","Abm/Eb:4",1)
+play("mx/steinway_model_b/amp=1.0,attack=0","E:4",2)
+play("mx/steinway_model_b/amp=1.0,attack=0.0","Gb/Db:4",3)
+play("mx/steinway_model_b/amp=1.0,attack=0.0","Ebm:4",4)
+stop("mx/steinway_model_b")
+
+play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",arp("ab4 b4 eb4",8),1)
+play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",arpr("e4 g#4 b4 e5 .",8),2)
+play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carp("Gb/Db:4",8),3)
+play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carpr("Ebm:4 Ebm:3",8),4)
+stop("mx/kalimba")
 
 --------------------------------------------------
 --------------------  crow -----------------------
@@ -217,25 +238,64 @@ norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3;
 
 
 --------------------------------------------------
--------------------- oooooo ----------------------
+---------------------- ooo -----------------------
 --------------------------------------------------
 
--- you can use ooooooo with commands
--- use the norns params menu to change characteristics of loops 
--- (e.g. pan, volume, lfos, etc.)
+-- ooo is like oooooo, but only allow three loops,
+-- each 90 seconds, of stereo audio
 
-tape_rec(1) -- records into loop 1
--- note: recording stops when reaching end of loop (set in `PARMS > startup`)
---       or recording stops when tape_stop(..) or tape_play(..) activated
-tape_arm_rec(1) -- arms recording for loop 1 (recording activated with sound)
+-- ooo.start(<tape>) starts the tape.
+-- <tape> can be 1, 2, or 3
+-- will start playing at that last rate (default 1)
+-- if recording is active, it will record
+ooo.start(1)
 
-tape_stop(1) -- stops loop 1
-tape_play(1) -- plays loop 1 from where it stopped
+-- ooo.stop(<tape>) stops the tape
+-- <tape> can be 1, 2, or 3
+ooo.stop(1)
 
-tape_clear(1) -- clears loop 1 entirely
+-- ooo.pan(<tape>,<pan>) changes the pan
+-- <tape> can be 1, 2, or 3
+-- <pan> is between -1 and 1
+ooo.pan(1,1)
 
-tape_reset(1) -- resets loop 1 to beginning
+-- ooo.rate(<tape>,<rate>) changes the rate
+-- <tape> can be 1, 2, or 3
+-- <rate> can be from -? to +?
+ooo.rate(1,1)
 
-clock.run(function() tape_clear(1); tape_reset(1); tape_rec(1); clock.sleep(2); tape_play(1) end)
+-- ooo.level(<tape>,<level>) changes the rate
+-- <tape> can be 1, 2, or 3
+-- <level> can be from 0 to 1
+ooo.level(1,1)
 
--- of course you change loop 1 to any number between 1 and 6....
+-- ooo.slew(<tape>,<slew>) changes the slew of rate/level/pan/rec
+-- <tape> can be 1, 2, or 3
+-- <slew> can be from 0 to ??
+ooo.slew(1,4)
+
+-- ooo.rec(<tape>,<rec_level>,<pre_level>) activates/deactivates recording
+-- which will record at level <rec_leve> and keep previous material
+-- at <pre_level>
+-- both levels can be from 0 to 1
+-- example: turn on recording with full overdub
+ooo.rec(1,1,0.0)
+-- example: turn off recording (keepinpp 100% of previous recordings)
+ooo.rec(1,0,1)
+-- example: record and only keep 50% of the previous recordings
+ooo.rec(1,1,0.5)
+
+-- ooo.rec(<tape>,<loop_end>,<loop_end>) creates a loop between
+-- <loop_start> and <loop_end> (denoted in seconds). 
+-- both points can be between 0 and 90 (90-second max)
+ooo.loop(1,0,2) -- a two-second loop between timestamps 0 and 2s, on tape 1
+
+-- example:
+-- a delay!
+ooo.level(1,0.25); ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/2);ooo.rec(1,1,0.1);
+ooo.pan(1,0)
+ooo.stop(1)
+
+-- you can add lfos to the loops easily
+play("loopy",er("ooo.pan(1,lfo(3.5,-1,1))",16),1)
+stop("loopy")
