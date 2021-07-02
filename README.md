@@ -16,7 +16,7 @@ the code you can sequence is any norns code. in addition to the standard norns f
 - grid control into [plonky sequencer](https://llllllll.co/t/plonky/)
 - sequencing pitches is faciliated by simply describing pitches using note/chord names (e.g. `Cm7/Eb` or `a4`). 
 
-using this script means that you first must run the script and then open up an editor of your choice (see documentation) and then run various lines of code to add code to the lua sequencer. the process is music.
+using this script means that you first must run the script in norns and then and then open up an editor of your choice to your lua code that you want to sequence. start with [getting-started.lua](https://github.com/schollz/internorns/blob/main/getting-started.lua) which explains all the funcationality of internorns. the process is music.
 
 
 ## Requirements
