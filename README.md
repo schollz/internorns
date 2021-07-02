@@ -16,7 +16,7 @@ the code you can sequence is any norns code. in addition to the standard norns f
 - grid control into [plonky sequencer](https://llllllll.co/t/plonky/)
 - sequencing pitches is faciliated by simply describing pitches using note/chord names (e.g. `Cm7/Eb` or `a4`). 
 
-using this script means that you first must run the script in norns and then and then open up an editor of your choice to your lua code that you want to sequence. start with [getting-started.lua](https://github.com/schollz/internorns/blob/main/getting-started.lua) which explains all the funcationality of internorns. the process is music.
+using this script means that you first must run the script in norns and then and then open up an editor of your choice to your lua code that you want to sequence. start with [`getting-started.lua`](https://github.com/schollz/internorns/blob/main/getting-started.lua) which explains all the funcationality of internorns. the process is music.
 
 
 ## Requirements
@@ -33,9 +33,12 @@ using this script means that you first must run the script in norns and then and
 
 ### maiden
 
+
 open up a webbrowser to [norns.local/maiden/#edit/dust/code/internorns/getting-started.lua](norns.local/maiden/#edit/dust/code/internorns/getting-started.lua).
 
 you can select any code and press <kbd>ctl</kbd>+<kbd>enter</kbd> to send that code to the norns.
+
+_note:_ requires latest version of maiden.
 
 ### visual studio code
 
