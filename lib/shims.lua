@@ -19,7 +19,7 @@ function expand(name,num)
 end
 
 function cclfo(name,ccnum,period,slo,shi)
-  ta:add(name..ccnum,er(string.format('mp:cc("%s",%d,lfo(%2.2f,%d,%d))',name,ccnum,period,slo,shi),12),1)
+  ta:add(name..ccnum,s(string.format('mp:cc("%s",%d,lfo(%2.2f,%d,%d))',name,ccnum,period,slo,shi),12),1)
 end
 
 function play(name,notes,i)
@@ -160,19 +160,19 @@ end
 
 function sample.sync(i,totalbeats)
   local v=totalbeats*4
-  ta:add("bb",er("if math.random()<0.5 then engine.pos("..i..",(<sn>-1)%"..v.."/"..v..") end",4),1)
+  ta:add("bb",s("if math.random()<0.5 then engine.pos("..i..",(<sn>-1)%"..v.."/"..v..") end",4),1)
 end
 
 function sample.reverse(i,v)
   if v==nil then
     v=0
   end
-  play("bbr",er("if math.random()<"..v.." then engine.reverse("..i..",1) end",5))
+  play("bbr",s("if math.random()<"..v.." then engine.reverse("..i..",1) end",5))
 end
 
 function sample.glitch(i,v)
   if v==nil then
     v=0
   end
-  ta:add("bbb",er("if math.random()<"..v.." then; v=math.random(); engine.loop("..i..",v,v+math.random()/40+0.01) end",4),1)
+  ta:add("bbb",s("if math.random()<"..v.." then; v=math.random(); engine.loop("..i..",v,v+math.random()/40+0.01) end",4),1)
 end

@@ -81,7 +81,7 @@ function rc(code)
 end
 
 -- returns an euclidean spaced array of "item"
-function er(item,num,size)
+function s(item,num,size)
   if size==nil then
     size=16
   end
@@ -104,7 +104,7 @@ end
 
 
 -- adds two arrays
-function er_add(t,t2)
+function s_add(t,t2)
   local t3={}
   for i,v1 in ipairs(t) do
     local v2=t2[i]
@@ -118,7 +118,7 @@ function er_add(t,t2)
 end
 
 -- subtract two arrays
-function er_sub(t,t2)
+function s_sub(t,t2)
   local t3={}
   for i,v1 in ipairs(t) do
     local v2=t2[i]
@@ -132,7 +132,7 @@ function er_sub(t,t2)
 end
 
 -- rotates an array by amt
-function rot(t,amt)
+function s_rot(t,amt)
   local rotated={}
   for i=#t-amt+1,#t do
     table.insert(rotated,t[i])

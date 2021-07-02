@@ -20,20 +20,20 @@ params:set("clock_tempo",120)
 -- nature(<vol>) is one example, it plays nature sounds
 nature(1.0)
 
--- er(<n>) function creates 16-step euclidean rhythm the number "1" in <n> places
--- e.g., er(4) = {1,,,,1,,,,1,,,,1,,,}
-table.print(er(4))
+-- a very useful function is the s(..) function
+-- s(<lua>,<n>) returns a table with 16-steps, where
+-- <n> steps contain the <lua>, spaced according to an euclidean rhythm
+table.print(s("print('hi')",4))
 
--- er(<lua>,<n>) creates 16-step euclidean rhythm with <lua> in <n> places
-table.print(er("print('hi')",4))
-
+-- another useful function is the play(..) function
 -- play(<ptn>,<er>,<measure>) creates a sequence called <ptn> that executes code
-play("hello",er("print('hi')",4),1)
+play("hello",s("print('hi')",4),1)
+
 -- stop(<ptn>) will stop the pattern
 stop("hello")
 
 -- lfo(<period>,<slo>,<shi>) returns value of a sine function evaluated
-play("hello",er("print('lfo='..lfo(10,1,100))",4),1)
+play("hello",s("print('lfo='..lfo(10,1,100))",4),1)
 stop("hello")
 
 --------------------------------------------------
@@ -44,9 +44,14 @@ stop("hello")
 -- "kick" or "clap" or "sd" or "hh" or "oh",
 -- it will utilize the built-in drums 
 
+-- we can use s(..) without the lua code to sequence these drums
+-- s(<n>) function creates 16-step euclidean rhythm the number "1" in <n> places
+-- e.g., s(4) = {1,,,,1,,,,1,,,,1,,,}
+table.print(s(4))
+
 -- more: http://norns.local/maiden/#edit/dust/code/internorns/lib/drummer.lua
 -- in each step of the <er> on the given <measure>
-play("kick",er(2),1)
+play("kick",s(2),1)
 
 -- regular lua commands work
 -- built-in drums have a bunch of properties you can modify
@@ -56,19 +61,19 @@ clap.patch.level=-2;
 hh.patch.level=-5;
 
 -- lets sequence some lua code
--- "kicklfo" is arbitrary, using er(..) to sequence lua that change the patch
-play("kicklfo",er("kick.patch.oscDcy=lfo(12,400,1200)",4),1)
-play("kicklfo2",er("kick.patch.distAmt=lfo(13,1,60)",4),1)
+-- "kicklfo" is arbitrary, using s(..) to sequence lua that change the patch
+play("kicklfo",s("kick.patch.oscDcy=lfo(12,400,1200)",4),1)
+play("kicklfo2",s("kick.patch.distAmt=lfo(13,1,60)",4),1)
 
--- er_add(<er1>,<er2>) will combine two rhythms
--- rot(<er>,<amt>) will rotate a rhythm <er> by <amt>
-play("kick",er_add(er(1),rot(er(1),3)),2)
+-- s_add(<er1>,<er2>) will combine two rhythms
+-- s_rot(<er>,<amt>) will rotate a rhythm <er> by <amt>
+play("kick",s_add(s(1),s_rot(s(1),3)),2)
 
 
--- er_sub(<er1>,<er2>) will subtract <er2> from <er1>
-play("hh",er_sub(er(15),er(4)),1)
-play("hhlfo",er("hh.patch.nEnvDcy=lfo(13,90,450)",4),1)
-play("clap",rot(er(2),4),1)
+-- s_sub(<er1>,<er2>) will subtract <er2> from <er1>
+play("hh",s_sub(s(15),s(4)),1)
+play("hhlfo",s("hh.patch.nEnvDcy=lfo(13,90,450)",4),1)
+play("clap",s_rot(s(2),4),1)
 
 -- stop(<ptn>) will stop pattern named <ptn>
 stop("kick")
@@ -102,8 +107,8 @@ sample.loop(1,0,1)
 sample.pan(1,0)
 
 -- set position every measure
-play("closer",er("sample.pos(1,13/28)",1),1)
-play("closerpan",er("sample.pan(1,lfo(6,-0.5,0.5))",8),1)
+play("closer",s("sample.pos(1,13/28)",1),1)
+play("closerpan",s("sample.pan(1,lfo(6,-0.5,0.5))",8),1)
 -- set position every 16 measures
 expand("closer",16)
 stop("closer")
@@ -297,5 +302,5 @@ ooo.pan(1,0)
 ooo.stop(1)
 
 -- you can add lfos to the loops easily
-play("loopy",er("ooo.pan(1,lfo(3.5,-1,1))",16),1)
+play("loopy",s("ooo.pan(1,lfo(3.5,-1,1))",16),1)
 stop("loopy")
