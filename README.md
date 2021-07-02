@@ -1,8 +1,23 @@
 # internorns
 
-a live-coding environment for norns.
+a live-coding environment that interconnects norns.
 
-combines [digital tapes a la *oooooo*](https://llllllll.co/t/oooooo), [built-in drums from supertonic](https://llllllll.co/t/supertonic/), with [sample player similar to amen](https://llllllll.co/t/amen/) and all atop the [plonky sequencer](https://llllllll.co/t/plonky/) with [instrument samples from mx.samples](https://llllllll.co/t/mx-samples/).
+this script is essentially *lua sequencer*. that is, you can write lines of code have them be executed at time intervals, similar to a tracker. by default there are 4 steps per beat which can hold any amount of code that will be run at that step.
+
+the code you can sequence is any norns code. in addition to the standard norns features (midi, osc, crow), I've added in simple interfaces to "lite" versions of several of my own scripts. here is a list of easily controllable entities:
+
+- midi pitches and cc lfos
+- crow pitches and envelope (or crow anything)
+- three stereo digital tapes a la [*oooooo*](https://llllllll.co/t/oooooo)
+- built-in drums from [supertonic](https://llllllll.co/t/supertonic/)
+- sample player similar to [amen](https://llllllll.co/t/amen/)
+- instrument samples from [mx.samples](https://llllllll.co/t/mx-samples/)
+- special tape stop / start global fx
+- grid control into [plonky sequencer](https://llllllll.co/t/plonky/)
+- sequencing pitches is faciliated by simply describing pitches using note/chord names (e.g. `Cm7/Eb` or `a4`). 
+
+using this script means that you first must run the script and then open up an editor of your choice (see documentation) and then run various lines of code to add code to the lua sequencer. the process is music.
+
 
 ## Requirements
 
