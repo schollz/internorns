@@ -80,7 +80,7 @@ now whenever you use the key combo <kbd>ctl</kbd>+<kbd>c</kbd> it will send the 
 
 
 
-then open up `dust/data/internorns/getting-started.lua` and follow the tutorial.
+open up `dust/data/internorns/getting-started.lua` in your editor to learn how to use internorns.
 
 ### Install
 
