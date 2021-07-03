@@ -63,7 +63,7 @@ function redraw()
     screen.move(1,8+8*(i-1))
     screen.text(s)
   end
-  if last_command=="" then
+  if print_command=="" then
     screen.font_size(8)
     screen.move(64,8)
     screen.text_center("available midi:")
