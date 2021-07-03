@@ -1,8 +1,8 @@
 # internorns
 
-a live-coding environment that interconnects norns.
+a live-coding interface that interconnects norns.
 
-this script is a cross between a live coding environment and a tracker: i.e. it is a tracker that you sequence with code. the code you can sequence is any norns lua code. in addition to the standard norns features (midi, osc, crow), I've added in simple interfaces to "lite" versions of several of my own scripts. here is a list of easily controllable entities:
+this script is a cross between a [live coding environment](https://llllllll.co/t/live-coding/5032) and a [tracker](https://llllllll.co/t/trackers/38551): i.e. it is a tracker that you sequence with code. the code you can sequence is any norns lua code. in addition to the standard norns features (midi, osc, crow), I've added in simple interfaces to "lite" versions of several of my own scripts. here is a list of easily controllable entities:
 
 - midi pitches and cc lfos
 - crow pitches and envelope (or crow anything)
@@ -12,14 +12,15 @@ this script is a cross between a live coding environment and a tracker: i.e. it 
 - instrument samples from [mx.samples](https://llllllll.co/t/mx-samples/)
 - special tape stop / start global fx
 - grid control into [plonky sequencer](https://llllllll.co/t/plonky/)
-- sequencing pitches is faciliated by simply describing pitches using note/chord names (e.g. `Cm7/Eb` or `a4`). 
+- sequencing pitches is facilitated by simply describing pitches using note/chord names (e.g. `Cm7/Eb` or `a4`). 
 
 the script works by constantly running a clock where code is defined to run on certain steps based on the the beat (4 steps per beat) and measure (you define measures). 
 
-see `getting-started.lua` to get started. the process is music.
+see [`data/getting-started.lua`](https://github.com/schollz/internorns/blob/main/data/getting-started.lua) to get started and preview how it works. the process is music.
 
 ## Requirements
 
+- computer (access to norns.online)
 - norns
 - grid (optional)
 - midi device (optional)
@@ -27,16 +28,16 @@ see `getting-started.lua` to get started. the process is music.
 
 ## Documentation
 
-start the internorns script.
+start the internorns script on norns.
 
-then choose an editor - maiden, visual studio code, and vim are all great options. see below for how to get started.
+on your computer, choose an editor: maiden, visual studio code, and vim are all great options. see below for how to get started with any of those.
 
 then open up `dust/data/internorns/getting-started.lua` and follow the tutorial.
 
 ### maiden
 
 
-open up a webbrowser to [norns.local/maiden/#edit/dust/code/internorns/getting-started.lua](norns.local/maiden/#edit/dust/code/internorns/getting-started.lua).
+open up a webbrowser to [norns.local/maiden/#edit/dust/data/internorns/getting-started.lua](norns.local/maiden/#edit/dust/data/internorns/getting-started.lua).
 
 you can select any code and press <kbd>ctl</kbd>+<kbd>enter</kbd> to send that code to the norns.
 
@@ -44,7 +45,7 @@ _note:_ requires latest version of maiden.
 
 ### visual studio code
 
-[download visual studio code](https://code.visualstudio.com/) and then install [the Norns REPL extension](https://llllllll.co/t/norns-repl-vscode-extension/41382). use software like [sftp drive](https://www.nsoftware.com/sftp/drive/) to mount your norns on your computer. then you can directly edit `~/dust/code/internorns/getting-started.lua`. 
+[download visual studio code](https://code.visualstudio.com/) and then install [the Norns REPL extension](https://llllllll.co/t/norns-repl-vscode-extension/41382). use software like [sftp drive](https://www.nsoftware.com/sftp/drive/) to mount your norns on your computer. then you can directly edit `~/dust/data/internorns/getting-started.lua`. 
 
 press <kbd>ctl</kbd>+<kbd>enter</kbd> to send the current line to the norns.
 

@@ -165,8 +165,10 @@ clock.run(function() clock.sync(2);tape.freeze();clock.sync(2);tape.freeze() end
 --------------------  midi -----------------------
 --------------------------------------------------
 
--- your norns screen shows the names, use any part of the name
--- e.g. if it says "op1 midi device" you can just write "op1"
+-- when you start internorns, you will see a list of 
+-- available midi devices in the console.
+-- you can use any part of their name as the <name> to designate it.
+-- i.e. if you see "op1 usb device" you can simply write "op1".
 
 -- cclfo(<name>,<cc>,<period>,<slo>,<shi>) sets a lfo on a cc value <cc>
 -- with sine lfo with period <period> oscillating between <slo> and <shi>

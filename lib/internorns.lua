@@ -6,7 +6,7 @@ function internorns_init()
   os.execute("mkdir -p /home/we/dust/audio/internorns/")
   os.execute("cp -u /home/we/dust/code/internorns/data/*.wav /home/we/dust/audio/internorns/")
   os.execute("mkdir -p /home/we/dust/data/internorns")
-  os.execute("cp /home/we/dust/code/internorns/data/getting-started.lua /home/we/dust/data/internorns/")
+  os.execute("cp -u /home/we/dust/code/internorns/data/getting-started.lua /home/we/dust/data/internorns/")
 
   local drummer=include("internorns/lib/drummer")
   local patches_=include("internorns/lib/patches")
