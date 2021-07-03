@@ -24,13 +24,13 @@ string.lpad = function(str, len, char)
 end
 
 function midipal:print()
+  print("---------------------------")
+  print("| connnected midi devices |")
+  print("---------------------------")
   for _, name in ipairs(self.names) do
-    print("---------------------------")
-    print("| connnected midi devices |")
-    print("---------------------------")
     print(string.format("| - %s |",string.lpad(name,21," ")))
-    print("---------------------------")
   end
+  print("---------------------------")
 end
 
 function midipal:ismidi(name)

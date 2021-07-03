@@ -45,10 +45,10 @@ function play(name,notes,i)
     else
       foo[3]=","..foo[3]
     end
-    print("mg.mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})")
+    print("mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})")
     ta:add(foo[2],ta:sound(notes,
-      "mg.mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})",
-    "mg.mx:off({name='"..foo[2].."',midi=<m>})"),i)
+      "mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})",
+    "mx:off({name='"..foo[2].."',midi=<m>})"),i)
   elseif name=="kick" or name=="hh" or name=="clap" or name=="sd" or name=="oh" then
     for i,v in ipairs(notes) do
       if v~="" then

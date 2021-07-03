@@ -11,7 +11,6 @@ this script is a cross between a [live coding environment](https://llllllll.co/t
 - sample player similar to [amen](https://llllllll.co/t/amen/)
 - instrument samples from [mx.samples](https://llllllll.co/t/mx-samples/)
 - special tape stop / start global fx
-- grid control into [plonky sequencer](https://llllllll.co/t/plonky/)
 - sequencing pitches is facilitated by simply describing pitches using note/chord names (e.g. `Cm7/Eb` or `a4`). 
 
 the script works by constantly running a clock where code is defined to run on certain steps based on the the beat (4 steps per beat) and measure (you define measures). 
@@ -79,7 +78,6 @@ make sure you install all of the following (or update if you already have them):
 
 ```
 ;install https://github.com/schollz/mx.samples
-;install https://github.com/schollz/plonky
 ;install https://github.com/schollz/supertonic
 ;install https://github.com/schollz/internorns
 ```
