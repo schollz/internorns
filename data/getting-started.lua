@@ -19,8 +19,8 @@ params:set("clock_tempo",120)
 -- the norns deck has special functions in addition to regular lua
 -- that harness a built-in drum machine, a 6-voice sampler, and sequencer
 -- nature(<vol>) is one example, it plays nature sounds
-nature(0.5)
-nature(0.0)
+nature(0.5) -- turns on 
+nature(0.0) -- turns off
 
 
 -- a very useful function is the s(..) function
