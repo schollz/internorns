@@ -18,7 +18,8 @@ params:set("clock_tempo",120)
 
 -- internorns has special functions in addition to regular lua
 -- that harness a built-in drum machine, a 6-voice sampler, and sequencer
--- nature(<vol>) is one example, it plays nature sounds
+-- one such function:
+-- nature(<vol>) plays nature sounds at volume <vol>
 nature(0.5) -- turns on 
 nature(0.0) -- turns off
 
@@ -133,7 +134,9 @@ sample.open(2,"120_4")
 
 sample.level(2,0.4)
 -- sample.rate(<id>,<rate>), can change rate to match bpm
-sample.rate(2,clock.get_tempo()/120)
+sample.rate(2,clock.get_tempo()/120) -- "120" because I know this 
+                                     -- sample is at 120 bpm
+
 -- sample.sync(<id>,<num>) keeps sample containing <num> beats in sync
 sample.sync(2,8)
 
