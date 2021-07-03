@@ -103,12 +103,12 @@ function TA:expand(s,n)
 end
 
 
-function TA:sound(s,ctx,ctxoff)
+function TA:sound(str,ctx,ctxoff)
   local rays={}
-  local lines=string.split(s,";")
+  local lines=string.split(str,";")
   for i,line in ipairs(lines) do
     local words=string.split(line," ")
-    local ray=er("-",#words)
+    local ray=s("-",#words)
     local cmds={}
     local cmdsoff={}
     local last_midi=nil

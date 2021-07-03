@@ -17,6 +17,21 @@ function midipal:new(o)
   return o
 end
 
+--- Pads str to length len with char from right
+string.lpad = function(str, len, char)
+    if char == nil then char = ' ' end
+    return str .. string.rep(char, len - #str)
+end
+
+function midipal:print()
+  for _, name in ipairs(self.names) do
+    print("---------------------------")
+    print("| connnected midi devices |")
+    print("---------------------------")
+    print(string.format("| - %s |",string.lpad(name,21," ")))
+    print("---------------------------")
+  end
+end
 
 function midipal:ismidi(name)
   for k,v in pairs(self.midis) do

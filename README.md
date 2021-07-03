@@ -27,11 +27,11 @@ see `getting-started.lua` to get started. the process is music.
 
 ## Documentation
 
-1. first you can choose an editor - maiden, visual studio code, and vim are all great options. see below for how to get started.
+start the internorns script.
 
-2. then open up `dust/code/internorns/getting-started.lua` and follow the tutorial.
+then choose an editor - maiden, visual studio code, and vim are all great options. see below for how to get started.
 
-3. copy-paste things from `getting-started.lua` to formulate your own composition.
+then open up `dust/data/internorns/getting-started.lua` and follow the tutorial.
 
 ### maiden
 

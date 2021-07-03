@@ -6,12 +6,8 @@ function nature(vol)
   if vol==nil then
     vol=0
   end
-  engine.wav(4,wav("birds_eating"))
-  engine.wav(5,wav("birds_morning"))
-  engine.wav(6,wav("waves"))
-  engine.amp(4,1*vol)
-  engine.amp(5,2*vol)
-  engine.amp(6,0.2*vol)
+  engine.wav(6,wav("nature"))
+  engine.amp(6,vol)
 end
 
 function expand(name,num)
