@@ -20,6 +20,7 @@ params:set("clock_tempo",120)
 -- that harness a built-in drum machine, a 6-voice sampler, and sequencer
 -- nature(<vol>) is one example, it plays nature sounds
 nature(1.0)
+nature(0.0)
 
 -- a very useful function is the s(..) function
 -- s(<lua>,<n>) returns a table with 16-steps, where
@@ -101,26 +102,26 @@ sample.open(1,"closer")
 sample.level(1,0.5)
 
 -- sample.pos(<id>,<pos>) sets position (in [0,1])
-sample.pos(1,13/28)
+sample.pos(1,0)
 
 -- sample.loop(<id>,<1>,<2>) sets loop points between
 -- <1> and <2> (in range [0,1])
-sample.loop(1,13.2/28,14.2/28)
+sample.loop(1,0.7,0.9)
 sample.loop(1,0,1)
 
 -- sample.pan(<id>,<pan>) sets pan (in [-1,1])
 sample.pan(1,0)
-
--- set position every measure
-play("closer",s("sample.pos(1,13/28)",1),1)
+-- example: lfo on the pan
 play("closerpan",s("sample.pan(1,lfo(6,-0.5,0.5))",8),1)
--- set position every 16 measures
-expand("closer",16)
-stop("closer")
+
+-- set position every 8 measures by setting the first measure and then
+-- expanding to 8 measures
+play("closerpos",s("sample.pos(1,0)",1),1)
+expand("closerpos",8)
 
 -- one sample can be "quantized" and with glitch and reverse fx
 sample.open(2,"120_4")
-sample.level(2,0.5)
+sample.level(2,0.4)
 -- sample.rate(<id>,<rate>), can change rate to match bpm
 sample.rate(2,clock.get_tempo()/120)
 -- sample.sync(<id>,<num>) keeps sample containing <num> beats in sync
@@ -151,6 +152,7 @@ tape.stop()
 -- all start, after running all stop
 tape.start()
 -- all break breaks everything
+-- run it again to unfreeze
 tape.freeze()
 
 -- put them together
@@ -207,12 +209,16 @@ play("mx/steinway_model_b/amp=1.0,attack=0","Abm/Eb:4",1)
 play("mx/steinway_model_b/amp=1.0,attack=0","E:4",2)
 play("mx/steinway_model_b/amp=1.0,attack=0.0","Gb/Db:4",3)
 play("mx/steinway_model_b/amp=1.0,attack=0.0","Ebm:4",4)
+
+-- stopping only needs to refernce the first two parts
 stop("mx/steinway_model_b")
 
-play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",arp("ab4 b4 eb4",8),1)
+play("mx/kalimba/amp=1.4,attack=0.0,release=0.1",arp("ab4 b4 eb4",8),1)
 play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",arpr("e4 g#4 b4 e5 .",8),2)
-play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carp("Gb/Db:4",8),3)
+play("mx/kalimba/amp=1.3,attack=0.0,release=0.1",carp("Gb/Db:4",8),3)
 play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carpr("Ebm:4 Ebm:3",8),4)
+
+-- stopping only needs to refernce the first two parts
 stop("mx/kalimba")
 
 --------------------------------------------------
@@ -304,10 +310,11 @@ ooo.loop(1,0,2) -- a two-second loop between timestamps 0 and 2s, on tape 1
 
 -- example:
 -- a delay!
-ooo.level(1,0.25); ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/2);ooo.rec(1,1,0.1);
+ooo.level(1,0.25); ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/1);ooo.rec(1,1,0.4);
 ooo.pan(1,0)
 ooo.stop(1)
 
 -- you can add lfos to the loops easily
 play("loopy",s("ooo.pan(1,lfo(3.5,-1,1))",16),1)
 stop("loopy")
+
