@@ -16,7 +16,7 @@ norns.script.load("code/internorns/internorns.lua")
 -- lets change the tempo to 120
 params:set("clock_tempo",120)
 
--- the norns deck has special functions in addition to regular lua
+-- internorns has special functions in addition to regular lua
 -- that harness a built-in drum machine, a 6-voice sampler, and sequencer
 -- nature(<vol>) is one example, it plays nature sounds
 nature(0.5) -- turns on 
@@ -98,7 +98,7 @@ stop("hh")
 ------------------  samples ----------------------
 --------------------------------------------------
 
--- you can load up to 6 samples, which are continuously
+-- you can load up to ?? samples, which are continuously
 -- running and can be seamlessly cut or looped
 
 -- sample.open(<id>,<name>) loads 
