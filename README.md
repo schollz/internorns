@@ -2,6 +2,8 @@
 
 a live-coding interface that interconnects norns.
 
+https://vimeo.com/570686702
+
 this script is a cross between a [live coding environment](https://llllllll.co/t/live-coding/5032) and a [tracker](https://llllllll.co/t/trackers/38551): i.e. it is a tracker that you sequence with code. the code you can sequence is any norns lua code. in addition to the standard norns features (midi, osc, crow), I've added in simple interfaces to "lite" versions of several of my own scripts. here is a list of easily controllable entities:
 
 - midi pitches and cc lfos
