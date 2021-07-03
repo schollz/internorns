@@ -2,12 +2,27 @@ function wav(s)
   return "/home/we/dust/audio/internorns/"..s..".wav"
 end
 
+local nature_loaded=false
+
 function nature(vol)
   if vol==nil then
     vol=0
   end
-  engine.wav(6,wav("nature"))
-  engine.amp(6,vol)
+  if not nature_loaded then
+    engine.wav(6,wav("nature"))
+    nature_loaded=true 
+  end
+  clock.run(function()
+    clock.sleep(0.2)
+    engine.amp(6,vol)
+  end)
+  if vol==0 then
+    clock.run(function()
+      clock.sleep(8)
+      engine.free(6)
+      nature_loaded=false
+    end)
+  end
 end
 
 function expand(name,num)
@@ -152,6 +167,10 @@ end
 
 function sample.rate(i,v)
   engine.rate(i,v)
+end
+
+function sample.release(i)
+  engine.release(i)
 end
 
 function sample.sync(i,totalbeats)

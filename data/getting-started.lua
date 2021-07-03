@@ -19,8 +19,9 @@ params:set("clock_tempo",120)
 -- the norns deck has special functions in addition to regular lua
 -- that harness a built-in drum machine, a 6-voice sampler, and sequencer
 -- nature(<vol>) is one example, it plays nature sounds
-nature(1.0)
+nature(0.5)
 nature(0.0)
+
 
 -- a very useful function is the s(..) function
 -- s(<lua>,<n>) returns a table with 16-steps, where
@@ -96,6 +97,8 @@ stop("hh")
 
 -- sample.open(<id>,<name>) loads 
 -- /home/we/dust/audio/internorns/<name>.wav into sample <id>
+-- note: need to load sample before running other commands
+-- in a block
 sample.open(1,"closer")
 
 -- sample.level(<id>,<vol>) sets volume for sample <id>
@@ -121,7 +124,7 @@ expand("closerpos",8)
 
 -- one sample can be "quantized" and with glitch and reverse fx
 sample.open(2,"120_4")
-sample.level(2,0.4)
+sample.level(2,0.3)
 -- sample.rate(<id>,<rate>), can change rate to match bpm
 sample.rate(2,clock.get_tempo()/120)
 -- sample.sync(<id>,<num>) keeps sample containing <num> beats in sync
@@ -138,6 +141,9 @@ sample.reverse(2,0.1)
 sample.level(1,0)
 sample.level(2,0)
 
+-- you can also "release" a sample which will unload and and save cpu
+sample.release(1)
+sample.release(2)
 
 --------------------------------------------------
 ----------------------- tape ---------------------
@@ -147,16 +153,16 @@ sample.level(2,0)
 -- buffer of everything in the engine
 -- and can do tape breaks/stops/starts
 
--- all stop in a stylish way
+-- tape stop
 tape.stop()
--- all start, after running all stop
+-- tape start, after a stop
 tape.start()
--- all break breaks everything
+-- tape free breaks everything
 -- run it again to unfreeze
 tape.freeze()
 
 -- put them together
-clock.run(function() clock.sync(2);tape.stop();clock.sync(6);tape.start() end)
+clock.run(function() clock.sync(2);tape.stop();clock.sync(8);tape.start() end)
 clock.run(function() clock.sync(2);tape.freeze();clock.sync(2);tape.freeze() end)
 
 

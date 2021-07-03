@@ -197,13 +197,12 @@ Engine_MxInternorns : CroneEngine {
 
 
 
-        // break beat
+        // sampler thing
 
-        bufSample=Array.fill(maxSamplers,{arg i;
-            Buffer.new(context.server);
-        });
+        bufSample=Dictionary.new(8);
+        synSample=Dictionary.new(8);
 
-        SynthDef("defBreakbeat", {
+        SynthDef("defSampler", {
             arg out=0, amp=0,bufnum=0, rate=1, start=0, end=1, reset=0, t_trig=0,
             loops=1, pan=0;
             var snd,snd2,pos,pos2,frames,duration,env,finalsnd;
@@ -218,7 +217,7 @@ Engine_MxInternorns : CroneEngine {
             endB=Latch.kr(end,1-aOrB);
             resetB=Latch.kr(reset,1-aOrB);
             crossfade=Lag.ar(K2A.ar(aOrB),0.05);
-            amp=VarLag.kr(amp,8,0);
+            amp=VarLag.kr(amp,6,0);
 
 
             rate = rate*BufRateScale.kr(bufnum);
@@ -267,46 +266,52 @@ Engine_MxInternorns : CroneEngine {
             Out.ar(out,Balance2.ar(finalsnd[0],finalsnd[1],-1*pan,amp))
         }).add;
 
-        context.server.sync;
-
-        synSample=Array.fill(maxSamplers,{arg i;
-            Synth("defBreakbeat",[
-                \out,mainBus.index,
-                \bufnum,bufSample[i];
-            ], target:context.xg);
-        });
-
-        context.server.sync;
 
         this.addCommand("wav","is", { arg msg;
-            bufSample[msg[1]-1].free;
-            bufSample[msg[1]-1] = Buffer.read(context.server,msg[2],action:{
-                synSample[msg[1]-1].set(\bufnum,bufSample[msg[1]-1].bufnum,\t_trig,1,\reset,0,\start,0,\end,1,\rate,1,\loops,1000);
+            if (bufSample.at(msg[1])==nil,{
+            },{
+                bufSample.at(msg[1]).free;
+                synSample.at(msg[1]).free;
+            });
+            Buffer.read(context.server,msg[2],action:{
+                arg bufnum;
+                ("loaded "++msg[2]++" into slot "++msg[1]).postln;
+                bufSample.put(msg[1],bufnum);
+                synSample.put(msg[1],Synth("defSampler",[
+                    \out,mainBus.index,
+                    \bufnum,bufnum,
+                    \t_trig,1,\reset,0,\start,0,\end,1,\rate,1,\loops,1000
+                ],target:context.server));
             });                       
         });
 
         this.addCommand("amp","if", { arg msg;
-            synSample[msg[1]-1].set(\amp,msg[2])
+            synSample.at(msg[1]).set(\amp,msg[2])
+        });
+
+        this.addCommand("release","i", { arg msg;
+            synSample.at(msg[1]).free;
+            bufSample.at(msg[1]).free;
         });
 
         this.addCommand("pan","if", { arg msg;
-            synSample[msg[1]-1].set(\pan,msg[2])
+            synSample.at(msg[1]).set(\pan,msg[2])
         });
 
         this.addCommand("rate","if", { arg msg;
-            synSample[msg[1]-1].set(\rate,msg[2])
+            synSample.at(msg[1]).set(\rate,msg[2])
         });
 
         this.addCommand("pos","if", {arg msg;
-            synSample[msg[1]-1].set(\t_trig,1,\reset,msg[2],\start,0,\end,1,\rate,1,\loops,1000);
+            synSample.at(msg[1]).set(\t_trig,1,\reset,msg[2],\start,0,\end,1,\rate,1,\loops,1000);
         });
 
         this.addCommand("reverse","i", {arg msg;
-            synSample[msg[1]-1].set(\rate,-1);
+            synSample.at(msg[1]).set(\rate,-1);
         });
 
         this.addCommand("loop","iff", {arg msg;
-            synSample[msg[1]-1].set(\t_trig,1,\start,msg[2],\reset,msg[2],\end,msg[3],\loops,1000);
+            synSample.at(msg[1]).set(\t_trig,1,\start,msg[2],\reset,msg[2],\end,msg[3],\loops,1000);
         });
 
 
@@ -500,8 +505,8 @@ Engine_MxInternorns : CroneEngine {
         synBreaklivePlay.free;
         synBreakliveRec.free;
         mainBus.free;
-        maxSamplers.do({arg i; bufSample[i].free});
-        maxSamplers.do({arg i; synSample[i].free});
+        synSample.keysValuesDo({ arg key, value; value.free; });
+        bufSample.keysValuesDo({ arg key, value; value.free; });
         synKeys.free;
         bufKeys.free;
 	}
