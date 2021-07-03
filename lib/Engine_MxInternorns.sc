@@ -271,17 +271,20 @@ Engine_MxInternorns : CroneEngine {
             if (bufSample.at(msg[1])==nil,{
             },{
                 bufSample.at(msg[1]).free;
-                synSample.at(msg[1]).free;
             });
             Buffer.read(context.server,msg[2],action:{
                 arg bufnum;
                 ("loaded "++msg[2]++" into slot "++msg[1]).postln;
                 bufSample.put(msg[1],bufnum);
+		if (synSample.at(msg[1])==nil,{
                 synSample.put(msg[1],Synth("defSampler",[
                     \out,mainBus.index,
                     \bufnum,bufnum,
                     \t_trig,1,\reset,0,\start,0,\end,1,\rate,1,\loops,1000
                 ],target:context.server));
+		},{
+		synSample.at(msg[1]).set(\bufnum,bufnum);
+		});
             });                       
         });
 
@@ -291,7 +294,9 @@ Engine_MxInternorns : CroneEngine {
 
         this.addCommand("release","i", { arg msg;
             synSample.at(msg[1]).free;
+	    synSample.removeAt(msg[1]);
             bufSample.at(msg[1]).free;
+	    bufSample.removeAt(msg[1]);
         });
 
         this.addCommand("pan","if", { arg msg;

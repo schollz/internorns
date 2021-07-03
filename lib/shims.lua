@@ -46,7 +46,7 @@ function play(name,notes,i)
       foo[3]=","..foo[3]
     end
     print("mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})")
-    ta:add(foo[2],ta:sound(notes,
+    ta:add(foo[1].."/"..foo[2],ta:sound(notes,
       "mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})",
     "mx:off({name='"..foo[2].."',midi=<m>})"),i)
   elseif name=="kick" or name=="hh" or name=="clap" or name=="sd" or name=="oh" then
@@ -66,10 +66,6 @@ end
 function stop(name)
   if mp:ismidi(name) then
     mp:off(name,-1)
-  end
-  if string.sub(name,1,3)=="mx/" then
-    local foo=string.split(name,"/")
-    name=foo[2]
   end
   ta:rm(name)
 end
