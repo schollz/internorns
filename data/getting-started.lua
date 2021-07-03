@@ -42,6 +42,10 @@ stop("hello")
 -- <period> that oscillates between <slo> and <shi>
 play("hello",s("print('lfo='..lfo(10,1,100))",4),1)
 
+
+
+
+
 --------------------------------------------------
 ---------------  built-in drums ------------------
 --------------------------------------------------
@@ -88,6 +92,8 @@ stop("clap")
 stop("hh")
 
 
+
+
 --------------------------------------------------
 ------------------  samples ----------------------
 --------------------------------------------------
@@ -124,7 +130,8 @@ expand("closerpos",8)
 
 -- one sample can be "quantized" and with glitch and reverse fx
 sample.open(2,"120_4")
-sample.level(2,0.3)
+
+sample.level(2,0.4)
 -- sample.rate(<id>,<rate>), can change rate to match bpm
 sample.rate(2,clock.get_tempo()/120)
 -- sample.sync(<id>,<num>) keeps sample containing <num> beats in sync
@@ -145,25 +152,6 @@ sample.level(2,0)
 sample.release(1)
 sample.release(2)
 
---------------------------------------------------
------------------------ tape ---------------------
---------------------------------------------------
-
--- "tape" is a special utility that keeps a 
--- buffer of everything in the engine
--- and can do tape breaks/stops/starts
-
--- tape stop
-tape.stop()
--- tape start, after a stop
-tape.start()
--- tape free breaks everything
--- run it again to unfreeze
-tape.freeze()
-
--- put them together
-clock.run(function() clock.sync(2);tape.stop();clock.sync(8);tape.start() end)
-clock.run(function() clock.sync(2);tape.freeze();clock.sync(2);tape.freeze() end)
 
 
 
@@ -207,16 +195,18 @@ play("op1",carpr("Ebm:4 Ebm:5"),4)
 stop("op1")
 
 
+
+
 --------------------------------------------------
 ------------------ mx.samples---------------------
 --------------------------------------------------
 
 -- mx.samples can be played directly
 -- define instrument using "mx/<instrument_name>/<other_params>"
-play("mx/steinway_model_b/amp=1.0,attack=0","Abm/Eb:4",1)
-play("mx/steinway_model_b/amp=1.0,attack=0","E:4",2)
-play("mx/steinway_model_b/amp=1.0,attack=0.0","Gb/Db:4",3)
-play("mx/steinway_model_b/amp=1.0,attack=0.0","Ebm:4",4)
+play("mx/steinway_model_b/amp=1.3,attack=0","Abm/Eb:4",1)
+play("mx/steinway_model_b/amp=1.2,attack=0","E:4",2)
+play("mx/steinway_model_b/amp=1.1,attack=0.0","Gb/Db:4",3)
+play("mx/steinway_model_b/amp=1.2,attack=0.0","Ebm:4",4)
 
 -- stopping only needs to refernce the first two parts
 stop("mx/steinway_model_b")
@@ -229,6 +219,9 @@ play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carpr("Ebm:4 Ebm:3",8),4)
 -- stopping only needs to refernce the first two parts
 stop("mx/kalimba")
 
+
+
+
 --------------------------------------------------
 --------------------  crow -----------------------
 --------------------------------------------------
@@ -238,19 +231,18 @@ stop("mx/kalimba")
 -- crow out 2 is envelope, triggered on each note
 
 -- define an envelope
-crow.output[2].action="{ to(10,3),to(0,5) }";
+crow.output[2].action=string.format("{ to(10,%2.2f,exponential),to(0,%2.2f,exponential) }",(clock.get_beat_sec()*3),(clock.get_beat_sec()*2));
 
 -- play("crow",<notes>,<measure>) will play crow notes on
 -- specified measure, as before with midi
 -- the envelope is triggered on every note.
-play("crow","ab1",1)
-play("crow","ab3",1)
-play("crow","gb4",3)
-play("crow","bb4",5)
-play("crow","eb5",7)
+play("crow","ab2",1)
+play("crow","gb3",3)
+play("crow","bb3",5)
+play("crow","eb4",7)
 expand("crow",8)
 
-crow.output[2].action="{ to(10,0),to(0,0.07) }"; crow.output[2]()
+crow.output[2].action="{ to(10,0.0),to(0,0.07) }"; crow.output[2]()
 stop("crow"); play("crow",arpr("ab4 eb5 ab5"),1)
 
 -- stop(<name>) will stop crow
@@ -259,6 +251,31 @@ stop("crow")
 -- quick tuning!
 -- this loads the tuner and sets the volts to 3 (A3)
 norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3; 
+
+
+
+
+--------------------------------------------------
+----------------------- tape ---------------------
+--------------------------------------------------
+
+-- "tape" is a special utility that keeps a 
+-- buffer of everything in the engine
+-- and can do tape breaks/stops/starts
+
+-- tape stop
+tape.stop()
+-- tape start, after a stop
+tape.start()
+-- tape free breaks everything
+-- run it again to unfreeze
+tape.freeze()
+
+-- put them together
+clock.run(function() clock.sync(2);tape.stop();clock.sync(8);tape.start() end)
+clock.run(function() clock.sync(2);tape.freeze();clock.sync(2);tape.freeze() end)
+
+
 
 
 --------------------------------------------------
@@ -318,7 +335,7 @@ ooo.loop(1,0,2) -- a two-second loop between timestamps 0 and 2s, on tape 1
 
 -- example:
 -- a delay!
-ooo.level(1,0.25); ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/1);ooo.rec(1,1,0.4);
+ooo.level(1,0.1); ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/1);ooo.rec(1,1,0.1);
 ooo.pan(1,0)
 ooo.stop(1)
 
