@@ -10,7 +10,7 @@ function nature(vol)
   end
   if not nature_loaded then
     engine.wav(6,wav("nature"))
-    nature_loaded=true 
+    nature_loaded=true
   end
   clock.run(function()
     clock.sleep(0.2)
@@ -143,12 +143,24 @@ end
 sample={}
 
 sample.memrate={}
+sample.memsynced={}
+sample.memclock={}
 
 function sample.loop(i,u,v)
   engine.loop(i,u,v)
 end
 
 function sample.pos(i,v)
+  if sample.memsynced[i]~=nil then
+    local current_tempo=clock.get_tempo()
+    if sample.memclock[i]==nil then
+      sample.memclock[i]=current_tempo
+    end
+    if current_tempo~=sample.memclock[i] then
+      sample.memclock[i]=current_tempo
+      sample.rate(i,clock.get_tempo()/sample.memsynced[i])
+    end
+  end
   engine.pos(i,v,sample.memrate[i])
 end
 
@@ -180,9 +192,11 @@ end
 
 function sample.sync(i,bpm,totalbeats)
   if bpm==nil then
+    sample.memsynced[i]=nil
     ta:rm("bb"..i)
     do return end
   end
+  sample.memsynced[i]=bpm
   sample.rate(i,clock.get_tempo()/bpm)
   local v=totalbeats*4
   ta:add("bb"..i,s("if math.random()<0.5 then sample.pos("..i..",(<sn>-1)%"..v.."/"..v..") end",4),1)
@@ -190,16 +204,16 @@ end
 
 function sample.reverse(i,v)
   if v==nil then
-     ta:rm("bbr"..i)
-     do return end
+    ta:rm("bbr"..i)
+    do return end
   end
   play("bbr"..i,s("if math.random()<"..v.." then sample.reverse_rate("..i..") end",5))
 end
 
 function sample.glitch(i,v)
   if v==nil then
-     ta:rm("bbb"..i)
-     do return end
+    ta:rm("bbb"..i)
+    do return end
   end
   ta:add("bbb"..i,s("if math.random()<"..v.." then; v=math.random(); engine.loop("..i..",v,v+math.random()/40+0.01) end",4),1)
 end

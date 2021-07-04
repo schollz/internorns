@@ -133,10 +133,10 @@ play("closerpos",s("sample.pos(1,0)",1),1)
 expand("closerpos",8)
 
 
-
--- quantized sampels
+-- syncing samples
 -- you can easily quantize samples, e.g. drums, to the beat of the norns
-sample.open(2,"120_4") -- opens /home/we/dust/audio/internorns/120_4.wav
+sample.open(2,"120_8") -- opens /home/we/dust/audio/internorns/120_4.wav
+                       -- drum beat at 120bpm for 8 beats
 
 -- turn up the volume
 sample.level(2,0.4)
@@ -157,8 +157,9 @@ sample.reverse(2,0.1)
 sample.reverse(2) -- turns off reversing
 
 -- example: another beat
-sample.open(2,"165_1") -- opens /home/we/dust/audio/internorns/120_4.wav
-sample.sync(2,165,8)
+sample.open(2,"165_8") -- opens /home/we/dust/audio/internorns/165_8.wav
+sample.sync(2,165,8) -- syncs to source of 165 bpm and 8 beats
+params:set("clock_tempo",120) -- will stay synced if you change the clock!
 
 -- sample.level(<id>,0) will turn off the samples
 sample.level(1,0)
