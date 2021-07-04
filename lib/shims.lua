@@ -142,12 +142,14 @@ end
 
 sample={}
 
+sample.memrate={}
+
 function sample.loop(i,u,v)
   engine.loop(i,u,v)
 end
 
 function sample.pos(i,v)
-  engine.pos(i,v)
+  engine.pos(i,v,sample.memrate[i])
 end
 
 function sample.level(i,v)
@@ -155,13 +157,16 @@ function sample.level(i,v)
 end
 
 function sample.open(i,v)
+  sample.memrate[i]=1
   engine.wav(i,wav(v))
 end
+
 function sample.pan(i,v)
   engine.pan(i,v)
 end
 
 function sample.rate(i,v)
+  sample.memrate[i]=v
   engine.rate(i,v)
 end
 
@@ -169,21 +174,32 @@ function sample.release(i)
   engine.release(i)
 end
 
-function sample.sync(i,totalbeats)
+function sample.reverse_rate(i)
+  engine.rate(i,-1*sample.memrate[i])
+end
+
+function sample.sync(i,bpm,totalbeats)
+  if bpm==nil then
+    ta:rm("bb"..i)
+    do return end
+  end
+  sample.rate(i,clock.get_tempo()/bpm)
   local v=totalbeats*4
-  ta:add("bb",s("if math.random()<0.5 then engine.pos("..i..",(<sn>-1)%"..v.."/"..v..") end",4),1)
+  ta:add("bb"..i,s("if math.random()<0.5 then sample.pos("..i..",(<sn>-1)%"..v.."/"..v..") end",4),1)
 end
 
 function sample.reverse(i,v)
   if v==nil then
-    v=0
+     ta:rm("bbr"..i)
+     do return end
   end
-  play("bbr",s("if math.random()<"..v.." then engine.reverse("..i..",1) end",5))
+  play("bbr"..i,s("if math.random()<"..v.." then sample.reverse_rate("..i..") end",5))
 end
 
 function sample.glitch(i,v)
   if v==nil then
-    v=0
+     ta:rm("bbb"..i)
+     do return end
   end
-  ta:add("bbb",s("if math.random()<"..v.." then; v=math.random(); engine.loop("..i..",v,v+math.random()/40+0.01) end",4),1)
+  ta:add("bbb"..i,s("if math.random()<"..v.." then; v=math.random(); engine.loop("..i..",v,v+math.random()/40+0.01) end",4),1)
 end

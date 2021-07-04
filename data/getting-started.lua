@@ -114,6 +114,9 @@ sample.level(1,0.5)
 -- sample.pos(<id>,<pos>) sets position (in [0,1])
 sample.pos(1,0)
 
+-- sample.rate(<id>,<rate>) changes rate
+sample.rate(1,-1)
+
 -- sample.loop(<id>,<1>,<2>) sets loop points between
 -- <1> and <2> (in range [0,1])
 sample.loop(1,0.7,0.9)
@@ -129,23 +132,33 @@ play("closerpan",s("sample.pan(1,lfo(6,-0.5,0.5))",8),1)
 play("closerpos",s("sample.pos(1,0)",1),1)
 expand("closerpos",8)
 
--- one sample can be "quantized" and with glitch and reverse fx
-sample.open(2,"120_4")
 
+
+-- quantized sampels
+-- you can easily quantize samples, e.g. drums, to the beat of the norns
+sample.open(2,"120_4") -- opens /home/we/dust/audio/internorns/120_4.wav
+
+-- turn up the volume
 sample.level(2,0.4)
--- sample.rate(<id>,<rate>), can change rate to match bpm
-sample.rate(2,clock.get_tempo()/120) -- "120" because I know this 
-                                     -- sample is at 120 bpm
 
--- sample.sync(<id>,<num>) keeps sample containing <num> beats in sync
-sample.sync(2,8)
+-- sample.sync(<id>,<source_bpm>,<source_beats>) keeps sample synced with tempo
+-- given the <source_bpm> and the <source_beats>
+sample.sync(2,120,8)
+sample.sync(2) -- turns off syncing
 
 -- once beat synced, you can do
 -- glitching and reversing:
 -- sample.glitch(<id>,<prob>) glitch with probability <prob> (0,1)
-sample.glitch(2,0.02)
+sample.glitch(2,0.1)
+sample.glitch(2) -- turns off glitching
+
 -- sample.reverse(<id>,<prob>) reverses with probability <prob> (0,1)
 sample.reverse(2,0.1)
+sample.reverse(2) -- turns off reversing
+
+-- example: another beat
+sample.open(2,"165_1") -- opens /home/we/dust/audio/internorns/120_4.wav
+sample.sync(2,165,8)
 
 -- sample.level(<id>,0) will turn off the samples
 sample.level(1,0)

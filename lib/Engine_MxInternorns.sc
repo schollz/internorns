@@ -307,12 +307,8 @@ Engine_MxInternorns : CroneEngine {
             synSample.at(msg[1]).set(\rate,msg[2])
         });
 
-        this.addCommand("pos","if", {arg msg;
-            synSample.at(msg[1]).set(\t_trig,1,\reset,msg[2],\start,0,\end,1,\rate,1,\loops,1000);
-        });
-
-        this.addCommand("reverse","i", {arg msg;
-            synSample.at(msg[1]).set(\rate,-1);
+        this.addCommand("pos","iff", {arg msg;
+            synSample.at(msg[1]).set(\t_trig,1,\reset,msg[2],\start,0,\end,1,\rate,msg[3],\loops,1000);
         });
 
         this.addCommand("loop","iff", {arg msg;
