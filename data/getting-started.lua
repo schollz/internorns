@@ -66,6 +66,15 @@ play("kick",s(2),1)
 
 -- regular lua commands work
 -- built-in drums have a bunch of properties you can modify
+-- level    [-10,10] level (dB)
+-- distAmt  [0,100] dist amt
+-- eQFreq   [20,20000] eq freq 
+-- eQGain   [-10,10] eq gain
+-- oscAtk   [0,10]  oscillator attack
+-- oscDcy   [0,10]  oscillator decay
+-- nEnvAtk  [0,10]  noise attack
+-- nEnvDcy  [0,10]  noise decay
+-- mix      [0,100] 0 = oscillator, 100 = only noise
 kick.patch.distAmt=60;
 kick.patch.level=-5;
 clap.patch.level=-2;
