@@ -3,7 +3,7 @@
 --------------------------------------------------
 
 -- each line in this file is valid lua code
--- if in maiden:
+-- if in maiden or vs code:
 -- you can run it by selecting it and pressing Ctl+Enter 
 -- or just press Ctl+Enter and it will run the current line
 
@@ -25,22 +25,29 @@ nature(0.0) -- turns off
 
 
 -- a very useful function is the s(..) function
--- s(<lua>,<n>) returns a table with 16-steps, where
--- <n> steps contain the <lua>, spaced according to an euclidean rhythm
+-- s(<lua>,<n>) returns a table with 16 values - 1 value for 
+-- each 16th note in a measure.
+-- the <lua> code you put will be spaced out in this table
+-- according to a euclidean pattern with <n> entries
 table.print(s("print('hi')",4))
 
--- another useful function is the play(..) function
+-- the s(..) function becomes most useful when combined with play(..)
 -- play(<ptn>,<s>,<measure>) specifies a pattern named <ptn>
 -- which contains the <s> data (16 steps of code) for measure <measure>
 -- the <measure> is optional, and if omitted will just add to current measure
+-- the following will run `print('hi')` on each beat (4 times per measure)
+-- on measure 1
 play("hello",s("print('hi')",4),1)
 
 -- stop(<ptn>) will stop the pattern named <ptn>
 stop("hello")
 
--- example:
 -- lfo(<period>,<slo>,<shi>) returns value of a sine function with period
 -- <period> that oscillates between <slo> and <shi>
+print(lfo(10,1,100))
+
+-- example: combine the lfo and the print statement to print out
+-- a lfo number every 4 beats
 play("hello",s("print('lfo='..lfo(10,1,100))",4),1)
 
 
@@ -62,10 +69,8 @@ table.print(s(4))
 
 -- example, lets play a kick
 play("kick",s(2),1)
--- more: http://norns.local/maiden/#edit/dust/code/internorns/lib/drummer.lua
 
--- regular lua commands work
--- built-in drums have a bunch of properties you can modify
+-- built-in drums have a bunch of properties you can modify via .patch
 -- level    [-10,10] level (dB)
 -- distAmt  [0,100] dist amt
 -- eQFreq   [20,20000] eq freq 
@@ -75,10 +80,9 @@ play("kick",s(2),1)
 -- nEnvAtk  [0,10]  noise attack
 -- nEnvDcy  [0,10]  noise decay
 -- mix      [0,100] 0 = oscillator, 100 = only noise
-kick.patch.distAmt=60;
-kick.patch.level=-5;
-clap.patch.level=-2;
-hh.patch.level=-5;
+kick.patch.distAmt=60
+kick.patch.level=-5
+kick.patch.oscDcy=0.9
 
 -- lets sequence some lua code
 -- "kicklfo" is an arbitrary name, but we will
@@ -186,7 +190,7 @@ sample.release(2)
 --------------------------------------------------
 
 -- when you start internorns, you will see a list of 
--- available midi devices in the console.
+-- available midi devices in the console and on the norns.
 -- you can use any part of their name as the <name> to designate it.
 -- i.e. if you see "op1 usb device" you can simply write "op1".
 
@@ -252,7 +256,10 @@ stop("mx/kalimba")
 --------------------  crow -----------------------
 --------------------------------------------------
 
--- crow can be commanded similar to midi
+-- any crow code can be used at any time.
+
+-- if you use play("crow","<pitches>",<measure>)
+-- you can automatically sequence pitches and trigger envelopes
 -- crow out 1 is pitch
 -- crow out 2 is envelope, triggered on each note
 
@@ -275,7 +282,7 @@ stop("crow"); play("crow",arpr("ab4 eb5 ab5"),1)
 stop("crow")
 
 -- quick tuning!
--- this loads the tuner and sets the volts to 3 (A3)
+-- this one-liner will load the tuner and sets the volts to 3 (A3)
 norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3; 
 
 
@@ -362,10 +369,11 @@ ooo.loop(1,0,2) -- a two-second loop between timestamps 0 and 2s, on tape 1
 -- example:
 -- a delay!
 ooo.level(1,0.1); ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/1);ooo.rec(1,1,0.1);
-ooo.pan(1,0)
+-- turn delay off
 ooo.stop(1)
 
--- you can add lfos to the loops easily
-play("loopy",s("ooo.pan(1,lfo(3.5,-1,1))",16),1)
+-- like everything else, you can sequence parameters of ooo
+-- e.g., you can add lfos to the loops easily
+play("loopy",s("ooo.pan(1,lfo(3.5,-1,1));ooo.level(1,lfo(3.3,0.2,0.8))",16),1)
 stop("loopy")
 
