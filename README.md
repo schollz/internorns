@@ -17,13 +17,13 @@ this script is a cross between a [live coding environment](https://llllllll.co/t
 - sequence notes/chords from any instrument in [mx.samples](https://llllllll.co/t/mx-samples/)
 - special tape stop / start global fx
 
-internorns works quite simply: it is a sequencer that runs code. there is an internal clock that makes 4 steps per beat, and 4 beats per measure. at each step it checks to see if there is code to run in that step in the current measure and attempts to run it. code can be added to steps using the built-in functions.
+internorns works quite simply: it runs an internal sequencer that runs code. there is an internal clock that makes 4 steps per beat, and 4 beats per measure. at each step it checks to see if there is code to run in that step in the current measure and attempts to run it. code can be added to steps using the built-in functions.
 
 see [`data/getting-started.lua`](https://github.com/schollz/internorns/blob/main/data/getting-started.lua) to get started and preview how it works. the process is music.
 
 ## Requirements
 
-- computer (access to norns.online)
+- computer
 - norns
 - midi device (optional)
 - crow (optional)
