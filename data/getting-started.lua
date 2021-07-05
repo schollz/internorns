@@ -146,7 +146,13 @@ play("closerpos",s("sample.pos(1,0)",1),1)
 expand("closerpos",8)
 
 
--- syncing samples
+-- quantizing samples
+-- samples can easily be quantized to allow you to keep
+-- a sample perfectly in sync with the norns internal clock
+-- this is useful for drum loops or other specific loops.
+-- to utilize, make sure you have a loop with known bpm and 
+-- known number of beats.
+
 -- you can easily quantize samples, e.g. drums, to the beat of the norns
 sample.open(2,"120_8") -- opens /home/we/dust/audio/internorns/120_4.wav
                        -- drum beat at 120bpm for 8 beats
@@ -156,8 +162,15 @@ sample.level(2,0.4)
 
 -- sample.sync(<id>,<source_bpm>,<source_beats>) keeps sample synced with tempo
 -- given the <source_bpm> and the <source_beats>
-sample.sync(2,120,8)
+sample.sync(2,120,8) -- the source loop has 8 beats at 120 bpm (i.e. 4 seconds long)
 sample.sync(2) -- turns off syncing
+
+-- example: another beat
+sample.open(2,"165_8") -- opens /home/we/dust/audio/internorns/165_8.wav
+sample.sync(2,165,8) -- syncs to source of 165 bpm and 8 beats
+
+-- it will stay in sync even if you change the clock!
+params:set("clock_tempo",130)
 
 -- once beat synced, you can do
 -- glitching and reversing:
@@ -169,10 +182,6 @@ sample.glitch(2) -- turns off glitching
 sample.reverse(2,0.1)
 sample.reverse(2) -- turns off reversing
 
--- example: another beat
-sample.open(2,"165_8") -- opens /home/we/dust/audio/internorns/165_8.wav
-sample.sync(2,165,8) -- syncs to source of 165 bpm and 8 beats
-params:set("clock_tempo",120) -- will stay synced if you change the clock!
 
 -- sample.level(<id>,0) will turn off the samples
 sample.level(1,0)
