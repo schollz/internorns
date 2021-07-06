@@ -68,7 +68,7 @@ end
 
 
 
--- rc runs any code, even stupid code
+-- rc runs any code and will never crash (I hope)
 function rc(code)
   local ok,f=pcall(load(code))
   if ok then

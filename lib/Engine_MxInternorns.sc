@@ -307,11 +307,11 @@ Engine_MxInternorns : CroneEngine {
         });
 
         this.addCommand("pos","iff", {arg msg;
-            synSample.at(msg[1]).set(\t_trig,1,\reset,msg[2],\start,0,\end,1,\rate,msg[3],\loops,1000);
+            synSample.at(msg[1]).set(\t_trig,1,\reset,msg[2],\start,0,\end,1,\rate,msg[3]);
         });
 
         this.addCommand("loop","iff", {arg msg;
-            synSample.at(msg[1]).set(\t_trig,1,\start,msg[2],\reset,msg[2],\end,msg[3],\loops,1000);
+            synSample.at(msg[1]).set(\start,msg[2],\reset,msg[2],\end,msg[3]);
         });
 
 
