@@ -1,4 +1,4 @@
--- internorns
+-- internorns v1.0.0
 -- live-coding all norns
 --
 -- llllllll.co/t/internorns
