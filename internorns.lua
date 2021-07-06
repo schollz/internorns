@@ -1,19 +1,17 @@
--- plonky v1.4.0
--- keyboard + sequencer
+-- internorns
+-- live-coding all norns
 --
--- llllllll.co/t/plonky
+-- llllllll.co/t/internorns
 --
 --
 --
 --    ▼ instructions below ▼
 --
--- e1 changes voice
--- k1+(k2 or k3) records pattern
--- k2 or k3 plays pattern
--- (e2 or e3) changes latch/arp
+-- open maiden and edit 
+-- dust/data/internorns/
+--         getting-started.lua
 
 
-local plonky=include("plonky/lib/plonky")
 local shift=false
 local arplatch=0
 

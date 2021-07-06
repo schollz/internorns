@@ -13,7 +13,7 @@ function nature(vol)
     nature_loaded=true
   end
   clock.run(function()
-    clock.sleep(0.2)
+    clock.sleep(0.5)
     engine.amp(6,vol)
   end)
   if vol==0 then

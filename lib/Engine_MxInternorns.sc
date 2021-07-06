@@ -2,7 +2,6 @@
 
 // Inherit methods from CroneEngine
 Engine_MxInternorns : CroneEngine {
-
     // MxSamples specific
     var sampleBuffMxSamples;
     // var sampleBuffMxSamplesDelay;
