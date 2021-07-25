@@ -386,3 +386,24 @@ ooo.stop(1)
 play("loopy",s("ooo.pan(1,lfo(3.5,-1,1));ooo.level(1,lfo(3.3,0.2,0.8))",16),1)
 stop("loopy")
 
+
+
+
+--------------------------------------------------
+----------------------- bass ---------------------
+--------------------------------------------------
+
+-- there is a built-in bass that you can access 
+-- via engine or using play:
+play("bass","ab1 eb1 . eb1 ab1 .",1)
+play("bass","e1 bb1 ab1 bb1 e1 bb1 ab1 bb1",2)
+play("bass","gb1 db1 gb1 gb1 eb1 db1",3)
+play("bass","eb1",4)
+
+
+
+-- via engine (lfo examples for amp and lpf):
+play("basslfo",s("engine.bassamp(lfo(10.13,0.3,0.6))",4),1)
+play("basslfo2",s("engine.basslpf(lfo(7.13,2,4))",4),1)
+
+stop("basslfo"); stop("basslfo2"); stop("bass"); engine.bassamp(0)

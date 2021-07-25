@@ -49,6 +49,8 @@ function play(name,notes,i)
     ta:add(foo[1].."/"..foo[2],ta:sound(notes,
       "mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})",
     "mx:off({name='"..foo[2].."',midi=<m>})"),i)
+  elseif name=="bass" then 
+    ta:add(name,ta:sound(notes,"engine.bassnote(<m>)"),i)
   elseif name=="kick" or name=="hh" or name=="clap" or name=="sd" or name=="oh" then
     for i,v in ipairs(notes) do
       if v~="" then

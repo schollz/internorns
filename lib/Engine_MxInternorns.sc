@@ -22,6 +22,7 @@ Engine_MxInternorns : CroneEngine {
     var bufSample;
     var synKeys;
     var bufKeys;
+    var synBass;
     // NornsDeck ^
 
 	*new { arg context, doneCallback;
@@ -314,6 +315,37 @@ Engine_MxInternorns : CroneEngine {
             synSample.at(msg[1]).set(\t_trig,1,\start,msg[2],\reset,msg[2],\end,msg[3]);
         });
 
+        SynthDef("bass", {
+            arg out,amp=0,
+            note=35,t_trig=1,lpf=2;
+            var snd;
+            amp=Lag.kr(amp,2);
+            lpf=Lag.kr(lpf,2);
+            snd=Pulse.ar(note.midicps,width:SinOsc.kr(1/3).range(0.2,0.4));
+            snd=snd+LPF.ar(WhiteNoise.ar(SinOsc.kr(1/rrand(3,4)).range(1,rrand(3,4))),2*note.midicps);
+            snd = Pan2.ar(snd,LFTri.kr(1/6.12).range(-0.2,0.2));
+            snd = HPF.ar(snd,60);
+            snd = LPF.ar(snd,lpf*note.midicps);
+            snd = snd*(60/note.midicps);
+            Out.ar(out,snd.tanh*amp);
+        }).add;
+
+        context.server.sync;
+            
+        synBass=Synth("bass", [\amp,0,\out,0],target:context.xg);
+        
+        this.addCommand("bassamp","f", {arg msg;
+            synBass.set(\amp,msg[1]);
+        });
+        
+        this.addCommand("bassnote","f", {arg msg;
+            synBass.set(\note,msg[1]);
+        });
+
+        this.addCommand("basslpf","f", {arg msg;
+            synBass.set(\lpf,msg[1]);
+        });
+
 
         SynthDef("supertonic", {
             arg out,
@@ -509,5 +541,6 @@ Engine_MxInternorns : CroneEngine {
         bufSample.keysValuesDo({ arg key, value; value.free; });
         synKeys.free;
         bufKeys.free;
+        synBass.free;
 	}
 }
