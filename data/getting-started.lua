@@ -407,6 +407,18 @@ play("basslfo2",s("engine.basslpf(lfo(7.13,2,4))",4),1)
 
 stop("basslfo"); stop("basslfo2"); stop("bass"); engine.bassamp(0)
 
+--------------------------------------------------
+---------------------- piano ---------------------
+--------------------------------------------------
+
+-- synthesized piano
+play("piano","Abm/Eb:4",1)
+play("piano","E:4",2)
+play("piano","Gb/Db:4",3)
+play("piano","Ebm:4",4)
+
+stop("piano")
+
 
 --------------------------------------------------
 ---------------------- xfade ---------------------
@@ -416,8 +428,8 @@ stop("basslfo"); stop("basslfo2"); stop("bass"); engine.bassamp(0)
 -- record 4 measures of live input (in sync)
 xfade.rec(4) 
 
--- crossfades from live input to the recording
-xfade.on()
+-- crossfades from live input to the recorded buffer
+xfade.buffer()
 
--- crossfades from the recording back to live input
-xfade.off()
+-- crossfades from the recorded buffer to live input
+xfade.live()

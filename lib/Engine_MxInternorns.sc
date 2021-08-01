@@ -239,13 +239,19 @@ Engine_MxInternorns : CroneEngine {
 
         crossfadeloopSyn = Synth("crossfadeloopPlay",[\bufnum,crossfadeloopBuff,\in,mainBus.index],context.xg);
 
-        this.addCommand("xloop","ffff", { arg msg;
+        this.addCommand("xloop","fff", { arg msg;
             crossfadeloopSyn.set(
                 \t_trig,1,
-                \amp,msg[1],
-                \bpm,msg[2],
-                \beats,msg[3],
-                \beat,msg[4],
+                \amp,1,
+                \bpm,msg[1],
+                \beats,msg[2],
+                \beat,msg[3],
+            );
+        });
+
+        this.addCommand("xloop_off","", { arg msg;
+            crossfadeloopSyn.set(
+                \amp,0,
             );
         });
 
@@ -375,6 +381,8 @@ Engine_MxInternorns : CroneEngine {
             synSample.at(msg[1]).set(\t_trig,1,\start,msg[2],\reset,msg[2],\end,msg[3]);
         });
 
+        // <bass>
+
         SynthDef("bass", {
             arg out,amp=0,
             note=35,t_trig=1,lpf=2;
@@ -405,6 +413,41 @@ Engine_MxInternorns : CroneEngine {
         this.addCommand("basslpf","f", {arg msg;
             synBass.set(\lpf,msg[1]);
         });
+
+        // </bass>
+
+        // <combpiano>
+        // from ezra: https://github.com/catfact/zebra/blob/master/lib/Engine_DreadMoon.sc#L20-L41
+        SynthDef.new("synthPiano", {
+            arg out=0, amp=0.125, note=60,
+            noise_hz = 4000, noise_attack=0.002, noise_decay=0.06,
+            tune_up = 1.0005, tune_down = 0.9996, string_decay=3.0,
+            lpf_ratio=2.0, lpf_rq = 4.0, hpf_hz = 40, damp=0, damp_time=0.1;
+
+            var noise, string, delaytime, lpf, noise_env, snd, damp_mul;
+            var hz=note.midicps;
+
+            damp_mul = LagUD.ar(K2A.ar(1.0 - damp), 0, damp_time);
+
+            noise_env = Decay2.ar(Impulse.ar(0));
+            noise = LFNoise2.ar(noise_hz) * noise_env;
+
+            delaytime = 1.0 / (hz * [tune_up, tune_down]);
+            string = Mix.new(CombL.ar(noise, delaytime, delaytime, string_decay * damp_mul));
+
+            snd = RLPF.ar(string, lpf_ratio * hz, lpf_rq) * amp;
+            snd = HPF.ar(snd, hpf_hz);
+
+            Out.ar(out, snd.dup);
+            DetectSilence.ar(snd, doneAction:2);
+        }).add;
+
+        this.addCommand("pianonote","f", {arg msg;
+            Synth("synthPiano", [\out,mainBus,\note,msg[1]],target:context.xg);
+        });
+
+
+        // </combpiano>
 
 
         SynthDef("supertonic", {

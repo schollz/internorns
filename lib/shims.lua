@@ -51,6 +51,8 @@ function play(name,notes,i)
     "mx:off({name='"..foo[2].."',midi=<m>})"),i)
   elseif name=="bass" then
     ta:add(name,ta:sound(notes,"engine.bassnote(<m>)"),i)
+  elseif name=="piano" then
+    ta:add(name,ta:sound(notes,"engine.pianonote(<m>)"),i)
   elseif name=="kick" or name=="hh" or name=="clap" or name=="sd" or name=="oh" then
     for i,v in ipairs(notes) do
       if v~="" then
@@ -82,12 +84,12 @@ function xfade.rec(measures)
   ta:expand("xfaderec",measures)
 end
 
-function xfade.on()
-  ta.next='print("xfade: on"); engine.tapeamp(0); engine.xloop(1,clock.get_tempo(),xfade.measures*4,(ta.measure%xfade.measures)*4+((ta.pulse-1)/4));'
+function xfade.buffer()
+  ta.next='print("xfade: on"); engine.tapeamp(0); engine.xloop(clock.get_tempo(),xfade.measures*4,(ta.measure%xfade.measures)*4+((ta.pulse-1)/4));'
 end
 
-function xfade.off()
-  ta.next='print("xfade: off"); engine.tapeamp(1);engine.xloop(0,clock.get_tempo(),xfade.measures*4,0)'
+function xfade.live()
+  ta.next='print("xfade: off"); engine.tapeamp(1);engine.xloop_off()'
 end
 
 tape={}
