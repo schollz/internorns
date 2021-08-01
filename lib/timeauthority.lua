@@ -10,6 +10,7 @@ function TA:new(o)
   o.qn=0
   o.measure=0
   o.last_command=""
+  o.next=nil
   return o
 end
 
@@ -24,6 +25,11 @@ function TA:step()
     self.qn=self.qn+1
   end
 
+  -- emit anything that is set in the "next"
+  if self.next~=nil then
+    rc(self.next)
+    self.next=nil
+  end
   -- emit anything in the time authority
   local next_command=""
   for k,v in pairs(self.patterns) do
@@ -101,7 +107,6 @@ function TA:expand(s,n)
     end
   end
 end
-
 
 function TA:sound(str,ctx,ctxoff)
   local rays={}

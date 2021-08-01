@@ -24,6 +24,10 @@ Engine_MxInternorns : CroneEngine {
     var bufKeys;
     var synBass;
     // NornsDeck ^
+    // <crossfadeloop>
+    var crossfadeloopBuff;
+    var crossfadeloopSyn;
+    // </crossfadeloop>
 
 	*new { arg context, doneCallback;
 		^super.new(context, doneCallback);
@@ -173,6 +177,7 @@ Engine_MxInternorns : CroneEngine {
             );
             snd=BufRd.ar(2,bufnum,pos,interpolation:4);
             snd=(crossfade*snd)+(LinLin.kr(1-crossfade,0,1,ampmin,1)*(SoundIn.ar([0,1])+In.ar(in,2)));
+            snd=SelectX.ar(Lag.kr(amp,2),[Silent.ar(2),snd]); // toggle off/on
             Out.ar(0,(snd*0.5).tanh);
         }).add;
 
@@ -193,9 +198,64 @@ Engine_MxInternorns : CroneEngine {
             synBreaklivePlay.set(\panRate,msg[1])
         });
 
+        this.addCommand("tapeamp","f", { arg msg;
+            synBreaklivePlay.set(\amp,msg[1])
+        });
+
 	   context.server.sync;
 
+        // <crossfadeloop>
+         
+        crossfadeloopBuff = Buffer.alloc(context.server, context.server.sampleRate * 45.0, 2);
 
+        context.server.sync;
+
+        SynthDef("crossfadeloopRec", {
+            arg t_trig=0, bpm=140, beats=16, in,bufnum;
+            var pos;
+            pos=Line.ar(
+                end:context.server.sampleRate*beats*60/bpm,
+                dur:beats*60/bpm,
+                doneAction:2,
+            );
+            BufWr.ar(SoundIn.ar([0,1])+In.ar(in,2),bufnum,pos,0);
+        }).add;
+
+
+        SynthDef("crossfadeloopPlay", {
+            arg amp=0, t_trig=0, bpm=140, beats=16, beat=0, in, bufnum;
+            var pos,snd;
+            pos=Phasor.ar(
+                trig:t_trig,
+                resetPos:context.server.sampleRate*(beat)*60/bpm,
+                end:context.server.sampleRate*beats*60/bpm,
+            );
+            snd=BufRd.ar(2,bufnum,pos);
+            snd=SelectX.ar(Lag.kr(amp,2),[Silent.ar(2),snd]);
+            Out.ar(0,(snd*0.5).tanh);
+        }).add;
+
+        context.server.sync;
+
+        crossfadeloopSyn = Synth("crossfadeloopPlay",[\bufnum,crossfadeloopBuff,\in,mainBus.index],context.xg);
+
+        this.addCommand("xloop","ffff", { arg msg;
+            crossfadeloopSyn.set(
+                \t_trig,1,
+                \amp,msg[1],
+                \bpm,msg[2],
+                \beats,msg[3],
+                \beat,msg[4],
+            );
+        });
+
+        this.addCommand("xloop_rec","ff", { arg msg;
+            Synth("crossfadeloopRec",[\bpm,msg[1],\beats,msg[2],\bufnum,crossfadeloopBuff,\in,mainBus.index],context.xg);
+        });
+
+        context.server.sync;
+
+        // </crossfadeloop>
 
         // sampler thing
 
@@ -542,5 +602,7 @@ Engine_MxInternorns : CroneEngine {
         synKeys.free;
         bufKeys.free;
         synBass.free;
+        crossfadeloopSyn.free;
+        crossfadeloopBuff.free;
 	}
 }

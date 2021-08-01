@@ -49,7 +49,7 @@ function play(name,notes,i)
     ta:add(foo[1].."/"..foo[2],ta:sound(notes,
       "mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})",
     "mx:off({name='"..foo[2].."',midi=<m>})"),i)
-  elseif name=="bass" then 
+  elseif name=="bass" then
     ta:add(name,ta:sound(notes,"engine.bassnote(<m>)"),i)
   elseif name=="kick" or name=="hh" or name=="clap" or name=="sd" or name=="oh" then
     for i,v in ipairs(notes) do
@@ -70,6 +70,24 @@ function stop(name)
     mp:off(name,-1)
   end
   ta:rm(name)
+end
+
+xfade={}
+xfade.measures=4
+
+function xfade.rec(measures)
+  xfade.measures=measures
+  local beats=measures*4
+  ta:add("xfaderec",s('print("xfade: recording loop");engine.xloop_rec(clock.get_tempo(),'..beats..'); ta:rm("xfaderec")',1),1)
+  ta:expand("xfaderec",measures)
+end
+
+function xfade.on()
+  ta.next='print("xfade: on"); engine.tapeamp(0); engine.xloop(1,clock.get_tempo(),xfade.measures*4,(ta.measure%xfade.measures)*4+((ta.pulse-1)/4));'
+end
+
+function xfade.off()
+  ta.next='print("xfade: off"); engine.tapeamp(1);engine.xloop(0,clock.get_tempo(),xfade.measures*4,0)'
 end
 
 tape={}
@@ -139,8 +157,6 @@ function carpr(s,num)
   end
   return arpr(table.concat(notearray," "),num)
 end
-
-
 
 sample={}
 

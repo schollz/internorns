@@ -259,8 +259,6 @@ play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carpr("Ebm:4 Ebm:3",8),4)
 stop("mx/kalimba")
 
 
-
-
 --------------------------------------------------
 --------------------  crow -----------------------
 --------------------------------------------------
@@ -393,17 +391,33 @@ stop("loopy")
 ----------------------- bass ---------------------
 --------------------------------------------------
 
+-- turn the bass on
+engine.bassamp(0.5) -- bass is always on!
+
 -- there is a built-in bass that you can access 
 -- via engine or using play:
-play("bass","ab1 eb1 . eb1 ab1 .",1)
-play("bass","e1 bb1 ab1 bb1 e1 bb1 ab1 bb1",2)
-play("bass","gb1 db1 gb1 gb1 eb1 db1",3)
+play("bass","ab1",1)
+play("bass","e1",2)
+play("bass","gb1",3)
 play("bass","eb1",4)
-
-
 
 -- via engine (lfo examples for amp and lpf):
 play("basslfo",s("engine.bassamp(lfo(10.13,0.3,0.6))",4),1)
 play("basslfo2",s("engine.basslpf(lfo(7.13,2,4))",4),1)
 
 stop("basslfo"); stop("basslfo2"); stop("bass"); engine.bassamp(0)
+
+
+--------------------------------------------------
+---------------------- xfade ---------------------
+--------------------------------------------------
+
+
+-- record 4 measures of live input (in sync)
+xfade.rec(4) 
+
+-- crossfades from live input to the recording
+xfade.on()
+
+-- crossfades from the recording back to live input
+xfade.off()
