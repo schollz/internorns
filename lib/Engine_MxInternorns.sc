@@ -24,6 +24,7 @@ Engine_MxInternorns : CroneEngine {
     var bufKeys;
     var synBass;
     var synPiano;
+    var synPianoADSR=Array.fill(4,{0.1});
     // NornsDeck ^
     // <crossfadeloop>
     var crossfadeloopBuff;
@@ -433,7 +434,7 @@ Engine_MxInternorns : CroneEngine {
         // <combpiano>
         // from ezra: https://github.com/catfact/zebra/blob/master/lib/Engine_DreadMoon.sc#L20-L41
         SynthDef.new("synthPiano", {
-            arg out=0, amp=0.125, note=60, gate=1,
+            arg out=0, amp=0.125, note=60, t_trig=1,
             attack=0.01, decay=0.1, sustain=0.7, release=0.5,
             noise_hz = 4000, noise_attack=0.002, noise_decay=0.06,
             tune_up = 1.0005, tune_down = 0.9996, string_decay=3.0,
@@ -460,8 +461,23 @@ Engine_MxInternorns : CroneEngine {
             Out.ar(out, snd.dup);
         }).add;
 
-        this.addCommand("pianonote","f", {arg msg;
-            Synth("synthPiano", [\out,mainBus,\note,msg[1]],target:context.xg);
+        this.addCommand("pianoadsr","ffff", {arg msg;
+            synPianoADSR.do({arg item,i;
+                synPianoADSR[i]=msg[i+1];
+            });
+
+            synPiano.keysValuesDo({ arg name, value; 
+                if (synPiano.at(name)!=nil,{
+                    if (synPiano.at(name).isRunning==true,{
+                        synPiano.at(name).set(
+                            \attack,synPianoADSR[0],
+                            \decay,synPianoADSR[1],
+                            \sustain,synPianoADSR[2],
+                            \release,synPianoADSR[3],
+                        );
+                    });
+                });
+            });
         });
 
         this.addCommand("pianonoteon","i", { arg msg;
@@ -472,50 +488,26 @@ Engine_MxInternorns : CroneEngine {
                 });
             });
             synPiano.put(name,
-                Synth("synthPiano",\out,mainBus,
+                Synth("synthPiano",
+                    \out,mainBus,
                     \attack,synPianoADSR[0],
                     \decay,synPianoADSR[1],
                     \sustain,synPianoADSR[2],
                     \release,synPianoADSR[3],
+                    \note,msg[1],
+                    \t_trig,1,
                 );
             );
-
-            synPiano.at(name).set(\gate,1,\note,msg[1]);
-            mxsamplesVoiceAlloc.put(name,
-                Synth("mxPlayer",[
-                \out,mainBus.index,
-                // \bufnumDelay,sampleBuffMxSamplesDelay[msg[1]-1],
-                \t_trig,1,
-                \envgate,1,
-                \bufnum,msg[2],
-                \rate,msg[3],
-                \amp,msg[4],
-                \pan,msg[5],
-                \attack,msg[6],
-                \decay,msg[7],
-                \sustain,msg[8],
-                \release,msg[9],
-                \lpf,msg[10],
-                \hpf,msg[11],
-                \secondsPerBeat,msg[12],
-                \delayBeats,msg[13],
-                \delayFeedback,msg[14],
-                \delaySend,msg[15],
-                \sampleStart,msg[16] ],target:context.server).onFree({
-                    ("freed "++name).postln;
-                    NetAddr("127.0.0.1", 10111).sendMsg("voice",name,0);
-                });
-            );
-            NodeWatcher.register(mxsamplesVoiceAlloc.at(name));
+            NodeWatcher.register(synPiano.at(name));
         });
 
-        this.addCommand("mxsamplesoff","i", { arg msg;
+        this.addCommand("pianonoteoff","i", { arg msg;
             // lua is sending 1-index
             var name=msg[1];
             if (mxsamplesVoiceAlloc.at(name)!=nil,{
                 if (mxsamplesVoiceAlloc.at(name).isRunning==true,{
                     mxsamplesVoiceAlloc.at(name).set(
-                        \envgate,0,
+                        \t_trig,0,
                     );
                 });
             });
@@ -716,6 +708,7 @@ Engine_MxInternorns : CroneEngine {
         mainBus.free;
         synSample.keysValuesDo({ arg key, value; value.free; });
         bufSample.keysValuesDo({ arg key, value; value.free; });
+        synPiano.keysValuesDo({ arg key, value; value.free; });
         synKeys.free;
         bufKeys.free;
         synBass.free;
