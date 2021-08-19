@@ -385,8 +385,9 @@ Engine_MxInternorns : CroneEngine {
 
         SynthDef("bass", {
             arg out,amp=0,
-            note=35,t_trig=1,lpf=2;
-            var snd;
+            note=35,t_trig=1,lpf=2,
+            attack=0.01,decay=0.1,sustain=0.7,release=1.0,gate=1;
+            var snd,env;
             amp=Lag.kr(amp,2);
             lpf=Lag.kr(lpf,2);
             snd=Pulse.ar(note.midicps,width:SinOsc.kr(1/3).range(0.2,0.4));
@@ -395,7 +396,10 @@ Engine_MxInternorns : CroneEngine {
             snd = HPF.ar(snd,60);
             snd = LPF.ar(snd,lpf*note.midicps);
             snd = snd*(60/note.midicps);
-            Out.ar(out,snd.tanh*amp);
+            snd = snd.tanh*amp;
+            env = EnvGen.ar(Env.adsr(attack,decay,sustain,release),gate:gate);
+            snd = snd * env;
+            Out.ar(out,snd);
         }).add;
 
         context.server.sync;
@@ -406,8 +410,17 @@ Engine_MxInternorns : CroneEngine {
             synBass.set(\amp,msg[1]);
         });
         
-        this.addCommand("bassnote","f", {arg msg;
-            synBass.set(\note,msg[1]);
+        this.addCommand("bassnoteon","f", {arg msg;
+            synBass.set(\gate,0);
+            synBass.set(\gate,1,\note,msg[1]);
+        });
+        
+        this.addCommand("bassadsr","ffff", {arg msg;
+            synBass.set(\attack,msg[1],\decay,msg[2],\sustain,msg[3],\release,msg[4]);
+        });
+        
+        this.addCommand("bassnoteoff","", {arg msg;
+            synBass.set(\gate,0);
         });
 
         this.addCommand("basslpf","f", {arg msg;
