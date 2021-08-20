@@ -46,7 +46,7 @@ function internorns_init()
   ooo.reset()
 
   -- start scheduler
+  ta:start()
   sched:start()
 
 end
-
