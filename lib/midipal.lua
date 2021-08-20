@@ -6,6 +6,7 @@ function midipal:new(o)
   self.__index=self
   o.midis={}
   o.names={}
+  o.events={}
   for _,dev in pairs(midi.devices) do
     local name=string.lower(dev.name)
     name=name:gsub("-","")
@@ -13,21 +14,75 @@ function midipal:new(o)
     print("connected to "..name)
     o.midis[name]={notes={}}
     o.midis[name].conn=midi.connect(dev.port)
+    o.midis[name].conn.event=function(data)
+      local d=midi.to_msg(data)
+      if d.ch~=nil then
+        for _,ev in ipairs(o.events) do
+          if ev.name==name and ev.ch==d.ch then
+            ev.func(d)
+          end
+        end
+      end
+    end
   end
   return o
 end
 
 --- Pads str to length len with char from right
-string.lpad = function(str, len, char)
-    if char == nil then char = ' ' end
-    return str .. string.rep(char, len - #str)
+string.lpad=function(str,len,char)
+  if char==nil then char=' ' end
+  return str..string.rep(char,len-#str)
+end
+
+-- hook will hook up midi notes from one midi device to another
+function midipal:hook(midiin,out)
+  -- midiin = {name="op-z",ch=1}
+  -- out = {name="op-z" (optional), ch=1 (optional), note_on=..., note_off=..}
+  midiin.name=self:get_name(midiin.name)
+  if midiin.name==nil then
+    print("no hook available")
+    do return end
+  end
+  out.name=self:get_name(out.name)
+
+  local event={}
+  event.name=midiin.name
+  event.ch=midin.ch
+  event.func=function(d)
+    if d.type=="note_on" then
+      if out.name~=nil then
+        self.midis[out.name].conn:note_on(d.note,d.velocity,out.ch)
+      end
+      if out.note_on~=nil then
+        out.note_on(d.note,d.velocity,d.ch)
+      end
+    elseif d.type=="note_off" then
+      if out.name~=nil then
+        self.midis[out.name].conn:note_off(d.note,d.velocity,out.ch)
+      end
+      if out.note_off~=nil then
+        out.note_off(d.note,d.velocity,d.ch)
+      end
+    end
+  end
+  -- add new event
+  table.insert(self.events,event)
+end
+
+function midipal:get_name(name)
+  for k,v in pairs(self.midis) do
+    if string.find(k,name) then
+      do return k end
+    end
+  end
+  return nil
 end
 
 function midipal:print()
   print("---------------------------")
   print("| connnected midi devices |")
   print("---------------------------")
-  for _, name in ipairs(self.names) do
+  for _,name in ipairs(self.names) do
     print(string.format("| - %s |",string.lpad(name,21," ")))
   end
   print("---------------------------")
@@ -78,6 +133,5 @@ function midipal:off(name,r)
     end
   end
 end
-
 
 return midipal

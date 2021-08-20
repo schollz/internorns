@@ -4,7 +4,7 @@
 
 -- each line in this file is valid lua code
 -- if in maiden or vs code:
--- you can run it by selecting it and pressing Ctl+Enter 
+-- you can run it by selecting it and pressing Ctl+Enter
 -- or just press Ctl+Enter and it will run the current line
 
 -- highlight and run this code, it should print "hello, world"
@@ -20,12 +20,11 @@ params:set("clock_tempo",120)
 -- that harness a built-in drum machine, a 6-voice sampler, and sequencer
 -- one such function:
 -- nature(<vol>) plays nature sounds at volume <vol>
-nature(0.5) -- turns on 
+nature(0.5) -- turns on
 nature(0.0) -- turns off
 
-
 -- a very useful function is the s(..) function
--- s(<lua>,<n>) returns a table with 16 values - 1 value for 
+-- s(<lua>,<n>) returns a table with 16 values - 1 value for
 -- each 16th note in a measure.
 -- the <lua> code you put will be spaced out in this table
 -- according to a euclidean pattern with <n> entries
@@ -50,17 +49,13 @@ print(lfo(10,1,100))
 -- a lfo number every 4 beats
 play("hello",s("print('lfo='..lfo(10,1,100))",4),1)
 
-
-
-
-
 --------------------------------------------------
 ---------------  built-in drums ------------------
 --------------------------------------------------
 
 -- if you use play(..) with <ptn> named with any of the following:
 -- "kick" or "clap" or "sd" or "hh" or "oh",
--- it will utilize the built-in drums 
+-- it will utilize the built-in drums
 
 -- we can use s(..) without the lua code to sequence these drums
 -- s(<n>) function creates 16-step euclidean rhythm the number "1" in <n> places
@@ -73,7 +68,7 @@ play("kick",s(2),1)
 -- built-in drums have a bunch of properties you can modify via .patch
 -- level    [-10,10] level (dB)
 -- distAmt  [0,100] dist amt
--- eQFreq   [20,20000] eq freq 
+-- eQFreq   [20,20000] eq freq
 -- eQGain   [-10,10] eq gain
 -- oscAtk   [0,10]  oscillator attack
 -- oscDcy   [0,10]  oscillator decay
@@ -94,7 +89,6 @@ play("kicklfo2",s("kick.patch.distAmt=lfo(13,1,60)",4),1)
 -- s_rot(<s>,<amt>) will rotate a steps by <amt>
 play("kick",s_add(s(1),s_rot(s(1),3)),2)
 
-
 -- s_sub(<s1>,<s2>) will subtract <s2> from <s1>
 play("hh",s_sub(s(15),s(4)),1)
 play("hhlfo",s("hh.patch.nEnvDcy=lfo(13,90,450)",4),1)
@@ -105,9 +99,6 @@ stop("kick")
 stop("clap")
 stop("hh")
 
-
-
-
 --------------------------------------------------
 ------------------  samples ----------------------
 --------------------------------------------------
@@ -115,7 +106,7 @@ stop("hh")
 -- you can load up to ?? samples, which are continuously
 -- running and can be seamlessly cut or looped
 
--- sample.open(<id>,<name>) loads 
+-- sample.open(<id>,<name>) loads
 -- /home/we/dust/audio/internorns/<name>.wav into sample <id>
 -- note: need to load sample before running other commands
 -- in a block
@@ -145,17 +136,16 @@ play("closerpan",s("sample.pan(1,lfo(6,-0.5,0.5))",8),1)
 play("closerpos",s("sample.pos(1,0)",1),1)
 expand("closerpos",8)
 
-
 -- quantizing samples
 -- samples can easily be quantized to allow you to keep
 -- a sample perfectly in sync with the norns internal clock
 -- this is useful for drum loops or other specific loops.
--- to utilize, make sure you have a loop with known bpm and 
+-- to utilize, make sure you have a loop with known bpm and
 -- known number of beats.
 
 -- you can easily quantize samples, e.g. drums, to the beat of the norns
 sample.open(2,"120_8") -- opens /home/we/dust/audio/internorns/120_4.wav
-                       -- drum beat at 120bpm for 8 beats
+-- drum beat at 120bpm for 8 beats
 
 -- turn up the volume
 sample.level(2,0.4)
@@ -182,7 +172,6 @@ sample.glitch(2) -- turns off glitching
 sample.reverse(2,0.1)
 sample.reverse(2) -- turns off reversing
 
-
 -- sample.level(<id>,0) will turn off the samples
 sample.level(1,0)
 sample.level(2,0)
@@ -191,14 +180,11 @@ sample.level(2,0)
 sample.release(1)
 sample.release(2)
 
-
-
-
 --------------------------------------------------
 --------------------  midi -----------------------
 --------------------------------------------------
 
--- when you start internorns, you will see a list of 
+-- when you start internorns, you will see a list of
 -- available midi devices in the console and on the norns.
 -- you can use any part of their name as the <name> to designate it.
 -- i.e. if you see "op1 usb device" you can simply write "op1".
@@ -233,8 +219,22 @@ play("op1",carpr("Ebm:4 Ebm:5"),4)
 -- stop(<name>) will stop all patterns and notes for that instruments
 stop("op1")
 
+--------------------------------------------------
+------------------- midi hooks -------------------
+--------------------------------------------------
 
+-- midi hooks allow you to easily funnel messages
+-- between midi devices
 
+-- send note events from op-z to op-1
+hook({name="opz",ch=1},{name="op1",ch=1})
+
+-- midi hooks allow customizable hooks as well
+-- and multiple hooks can be assigned to the same device
+hook({name="opz",ch=1},{note_on=function(note,vel,ch)
+  print("op-z")
+  engine.bassnote(note)
+end})
 
 --------------------------------------------------
 ------------------ mx.samples---------------------
@@ -257,7 +257,6 @@ play("mx/kalimba/amp=1.2,attack=0.0,release=0.1",carpr("Ebm:4 Ebm:3",8),4)
 
 -- stopping only needs to refernce the first two parts
 stop("mx/kalimba")
-
 
 --------------------------------------------------
 --------------------  crow -----------------------
@@ -282,24 +281,21 @@ play("crow","bb3",5)
 play("crow","eb4",7)
 expand("crow",8)
 
-crow.output[2].action="{ to(10,0.0),to(0,0.07) }"; crow.output[2]()
-stop("crow"); play("crow",arpr("ab4 eb5 ab5"),1)
+crow.output[2].action="{ to(10,0.0),to(0,0.07) }";crow.output[2]()
+stop("crow");play("crow",arpr("ab4 eb5 ab5"),1)
 
 -- stop(<name>) will stop crow
 stop("crow")
 
 -- quick tuning!
 -- this one-liner will load the tuner and sets the volts to 3 (A3)
-norns.script.load("code/tuner/tuner.lua"); crow.output[1].volts=3 -- A3; 
-
-
-
+norns.script.load("code/tuner/tuner.lua");crow.output[1].volts=3 -- A3;
 
 --------------------------------------------------
 ----------------------- tape ---------------------
 --------------------------------------------------
 
--- "tape" is a special utility that keeps a 
+-- "tape" is a special utility that keeps a
 -- buffer of everything in the engine
 -- and can do tape breaks/stops/starts
 
@@ -314,9 +310,6 @@ tape.freeze()
 -- put them together
 clock.run(function() clock.sync(2);tape.stop();clock.sync(8);tape.start() end)
 clock.run(function() clock.sync(2);tape.freeze();clock.sync(2);tape.freeze() end)
-
-
-
 
 --------------------------------------------------
 ---------------------- ooo -----------------------
@@ -369,13 +362,13 @@ ooo.rec(1,0,1)
 ooo.rec(1,1,0.5)
 
 -- ooo.rec(<tape>,<loop_end>,<loop_end>) creates a loop between
--- <loop_start> and <loop_end> (denoted in seconds). 
+-- <loop_start> and <loop_end> (denoted in seconds).
 -- both points can be between 0 and 90 (90-second max)
 ooo.loop(1,0,2) -- a two-second loop between timestamps 0 and 2s, on tape 1
 
 -- example:
 -- a delay!
-ooo.level(1,0.1); ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/1);ooo.rec(1,1,0.1);
+ooo.level(1,0.1);ooo.start(1);ooo.loop(1,0,clock.get_beat_sec()/1);ooo.rec(1,1,0.1);
 -- turn delay off
 ooo.stop(1)
 
@@ -384,9 +377,6 @@ ooo.stop(1)
 play("loopy",s("ooo.pan(1,lfo(3.5,-1,1));ooo.level(1,lfo(3.3,0.2,0.8))",16),1)
 stop("loopy")
 
-
-
-
 --------------------------------------------------
 ----------------------- bass ---------------------
 --------------------------------------------------
@@ -394,7 +384,7 @@ stop("loopy")
 -- turn the bass on
 engine.bassamp(0.5) -- bass is always on!
 
--- there is a built-in bass that you can access 
+-- there is a built-in bass that you can access
 -- via engine or using play:
 play("bass","ab1",1)
 play("bass","e1",2)
@@ -405,7 +395,7 @@ play("bass","eb1",4)
 play("basslfo",s("engine.bassamp(lfo(10.13,0.3,0.6))",4),1)
 play("basslfo2",s("engine.basslpf(lfo(7.13,2,4))",4),1)
 
-stop("basslfo"); stop("basslfo2"); stop("bass"); engine.bassamp(0)
+stop("basslfo");stop("basslfo2");stop("bass");engine.bassamp(0)
 
 --------------------------------------------------
 ---------------------- piano ---------------------
@@ -419,14 +409,12 @@ play("piano","Ebm:4",4)
 
 stop("piano")
 
-
 --------------------------------------------------
 ---------------------- xfade ---------------------
 --------------------------------------------------
 
-
 -- record 4 measures of live input (in sync)
-xfade.rec(4) 
+xfade.rec(4)
 
 -- crossfades from live input to the recorded buffer
 xfade.buffer()

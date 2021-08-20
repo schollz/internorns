@@ -237,3 +237,7 @@ function sample.glitch(i,v)
   end
   ta:add("bbb"..i,s("if math.random()<"..v.." then; v=math.random(); engine.loop("..i..",v,v+math.random()/40+0.01) end",4),1)
 end
+
+function hook(midiin,out)
+  mp:hook(midiin,out)
+end
