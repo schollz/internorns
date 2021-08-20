@@ -5,16 +5,28 @@ function TA:new(o)
   setmetatable(o,self)
   self.__index=self
   o.patterns={}
-  o.pulse=0
-  o.sn=0
-  o.qn=0
-  o.measure=0
-  o.last_command=""
-  o.next=nil
+  o:stop()
   return o
 end
 
+function TA:stop()
+  self.pulse=0
+  self.sn=0
+  self.qn=0
+  self.measure=0
+  self.last_command=""
+  self.next=nil
+  self.stopped=true
+end
+
+function TA:start()
+  self.stopped=false
+end
+
 function TA:step()
+  if self.stopped then
+    do return end
+  end
   self.pulse=self.pulse+1
   self.sn=self.sn+1
   if self.pulse>16 then

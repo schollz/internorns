@@ -236,7 +236,16 @@ hook({name="opz",ch=1},{note_on=function(note,vel,ch)
   engine.bassnote(note)
 end})
 
---------------------------------------------------
+-- midi hooks allow customizable hooks as well
+-- and multiple hooks can be assigned to the same device
+started=false
+hook({name="opz",ch=1},{note_on=function(note,vel,ch)
+  if started==false then
+
+  end
+end})
+
+-------------------------------------------------
 ------------------ mx.samples---------------------
 --------------------------------------------------
 
