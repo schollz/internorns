@@ -240,18 +240,14 @@ stop("op1")
 -- send note events from op-z to op-1
 hook({name="opz",ch=1},{name="op1",ch=1})
 
--- midi hooks allow customizable hooks as well
--- and multiple hooks can be assigned to the same device
-hook({name="opz",ch=1},{note_on=function(note,vel,ch)
-  print("op-z")
-  engine.bassnote(note)
-end})
-
 -- midi can use crow as well (pitch/envelope)
+-- and multiple hooks can be assigned to the same device
 hook({name="opz",ch=1},{crowout=1})
 
 -- midi hooks allow customizable hooks as well
--- and multiple hooks can be assigned to the same device
+hook({name="opz",ch=1},{note_on=function(note,vel,ch) engine.bassamp(1.0);engine.bassnote(note);end})
+hook({name="opz",ch=1},{note_on=function(note,vel,ch) engine.bassamp(0) end})
+
 -- in this example we can use a full stop to stop the sequencer
 -- and have the op-z activate internorns on the first note
 fullstop()
