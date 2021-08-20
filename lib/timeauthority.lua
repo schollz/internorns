@@ -16,15 +16,15 @@ function TA:stop()
   self.measure=0
   self.last_command=""
   self.next=nil
-  self.stopped=true
+  self.running=false
 end
 
 function TA:start()
-  self.stopped=false
+  self.running=true
 end
 
 function TA:step()
-  if self.stopped then
+  if not self.running then
     do return end
   end
   self.pulse=self.pulse+1

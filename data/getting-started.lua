@@ -50,6 +50,17 @@ print(lfo(10,1,100))
 play("hello",s("print('lfo='..lfo(10,1,100))",4),1)
 
 --------------------------------------------------
+------------  stop/start sequencer ---------------
+--------------------------------------------------
+
+-- by default the sequencer starts when internorns starts
+-- you can stop and start it with:
+
+fullstop()
+
+fullstart()
+
+--------------------------------------------------
 ---------------  built-in drums ------------------
 --------------------------------------------------
 
@@ -238,12 +249,10 @@ end})
 
 -- midi hooks allow customizable hooks as well
 -- and multiple hooks can be assigned to the same device
-started=false
-hook({name="opz",ch=1},{note_on=function(note,vel,ch)
-  if started==false then
-
-  end
-end})
+-- in this example we can use a full stop to stop the sequencer
+-- and have the op-z activate internorns on the first note
+fullstop()
+hook({name="opz",ch=1},{note_on=function(note,vel,ch) fullstart() end})
 
 -------------------------------------------------
 ------------------ mx.samples---------------------

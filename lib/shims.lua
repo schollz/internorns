@@ -241,3 +241,14 @@ end
 function hook(midiin,out)
   mp:hook(midiin,out)
 end
+
+function fullstart()
+  if not ta.running then
+    ta:start()
+    sched:hard_restart()
+  end
+end
+
+function fullstop()
+  ta:stop()
+end
