@@ -247,6 +247,9 @@ hook({name="opz",ch=1},{note_on=function(note,vel,ch)
   engine.bassnote(note)
 end})
 
+-- midi can use crow as well (pitch/envelope)
+hook({name="opz",ch=1},{crowout=1})
+
 -- midi hooks allow customizable hooks as well
 -- and multiple hooks can be assigned to the same device
 -- in this example we can use a full stop to stop the sequencer

@@ -37,7 +37,7 @@ end
 -- hook will hook up midi notes from one midi device to another
 function midipal:hook(midiin,out)
   -- midiin = {name="op-z",ch=1}
-  -- out = {name="op-z" (optional), ch=1 (optional), note_on=..., note_off=..}
+  -- out = {name="op-z" (optional), ch=1 (optional), note_on=..., note_off=.., crow=..}
   midiin.name=self:get_name(midiin.name)
   if midiin.name==nil then
     print("no hook available")
@@ -56,12 +56,20 @@ function midipal:hook(midiin,out)
       if out.note_on~=nil then
         out.note_on(d.note,d.velocity,d.ch)
       end
+      if out.crowout~=nil then
+        crow.output[out.crowout].volts=(d.note-21)/12
+        crow.output[out.crowout+1]()
+      end
     elseif d.type=="note_off" then
       if out.name~=nil then
         self.midis[out.name].conn:note_off(d.note,d.velocity,out.ch)
       end
       if out.note_off~=nil then
         out.note_off(d.note,d.velocity,d.ch)
+      end
+      if out.crowout~=nil then
+        crow.output[out.crowout].volts=(d.note-21)/12
+        crow.output[out.crowout+1]()
       end
     end
   end
