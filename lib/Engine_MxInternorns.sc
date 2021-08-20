@@ -23,6 +23,7 @@ Engine_MxInternorns : CroneEngine {
     var synKeys;
     var bufKeys;
     var synBass;
+    var synBassParams=Array.fill(5,{0.0});
     var synPiano;
     var synPianoADSR=Array.fill(4,{0.1});
     // NornsDeck ^
@@ -405,22 +406,29 @@ Engine_MxInternorns : CroneEngine {
         }).add;
 
         context.server.sync;
-            
-        synBass=Synth("bass", [\amp,0,\out,0],target:context.xg);
         
-        this.addCommand("bassamp","f", {arg msg;
-            synBass.set(\amp,msg[1]);
+        this.addCommand("bassparams","fffff", {arg msg;
+            synBassParams.do({arg item,i;
+                synBassParams[i]=msg[i+1];
+            });
+            synBass.set(\amp,synBassParams[0],\attack,synBassParams[1],\decay,synBassParams[2],\sustain,synBassParams[3],\release,synBassParams[4]);
         });
         
         this.addCommand("bassnoteon","f", {arg msg;
-            synBass.set(\gate,0);
-            synBass.set(\gate,1,\note,msg[1]);
+            if (synBass!=nil,{
+                if (synBass.isRunning==true,{
+                    synBass.set(\gate,0);
+                    synBass.set(\gate,1,\note,msg[1]);
+                },{
+                    synBass=Synth("bass", [\amp,synBassParams[0],\attack,synBassParams[1],\decay,synBassParams[2],\sustain,synBassParams[3],\release,synBassParams[4],\out,0,\gate,1],target:context.xg);
+                    NodeWatcher.register(synBass);
+                });
+            },{
+                synBass=Synth("bass", [\amp,synBassParams[0],\attack,synBassParams[1],\decay,synBassParams[2],\sustain,synBassParams[3],\release,synBassParams[4],\out,0,\gate,1],target:context.xg);
+                NodeWatcher.register(synBass);
+            });
         });
-        
-        this.addCommand("bassadsr","ffff", {arg msg;
-            synBass.set(\attack,msg[1],\decay,msg[2],\sustain,msg[3],\release,msg[4]);
-        });
-        
+                
         this.addCommand("bassnoteoff","", {arg msg;
             synBass.set(\gate,0);
         });
