@@ -445,7 +445,7 @@ Engine_MxInternorns : CroneEngine {
 
             damp_mul = LagUD.ar(K2A.ar(1.0 - damp), 0, damp_time);
 
-            noise_env = Decay2.ar(Impulse.ar(0));
+            noise_env = Decay2.ar(Trig.ar(t_trig,1/context.server.sampleRate));
             noise = LFNoise2.ar(noise_hz) * noise_env;
 
             delaytime = 1.0 / (hz * [tune_up, tune_down]);
@@ -484,21 +484,38 @@ Engine_MxInternorns : CroneEngine {
             var name=msg[1];
             if (synPiano.at(name)!=nil,{
                 if (synPiano.at(name).isRunning==true,{
-                    synPiano.at(name).free;
+                    synPiano.at(name).set(\gate,0,\t_trig,0);
+                    synPiano.at(name).set(\gate,1,\t_trig,1);
+                },{
+                    synPiano.put(name,
+                        Synth("synthPiano",
+                            \out,mainBus,
+                            \attack,synPianoADSR[0],
+                            \decay,synPianoADSR[1],
+                            \sustain,synPianoADSR[2],
+                            \release,synPianoADSR[3],
+                            \note,msg[1],
+                            \t_trig,1,
+                            \gate,1,
+                        );
+                    );
+                    NodeWatcher.register(synPiano.at(name));
                 });
-            });
-            synPiano.put(name,
-                Synth("synthPiano",
-                    \out,mainBus,
-                    \attack,synPianoADSR[0],
-                    \decay,synPianoADSR[1],
-                    \sustain,synPianoADSR[2],
-                    \release,synPianoADSR[3],
-                    \note,msg[1],
-                    \t_trig,1,
+            },{
+                synPiano.put(name,
+                    Synth("synthPiano",
+                        \out,mainBus,
+                        \attack,synPianoADSR[0],
+                        \decay,synPianoADSR[1],
+                        \sustain,synPianoADSR[2],
+                        \release,synPianoADSR[3],
+                        \note,msg[1],
+                        \t_trig,1,
+                        \gate,1,
+                    );
                 );
-            );
-            NodeWatcher.register(synPiano.at(name));
+                NodeWatcher.register(synPiano.at(name));
+            });
         });
 
         this.addCommand("pianonoteoff","i", { arg msg;
@@ -508,6 +525,7 @@ Engine_MxInternorns : CroneEngine {
                 if (mxsamplesVoiceAlloc.at(name).isRunning==true,{
                     mxsamplesVoiceAlloc.at(name).set(
                         \t_trig,0,
+                        \gate,0,
                     );
                 });
             });
