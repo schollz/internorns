@@ -270,7 +270,7 @@ Engine_MxInternorns : CroneEngine {
 
         SynthDef("defSampler", {
             arg out=0, amp=0,bufnum=0, rate=1, start=0, end=1, reset=0, t_trig=0,
-            loops=1, pan=0;
+            loops=1, pan=0, ampLag=6;
             var snd,snd2,pos,pos2,frames,duration,env,finalsnd;
             var startA,endA,startB,endB,resetA,resetB,crossfade,aOrB;
 
@@ -283,7 +283,7 @@ Engine_MxInternorns : CroneEngine {
             endB=Latch.kr(end,1-aOrB);
             resetB=Latch.kr(reset,1-aOrB);
             crossfade=Lag.ar(K2A.ar(aOrB),0.05);
-            amp=VarLag.kr(amp,6,0);
+            amp=VarLag.kr(amp,ampLag,0);
 
 
             rate = rate*BufRateScale.kr(bufnum);
@@ -356,6 +356,10 @@ Engine_MxInternorns : CroneEngine {
 
         this.addCommand("amp","if", { arg msg;
             synSample.at(msg[1]).set(\amp,msg[2])
+        });        
+
+        this.addCommand("amplag","if", { arg msg;
+            synSample.at(msg[1]).set(\ampLag,msg[2])
         });
 
         this.addCommand("release","i", { arg msg;

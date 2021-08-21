@@ -237,3 +237,20 @@ function sample.glitch(i,v)
   end
   ta:add("bbb"..i,s("if math.random()<"..v.." then; v=math.random(); engine.loop("..i..",v,v+math.random()/40+0.01) end",4),1)
 end
+
+function hook(midiin,out)
+  mp:hook(midiin,out)
+end
+
+function fullstart()
+  if not ta.running then
+    print("starting")
+    ta:start()
+    sched:hard_restart()
+  end
+end
+
+function fullstop()
+  print("stopping")
+  ta:stop()
+end
