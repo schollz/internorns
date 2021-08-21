@@ -244,11 +244,13 @@ end
 
 function fullstart()
   if not ta.running then
+    print("starting")
     ta:start()
     sched:hard_restart()
   end
 end
 
 function fullstop()
+  print("stopping")
   ta:stop()
 end

@@ -16,7 +16,7 @@ function midipal:new(o)
     o.midis[name].conn=midi.connect(dev.port)
     o.midis[name].conn.event=function(data)
       local d=midi.to_msg(data)
-      if d.ch~=nil then
+      if d.ch~=nil and d.type~="clock" then
         for _,ev in ipairs(o.events) do
           if ev.name==name and ev.ch==d.ch then
             ev.func(d)
@@ -47,7 +47,7 @@ function midipal:hook(midiin,out)
 
   local event={}
   event.name=midiin.name
-  event.ch=midin.ch
+  event.ch=midiin.ch
   event.func=function(d)
     if d.type=="note_on" then
       if out.name~=nil then
@@ -71,6 +71,10 @@ function midipal:hook(midiin,out)
         crow.output[out.crowout].volts=(d.note-21)/12
         crow.output[out.crowout+1]()
       end
+    elseif d.type=="cc" then
+      if out.cc~=nil then
+        out.cc(d.cc,d.val,d.ch)
+      end
     end
   end
   -- add new event
@@ -78,6 +82,9 @@ function midipal:hook(midiin,out)
 end
 
 function midipal:get_name(name)
+  if name==nil then 
+    do return nil end 
+  end
   for k,v in pairs(self.midis) do
     if string.find(k,name) then
       do return k end

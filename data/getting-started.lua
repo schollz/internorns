@@ -234,6 +234,10 @@ stop("op1")
 ------------------- midi hooks -------------------
 --------------------------------------------------
 
+
+norns.script.load("code/internorns/internorns.lua")
+
+
 -- midi hooks allow you to easily funnel messages
 -- between midi devices
 
@@ -245,13 +249,16 @@ hook({name="opz",ch=1},{name="op1",ch=1})
 hook({name="opz",ch=1},{crowout=1})
 
 -- midi hooks allow customizable hooks as well
-hook({name="opz",ch=1},{note_on=function(note,vel,ch) engine.bassamp(1.0);engine.bassnote(note);end})
-hook({name="opz",ch=1},{note_on=function(note,vel,ch) engine.bassamp(0) end})
+hook({name="opz",ch=5},{note_on=function(note,vel,ch) engine.bassamp(0.2);engine.bassnote(note);end})
+hook({name="opz",ch=5},{note_on=function(note,vel,ch) engine.bassamp(0) end})
+play("basslfo",s("engine.bassamp(lfo(10.13,0.3,0.6))",4),1)
+play("basslfo2",s("engine.basslpf(lfo(7.13,2,4))",4),1)
 
 -- in this example we can use a full stop to stop the sequencer
 -- and have the op-z activate internorns on the first note
 fullstop()
 hook({name="opz",ch=1},{note_on=function(note,vel,ch) fullstart() end})
+hook({name="opz",ch=1},{cc=function(cc,val,ch) print("OKOKOK"); if val==0 and cc==123 then fullstop() end end})
 
 -------------------------------------------------
 ------------------ mx.samples---------------------
