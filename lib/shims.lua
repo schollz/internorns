@@ -4,6 +4,9 @@ function wav(s)
 end
 
 local nature_loaded=false
+bass_attack=0.1
+bass_decay=5
+bass_volume=0.5
 
 function nature(vol)
   if vol==nil then
@@ -51,7 +54,7 @@ function play(name,notes,i)
       "mx:on({name='"..foo[2].."',midi=<m>,velocity=80"..foo[3].."})",
     "mx:off({name='"..foo[2].."',midi=<m>})"),i)
   elseif name=="bass" then
-    ta:add(name,ta:sound(notes,"engine.bassnote(<m>)"),i)
+    ta:add(name,ta:sound(notes,"engine.bassnote(<m>,bass_volume,bass_attack,bass_decay)"),i)
   elseif name=="piano" then
     ta:add(name,ta:sound(notes,"engine.pianonote(<m>)"),i)
   elseif name=="kick" or name=="hh" or name=="clap" or name=="sd" or name=="oh" then
@@ -185,8 +188,11 @@ function sample.pos(i,v)
   engine.pos(i,v,sample.memrate[i])
 end
 
-function sample.level(i,v)
-  engine.amp(i,v)
+function sample.level(i,v,slew)
+  if slew==nil then
+    slew=0
+  end
+  engine.amp(i,v,slew)
 end
 
 function sample.open(i,v)
