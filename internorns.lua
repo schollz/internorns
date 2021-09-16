@@ -50,6 +50,39 @@ function init()
 
 ]])
     mp:print()
+
+    clock.run(function()
+	sample.open(1,"/home/we/dust/audio/opz/20210916/samplepacks/2-snare/06/174-32-140.wav") 
+	clock.sleep(0.5)
+	-- sample.open(2,"opz/172-32-18")
+	--
+	-- -- -- drums
+	hook({name="opz",ch=2},{note_on=function(note,vel,ch)  if math.random()<0.9 then print((note-53)/16); sample.pos(1,(note-53)/16); sample.rate(1,1); end end})
+	sample.level(1,0.5)
+	--
+	-- -- -- vocals
+	-- -- hook({name="opz",ch=4},{note_on=function(note,vel,ch) engine.amplag(1,0.01); sample.pos(1,(note-53)/16); sample.level(1,0.6) end})
+	-- -- hook({name="opz",ch=4},{note_off=function(note,vel,ch)  engine.amplag(1,2); sample.level(1,0) end})
+	--
+	-- -- -- bass
+	hook({name="opz",ch=5},{note_on=function(note,vel,ch) engine.bassamp(0.8);engine.bassnote(note);end})
+	hook({name="opz",ch=5},{note_off=function(note,vel,ch) engine.bassamp(0.6) end})
+	--
+	-- strings
+	hook({name="opz",ch=8},{note_on=function(note,vel,ch) mx:on({name="string_spurs_swells",midi=note-12,velocity=120,amp=0.2}) end})
+	hook({name="opz",ch=8},{note_off=function(note,vel,ch) mx:off({name="string_spurs_swells",midi=note-12})  end})
+	hook({name="opz",ch=8},{note_on=function(note,vel,ch)  mx:on({name="sweep_violins",midi=note-12,velocity=120,amp=0.2}) end})
+	hook({name="opz",ch=8},{note_off=function(note,vel,ch) mx:off({name="sweep_violins",midi=note-12})  end})
+	--
+	-- -- -- lead piano
+	hook({name="opz",ch=6},{note_on=function(note,vel,ch)  mx:on({name="fender_rhodes",midi=note-12,velocity=120,amp=1.3}) end})
+	hook({name="opz",ch=6},{note_off=function(note,vel,ch) mx:off({name="fender_rhodes",midi=note-12})  end})
+	--
+	-- -- -- arp
+	-- -- crow.output[2].action="{ to(10,0.005),to(0,0.02) }";crow.output[2]()
+	-- -- crow.output[2].action="{ to(10,0.01),to(0,0.05) }";crow.output[2]()
+	-- -- hook({name="opz",ch=7},{crowout=1})
+    end)
 end
 
 

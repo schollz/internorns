@@ -1,5 +1,6 @@
 function wav(s)
-  return "/home/we/dust/audio/internorns/"..s..".wav"
+  return s
+  --return "/home/we/dust/audio/internorns/"..s..".wav"
 end
 
 local nature_loaded=false
