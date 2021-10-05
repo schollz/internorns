@@ -405,9 +405,6 @@ stop("loopy")
 ----------------------- bass ---------------------
 --------------------------------------------------
 
--- turn the bass on
-engine.bassamp(0.5) -- bass is always on!
-
 -- there is a built-in bass that you can access
 -- via engine or using play:
 play("bass","ab1",1)
@@ -415,11 +412,13 @@ play("bass","e1",2)
 play("bass","gb1",3)
 play("bass","eb1",4)
 
--- via engine (lfo examples for amp and lpf):
-play("basslfo",s("engine.bassamp(lfo(10.13,0.3,0.6))",4),1)
-play("basslfo2",s("engine.basslpf(lfo(7.13,2,4))",4),1)
+-- set globals for the bass attack and decay and volume
+bass_attack=0
+bass_decay=0.1
+bass_volume=0.5
 
-stop("basslfo");stop("basslfo2");stop("bass");engine.bassamp(0)
+-- stop bass
+stop("bass")
 
 --------------------------------------------------
 ---------------------- piano ---------------------
