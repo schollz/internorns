@@ -40,6 +40,11 @@ function play(name,notes,i)
   print(string.sub(name,1,3))
   if name=="crow" then
     ta:add(name,ta:sound(notes,'crow.output[1].volts=<v>;crow.output[2]()'),i)
+  elseif string.sub(name,1,7)=="jf.note" then
+    ta:add(name,ta:sound(notes,"crow.ii.jf.play_note((<m>-24)/12)"),i)
+  elseif string.sub(name,1,8)=="jf.voice" then
+    local voice=string.sub(name,-1)
+    ta:add(name,ta:sound(notes,"crow.ii.jf.play_voice("..voice..",(<m>-24)/12)"),i)
   elseif string.sub(name,1,3)=="mx/" then
     print(name)
     local foo=string.split(name,"/")
